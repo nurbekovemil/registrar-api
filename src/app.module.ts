@@ -1,3 +1,4 @@
+import * as path from "path";
 import { Module } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { ConfigModule } from "@nestjs/config";
@@ -6,13 +7,15 @@ import { UsersModule } from "./users/users.module";
 
 import { AuthModule } from "./auth/auth.module";
 import { ServeStaticModule } from "@nestjs/serve-static";
-import { RegistryManagementModule } from "./registry-management/registry-management.module";
-import { OperationsModule } from "./operations/operations.module";
-import { ReportsModule } from "./reports/reports.module";
-import { DirectoriesModule } from "./directories/directories.module";
-import { AdministrationsModule } from "./administrations/administrations.module";
-import { DirectoriesModule } from "./directories/directories.module";
-import * as path from "path";
+
+import { EmitentsModule } from './emitents/emitents.module';
+import { Emitent } from "./emitents/entities/emitent.entity";
+import { EmissionsModule } from './emissions/emissions.module';
+import { Emission } from "./emissions/entities/emission.entity";
+import { AccountsModule } from './accounts/accounts.module';
+import { ClientsModule } from './clients/clients.module';
+import { Account } from "./accounts/entities/account.entity";
+import { AccountType } from "./accounts/entities/account-types.entity";
 
 @Module({
   controllers: [],
@@ -31,22 +34,15 @@ import * as path from "path";
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRESS_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User],
+      models: [User, Emitent, Emission, Account, AccountType],
       autoLoadModels: true,
     }),
     UsersModule,
-
     AuthModule,
-
-    RegistryManagementModule,
-
-    OperationsModule,
-
-    ReportsModule,
-
-    DirectoriesModule,
-
-    AdministrationsModule,
+    EmitentsModule,
+    EmissionsModule,
+    AccountsModule,
+    ClientsModule,
   ],
 })
 export class AppModule {}

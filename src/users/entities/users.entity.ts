@@ -12,10 +12,8 @@ import {
   interface UserCreateAttrs {
     login: string;
     password: string;
-    companyId: number;
-    firstName: string;
-    lastName: string;
-    inn: string;
+    first_name: string;
+    last_name: string;
   }
   
   @Table({ tableName: 'users' })
@@ -36,8 +34,8 @@ import {
   
   
     @Column({ type: DataType.STRING })
-    firstName: string;
+    first_name: string;
   
     @Column({ type: DataType.STRING })
-    lastName: string;
+    last_name: string;
   }
