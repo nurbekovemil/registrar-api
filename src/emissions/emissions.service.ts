@@ -13,12 +13,14 @@ export class EmissionsService {
     return emission
   }
 
-  findAll() {
-    return `This action returns all emissions`;
+  async findAll() {
+    const emissions = await this.emissionRepository.findAll()
+    return emissions
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} emission`;
+  async findOne(id: number) {
+    const emission = await this.emissionRepository.findByPk(id)
+    return emission
   }
 
   update(id: number, updateEmissionDto: UpdateEmissionDto) {
