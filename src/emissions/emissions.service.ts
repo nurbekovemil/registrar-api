@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmissionDto } from './dto/create-emission.dto';
 import { UpdateEmissionDto } from './dto/update-emission.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Emission } from './entities/emission.entity';
 
 @Injectable()
 export class EmissionsService {
-  create(createEmissionDto: CreateEmissionDto) {
-    return 'This action adds a new emission';
+  constructor(@InjectModel(Emission) private emissionRepository: typeof Emission){}
+
+  async create(createEmissionDto: CreateEmissionDto) {
+    const emission = await this.emissionRepository.create(createEmissionDto)
+    return emission
   }
 
   findAll() {

@@ -3,7 +3,7 @@ import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Account } from './entities/account.entity';
-import { AccountType } from './entities/account-types.entity';
+import { AccountType } from './entities/account-type.entity';
 import { CreateAccountTypeDto } from './dto/create-type-account.dto';
 import { UpdateAccountTypeDto } from './dto/update-type-account.dto';
 

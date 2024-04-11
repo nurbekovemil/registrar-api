@@ -1,14 +1,18 @@
 export class CreateEmitentDto {
-    readonly name: string;
-    readonly gov_reg: string;
-    readonly authority_reg: string;
+    readonly full_name: string;
+    readonly short_name: string;
+    readonly director_company: string;
+    readonly director_registrar: string;
+    readonly accountant: string;
+    readonly gov_name: string;
+    readonly gov_number: string;
     readonly legal_address: string;
     readonly postal_address: string;
-    readonly phone: number;
+    readonly phone_number: string;
     readonly email: string;
-    readonly bank: string;
-    readonly bank_account: number;
-    readonly indentity_number: string;
+    readonly bank_name: string;
+    readonly bank_account: string;
+    readonly id_number: string;
     readonly capital: string;
     readonly contract_date: string
 }

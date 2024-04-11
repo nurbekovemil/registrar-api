@@ -1,14 +1,13 @@
 import { Column, DataType, Table, Model } from "sequelize-typescript";
 
 interface EmissionCreateAttrs {
-    type_id: number;
-    emitent_id: number;
+    reg_number: string;
+    release_date: number;
     start_nominal: number;
     new_nominal: number;
     start_count: number;
     new_count: number;
-    splitting: number;
-    reg_number: number;
+    splitting: number;    
   }
 
   @Table({ tableName: 'emissions' })
@@ -21,16 +20,22 @@ interface EmissionCreateAttrs {
     })
     id: number;
 
+    @Column({ type: DataType.STRING })
+    reg_number: number;
+
+    @Column({ type: DataType.INTEGER })
+    release_date: number;
+    
     @Column({ type: DataType.INTEGER })
     type_id: number;
 
     @Column({ type: DataType.INTEGER })
     emitent_id: number;
 
-    @Column({ type: DataType.INTEGER })
+    @Column({ type: DataType.DECIMAL(18, 10)  })
     start_nominal: number;
 
-    @Column({ type: DataType.INTEGER })
+    @Column({ type: DataType.DECIMAL(18, 10)  })
     new_nominal: number;
 
     @Column({ type: DataType.INTEGER })
@@ -39,10 +44,9 @@ interface EmissionCreateAttrs {
     @Column({ type: DataType.INTEGER })
     new_count: number;
 
-    @Column({ type: DataType.INTEGER })
+    @Column({ type: DataType.DECIMAL(18, 10) })
     splitting: number;
 
-    @Column({ type: DataType.INTEGER })
-    reg_number: number;
+
 
 }

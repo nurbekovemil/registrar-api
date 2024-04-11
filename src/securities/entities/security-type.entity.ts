@@ -1,19 +1,17 @@
 import {
-    BelongsTo,
     Column,
     DataType,
-    ForeignKey,
     Model,
     Table,
   } from 'sequelize-typescript';
-
   
-  interface ClientCreateAttrs {
-    type_id: number;
+  interface SecurityTypeCreateAttrs {
+    name: string;
   }
   
-  @Table({ tableName: 'accounts' })
-  export class Client extends Model<Client, ClientCreateAttrs> {
+  @Table({ tableName: 'security_types' })
+  export class SecurityType extends Model<SecurityType, SecurityTypeCreateAttrs> {
+
     @Column({
       type: DataType.INTEGER,
       unique: true,
@@ -21,5 +19,7 @@ import {
       primaryKey: true,
     })
     id: number;
-    
+
+    @Column({ type: DataType.STRING })
+    name: string;
   }

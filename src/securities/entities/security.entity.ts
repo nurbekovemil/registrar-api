@@ -1,19 +1,19 @@
 import {
-    BelongsTo,
     Column,
     DataType,
-    ForeignKey,
     Model,
     Table,
   } from 'sequelize-typescript';
-import { AccountType } from './account-type.entity';
   
-  interface AccountCreateAttrs {
+  interface SecurityCreateAttrs {
+    name: string;
     type_id: number;
+    emitent_id: number;
   }
   
-  @Table({ tableName: 'accounts' })
-  export class Account extends Model<Account, AccountCreateAttrs> {
+  @Table({ tableName: 'securities' })
+  export class Security extends Model<Security, SecurityCreateAttrs> {
+
     @Column({
       type: DataType.INTEGER,
       unique: true,
@@ -22,10 +22,12 @@ import { AccountType } from './account-type.entity';
     })
     id: number;
 
-    @ForeignKey(() => AccountType)
+    @Column({ type: DataType.STRING })
+    name: string;
+
     @Column({ type: DataType.INTEGER })
     type_id: number;
-
-    @BelongsTo(() => AccountType)
-    account_type: AccountType;
+    
+    @Column({ type: DataType.INTEGER })
+    emitent_id: number;
   }

@@ -13,9 +13,15 @@ import { Emitent } from "./emitents/entities/emitent.entity";
 import { EmissionsModule } from './emissions/emissions.module';
 import { Emission } from "./emissions/entities/emission.entity";
 import { AccountsModule } from './accounts/accounts.module';
-import { ClientsModule } from './clients/clients.module';
 import { Account } from "./accounts/entities/account.entity";
-import { AccountType } from "./accounts/entities/account-types.entity";
+import { AccountType } from "./accounts/entities/account-type.entity";
+import { HoldersModule } from './holders/holders.module';
+import { SecuritiesModule } from './securities/securities.module';
+import { EmissionType } from "./emissions/entities/emission-type.entity";
+import { Holder } from "./holders/entities/holder.entity";
+import { Security } from "./securities/entities/security.entity";
+import { SecurityType } from "./securities/entities/security-type.entity";
+import { HolderSecurity } from "./holders/entities/holder-security.entity";
 
 @Module({
   controllers: [],
@@ -34,7 +40,7 @@ import { AccountType } from "./accounts/entities/account-types.entity";
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRESS_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Emitent, Emission, Account, AccountType],
+      models: [User, Emitent, EmissionType, Emission, Account, AccountType, Holder, HolderSecurity, Security, SecurityType],
       autoLoadModels: true,
     }),
     UsersModule,
@@ -42,7 +48,8 @@ import { AccountType } from "./accounts/entities/account-types.entity";
     EmitentsModule,
     EmissionsModule,
     AccountsModule,
-    ClientsModule,
+    HoldersModule,
+    SecuritiesModule,
   ],
 })
 export class AppModule {}
