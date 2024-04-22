@@ -21,7 +21,9 @@ import { EmissionType } from "./emissions/entities/emission-type.entity";
 import { Holder } from "./holders/entities/holder.entity";
 import { Security } from "./securities/entities/security.entity";
 import { SecurityType } from "./securities/entities/security-type.entity";
-import { HolderSecurity } from "./holders/entities/holder-security.entity";
+import { SecurityAttitude } from "./securities/entities/security-attitude.entity";
+import { SecurityStatus } from "./securities/entities/security-status.entity";
+import { TransactionsModule } from './transactions/transactions.module';
 
 @Module({
   controllers: [],
@@ -40,7 +42,19 @@ import { HolderSecurity } from "./holders/entities/holder-security.entity";
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRESS_PASSWORD,
       database: process.env.POSTGRES_DB,
-      models: [User, Emitent, EmissionType, Emission, Account, AccountType, Holder, HolderSecurity, Security, SecurityType],
+      models: [
+        User, 
+        Emitent, 
+        EmissionType, 
+        Emission, 
+        Account, 
+        AccountType, 
+        Holder, 
+        Security, 
+        SecurityType,
+        SecurityAttitude,
+        SecurityStatus
+      ],
       autoLoadModels: true,
     }),
     UsersModule,
@@ -50,6 +64,7 @@ import { HolderSecurity } from "./holders/entities/holder-security.entity";
     AccountsModule,
     HoldersModule,
     SecuritiesModule,
+    TransactionsModule,
   ],
 })
 export class AppModule {}

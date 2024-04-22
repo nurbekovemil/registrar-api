@@ -21,14 +21,18 @@ export class EmitentsController {
   findOne(@Param('id') id: number) {
     return this.emitentsService.findOne(id);
   }
+  @Get(':id/emissions')
+  getEmitentEmissions(@Param('id') id: number) {
+    return this.emitentsService.getEmitentEmissions(id);
+  }
+
+  @Get(':id/holders')
+  getEmitentHolders(@Param('id') id: number) {
+    return this.emitentsService.getEmitentHolders(id);
+  }
 
   @Put(':id')
   update(@Param('id') id: number, @Body() updateEmitentDto: UpdateEmitentDto) {
     return this.emitentsService.update(id, updateEmitentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.emitentsService.remove(id);
   }
 }

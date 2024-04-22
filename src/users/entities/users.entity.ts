@@ -16,7 +16,7 @@ import {
     last_name: string;
   }
   
-  @Table({ tableName: 'users' })
+  @Table({ tableName: 'users', createdAt: false, updatedAt: false })
   export class User extends Model<User, UserCreateAttrs> {
     @Column({
       type: DataType.INTEGER,

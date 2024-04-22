@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
 import { EmissionsService } from './emissions.service';
 import { CreateEmissionDto } from './dto/create-emission.dto';
 import { UpdateEmissionDto } from './dto/update-emission.dto';
@@ -18,17 +18,12 @@ export class EmissionsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.emissionsService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.emissionsService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEmissionDto: UpdateEmissionDto) {
-    return this.emissionsService.update(+id, updateEmissionDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.emissionsService.remove(+id);
+  @Put(':id')
+  update(@Param('id') id: number, @Body() updateEmissionDto: UpdateEmissionDto) {
+    return this.emissionsService.update(id, updateEmissionDto);
   }
 }

@@ -9,14 +9,15 @@ import {
     name: string;
     actual_address: string;
     legal_address: string;
+    phone_number: string;
     passport_type: string;
     passport_number: string;
     passport_agency: string;
     inn: string;
   }
   
-  @Table({ tableName: 'holders' })
-  export class Holder extends Model<Holder, HolderCreateAttrs> {
+  @Table({ tableName: 'holders', createdAt: false, updatedAt: false })
+  export class Holder extends Model<Holder, HolderCreateAttrs>{
 
     @Column({
       type: DataType.INTEGER,

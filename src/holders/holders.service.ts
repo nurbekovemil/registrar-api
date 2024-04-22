@@ -6,11 +6,13 @@ import { Holder } from './entities/holder.entity';
 
 @Injectable()
 export class HoldersService {
-  constructor(@InjectModel(Holder) private holderRepository: typeof Holder){}
+  constructor(
+    @InjectModel(Holder) private holderRepository: typeof Holder,
+  ){}
 
   async create(createHolderDto: CreateHolderDto) {
-
-    return 'holders';
+    const holder = await this.holderRepository.create(createHolderDto)
+    return holder;
   }
 
   findAll() {
@@ -19,6 +21,10 @@ export class HoldersService {
 
   findOne(id: number) {
     return `This action returns a #${id} holder`;
+  }
+
+  async getHoldersByEmitentId(id: number){
+    
   }
 
   update(id: number, updateHolderDto: UpdateHolderDto) {

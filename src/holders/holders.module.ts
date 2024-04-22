@@ -7,10 +7,11 @@ import { Holder } from './entities/holder.entity';
 @Module({
   imports: [
     SequelizeModule.forFeature([
-      Holder
+      Holder,
     ])
   ],
   controllers: [HoldersController],
-  providers: [HoldersService]
+  providers: [HoldersService],
+  exports: [HoldersService]
 })
 export class HoldersModule {}

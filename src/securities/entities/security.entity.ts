@@ -1,33 +1,81 @@
 import {
-    Column,
-    DataType,
-    Model,
-    Table,
-  } from 'sequelize-typescript';
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { SecurityType } from './security-type.entity';
+import { SecurityAttitude } from './security-attitude.entity';
+import { Holder } from 'src/holders/entities/holder.entity';
+import { Emitent } from 'src/emitents/entities/emitent.entity';
+import { Emission } from 'src/emissions/entities/emission.entity';
+import { SecurityStatus } from './security-status.entity';
+
+interface SecurityCreateAttrs {
+  type_id: number;
+  status_id: number;
+  attitude_id: number;
+  holder_id: number;
+  emitent_id: number;
+  emission_id: number;
+  quantity: number;
+  purchased_date: string
+}
+
+@Table({ tableName: 'securities', createdAt: false, updatedAt: false })
+export class Security extends Model<Security, SecurityCreateAttrs> {
+
+  @Column({
+    type: DataType.INTEGER,
+    unique: true,
+    autoIncrement: true,
+    primaryKey: true,
+  })
+  id: number;
+
+  @ForeignKey(() => SecurityType)
+  @Column({ type: DataType.INTEGER })
+  type_id: number;
+
+  @ForeignKey(() => SecurityStatus)
+  @Column({ type: DataType.INTEGER })
+  status_id: number;
+
+  @ForeignKey(() => SecurityAttitude)
+  @Column({ type: DataType.INTEGER })
+  attitude_id: number;
+
+  @ForeignKey(() => Holder)
+  @Column({ type: DataType.INTEGER })
+  holder_id: number;
   
-  interface SecurityCreateAttrs {
-    name: string;
-    type_id: number;
-    emitent_id: number;
-  }
+  @ForeignKey(() => Emitent)
+  @Column({ type: DataType.INTEGER })
+  emitent_id: number;
   
-  @Table({ tableName: 'securities' })
-  export class Security extends Model<Security, SecurityCreateAttrs> {
+  @ForeignKey(() => Emission)
+  @Column({ type: DataType.INTEGER })
+  emission_id: number;
 
-    @Column({
-      type: DataType.INTEGER,
-      unique: true,
-      autoIncrement: true,
-      primaryKey: true,
-    })
-    id: number;
+  @Column({ type: DataType.INTEGER })
+  quantity: number;
 
-    @Column({ type: DataType.STRING })
-    name: string;
+  @Column({ type: DataType.STRING })
+  purchased_date: string
 
-    @Column({ type: DataType.INTEGER })
-    type_id: number;
-    
-    @Column({ type: DataType.INTEGER })
-    emitent_id: number;
-  }
+
+
+  @BelongsTo(() => SecurityType)
+  security_type: SecurityType;
+
+  @BelongsTo(() => SecurityAttitude)
+  security_attitude: SecurityAttitude;
+
+  @BelongsTo(() => Holder)
+  holder: Holder;
+
+  @BelongsTo(() => Emitent)
+  emitent: Emitent;
+}

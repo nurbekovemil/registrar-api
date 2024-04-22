@@ -23,4 +23,11 @@ export class SecuritiesService {
   remove(id: number) {
     return `This action removes a #${id} security`;
   }
+
+  async createSecurityAttitude(securityAttitudeDto: {name: string}){
+    
+  }
+  async getSecurityAttitudes(){
+
+  }
 }

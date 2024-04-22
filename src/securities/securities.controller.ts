@@ -22,13 +22,5 @@ export class SecuritiesController {
     return this.securitiesService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSecurityDto: UpdateSecurityDto) {
-    return this.securitiesService.update(+id, updateSecurityDto);
-  }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.securitiesService.remove(+id);
-  }
 }

@@ -1,9 +1,12 @@
 import {
     Column,
     DataType,
+    HasMany,
     Model,
     Table,
   } from 'sequelize-typescript';
+import { Emission } from 'src/emissions/entities/emission.entity';
+import { Security } from 'src/securities/entities/security.entity';
   
   interface EmitentCreateAttrs {
     full_name: string;
@@ -24,7 +27,7 @@ import {
     contract_date: string
   }
   
-  @Table({ tableName: 'emitents' })
+  @Table({ tableName: 'emitents', createdAt: false, updatedAt: false })
   export class Emitent extends Model<Emitent, EmitentCreateAttrs> {
 
     @Column({
@@ -82,4 +85,10 @@ import {
     
     @Column({ type: DataType.STRING })
     contract_date: string;
+
+    @HasMany(() => Emission)
+    emissions: Emission[];
+
+    @HasMany(() => Security)
+    securities: Security[]
   }
