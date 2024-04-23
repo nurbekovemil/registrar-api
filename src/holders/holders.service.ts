@@ -15,12 +15,14 @@ export class HoldersService {
     return holder;
   }
 
-  findAll() {
-    return `This action returns all holders`;
+  async findAll() {
+    const holders = await this.holderRepository.findAll()
+    return holders;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} holder`;
+  async findOne(id: number) {
+    const holder = await this.holderRepository.findByPk(id)
+    return holder;
   }
 
   async getHoldersByEmitentId(id: number){
