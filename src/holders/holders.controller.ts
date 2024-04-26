@@ -18,8 +18,8 @@ export class HoldersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.holdersService.findOne(+id);
+  findOne(@Param('id') id: number) {
+    return this.holdersService.findOne(id);
   }
 
   @Patch(':id')
