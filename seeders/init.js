@@ -3,9 +3,21 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface) {
+    // await queryInterface.bulkInsert('companies', 
+    //   [
+    //     {
+    //       name: 'ОсОО Реестродержатель Медина',
+    //       gov_name: 'Чуй-Бишкекское Упралвение юстиции',
+    //       gov_number: '',
+    //       legal_address: 'string',
+    //       phone_number: 'string'
+    //     }
+    //   ]
+    // );
     await queryInterface.bulkInsert('emitents',
     [
       {
+          "id":1,
           "full_name": "ЗАО НУР",
           "short_name": "ЗАО НУР",
           "director_company": "Керимкулов Мирлан Абылкасымович",
@@ -27,9 +39,11 @@ module.exports = {
     );
     await queryInterface.bulkInsert('emission_types', [
         { 
+          id: 1,
           name: 'Акция'
         },
         { 
+          id: 2,
           name: 'Облигация'
         }]
     );
@@ -84,15 +98,16 @@ module.exports = {
           login: 'admin', 
           password: '$2a$05$Jj1FBJ1FvlYB3IU4yRiVLus1.0UjmQ09tUAQsrGkkokVtKqPTumVy', // admin
           first_name: 'admin',
-          last_name: 'admin'
+          last_name: 'admin',
+          // company_id: 1
         }]
     );
   },
 
   async down (queryInterface) {
-    await queryInterface.bulkDelete('emitents', null, {});
-    await queryInterface.bulkDelete('emitent_types', null, {});
     await queryInterface.bulkDelete('emissions', null, {});
+    await queryInterface.bulkDelete('emission_types', null, {});
+    await queryInterface.bulkDelete('emitents', null, {});
     await queryInterface.bulkDelete('holders', null, {});
     await queryInterface.bulkDelete('security_attitudes', null, {});
     await queryInterface.bulkDelete('security_types', null, {});
