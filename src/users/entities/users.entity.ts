@@ -1,9 +1,12 @@
 import {
+  BelongsTo,
     Column,
     DataType,
+    ForeignKey,
     Model,
     Table,
   } from 'sequelize-typescript';
+import { Company } from 'src/companies/entities/company.entity';
   
   interface UserCreateAttrs {
     login: string;
@@ -36,6 +39,10 @@ import {
     @Column({ type: DataType.STRING })
     last_name: string;
 
+    @ForeignKey(() => Company)
     @Column({ type: DataType.INTEGER })
     company_id: number;
+
+    @BelongsTo(() => Company)
+    company: Company;
   }

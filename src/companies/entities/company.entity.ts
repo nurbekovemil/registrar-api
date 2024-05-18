@@ -12,6 +12,7 @@ import { User } from 'src/users/entities/users.entity';
     gov_name: string;
     gov_number: string;
     legal_address: string;
+    license: string;
     phone_number: string;
   }
   
@@ -34,7 +35,10 @@ import { User } from 'src/users/entities/users.entity';
     
     @Column({ type: DataType.STRING })
     gov_number: string;
-    
+
+    @Column({ type: DataType.STRING })
+    license: string;
+
     @Column({ type: DataType.STRING })
     legal_address: string;
         

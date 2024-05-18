@@ -3,17 +3,19 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface) {
-    // await queryInterface.bulkInsert('companies', 
-    //   [
-    //     {
-    //       name: 'ОсОО Реестродержатель Медина',
-    //       gov_name: 'Чуй-Бишкекское Упралвение юстиции',
-    //       gov_number: '',
-    //       legal_address: 'string',
-    //       phone_number: 'string'
-    //     }
-    //   ]
-    // );
+    await queryInterface.bulkInsert('companies', 
+      [
+        {
+          id: 1,
+          name: 'ОсОО Реестродержатель Медина',
+          gov_name: 'Чуй-Бишкекское Упралвение юстиции',
+          gov_number: '133580-3301-000 от 09.12.2013 год',
+          legal_address: 'string',
+          license: '№1430 от 20.12.2013 г. Гос. служба регуляр. и надзор за фин. рынок КР',
+          phone_number: '720001 пр. Манаса 40, каб 324, тел 90-06-43, 31-17-65, 90-06-42'
+        }
+      ]
+    );
     await queryInterface.bulkInsert('emitents',
     [
       {
@@ -99,7 +101,7 @@ module.exports = {
           password: '$2a$05$Jj1FBJ1FvlYB3IU4yRiVLus1.0UjmQ09tUAQsrGkkokVtKqPTumVy', // admin
           first_name: 'admin',
           last_name: 'admin',
-          // company_id: 1
+          company_id: 1
         }]
     );
   },
@@ -113,5 +115,6 @@ module.exports = {
     await queryInterface.bulkDelete('security_types', null, {});
     await queryInterface.bulkDelete('security_status', null, {});
     await queryInterface.bulkDelete('users', null, {});
+    await queryInterface.bulkDelete('companies', null, {});
   }
 };

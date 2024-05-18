@@ -6,4 +6,5 @@ export class CreateUserDto {
     password: string;
     first_name: string;
     last_name: string;
+    company_id: number
 }

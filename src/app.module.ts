@@ -26,6 +26,7 @@ import { SecurityStatus } from "./securities/entities/security-status.entity";
 import { TransactionsModule } from './transactions/transactions.module';
 import { PrintsModule } from './prints/prints.module';
 import { CompaniesModule } from './companies/companies.module';
+import { Company } from "./companies/entities/company.entity";
 
 @Module({
   controllers: [],
@@ -45,6 +46,7 @@ import { CompaniesModule } from './companies/companies.module';
       password: process.env.POSTGRESS_PASSWORD,
       database: process.env.POSTGRES_DB,
       models: [
+        Company,
         User, 
         Emitent, 
         EmissionType, 
