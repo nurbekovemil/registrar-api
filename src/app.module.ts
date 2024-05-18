@@ -25,6 +25,7 @@ import { SecurityAttitude } from "./securities/entities/security-attitude.entity
 import { SecurityStatus } from "./securities/entities/security-status.entity";
 import { TransactionsModule } from './transactions/transactions.module';
 import { PrintsModule } from './prints/prints.module';
+import { CompaniesModule } from './companies/companies.module';
 
 @Module({
   controllers: [],
@@ -67,6 +68,7 @@ import { PrintsModule } from './prints/prints.module';
     SecuritiesModule,
     TransactionsModule,
     PrintsModule,
+    CompaniesModule,
   ],
 })
 export class AppModule {}

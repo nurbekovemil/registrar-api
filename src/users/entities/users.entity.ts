@@ -1,10 +1,6 @@
 import {
-    BelongsTo,
-    BelongsToMany,
     Column,
     DataType,
-    ForeignKey,
-    HasMany,
     Model,
     Table,
   } from 'sequelize-typescript';
@@ -14,6 +10,7 @@ import {
     password: string;
     first_name: string;
     last_name: string;
+    company_id: number;
   }
   
   @Table({ tableName: 'users', createdAt: false, updatedAt: false })
@@ -38,4 +35,7 @@ import {
   
     @Column({ type: DataType.STRING })
     last_name: string;
+
+    @Column({ type: DataType.INTEGER })
+    company_id: number;
   }

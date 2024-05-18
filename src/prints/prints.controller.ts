@@ -5,9 +5,9 @@ import { PrintsService } from './prints.service';
 export class PrintsController {
   constructor(private readonly printsService: PrintsService) {}
 
-  @Get('/emitent/card')
-  findOne(@Param('id') id: string) {
-    return this.printsService.findOne(+id);
+  @Get('/emitent/:id/card')
+  findOne(@Param('id') id: number) {
+    return this.printsService.emitenCard(id);
   } 
 
 }

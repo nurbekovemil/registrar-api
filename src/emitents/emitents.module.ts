@@ -15,6 +15,7 @@ import { HoldersModule } from 'src/holders/holders.module';
     HoldersModule
   ],
   controllers: [EmitentsController],
-  providers: [EmitentsService]
+  providers: [EmitentsService],
+  exports: [EmitentsService]
 })
 export class EmitentsModule {}

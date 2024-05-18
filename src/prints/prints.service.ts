@@ -1,26 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePrintDto } from './dto/create-print.dto';
-import { UpdatePrintDto } from './dto/update-print.dto';
+import { EmissionsService } from 'src/emissions/emissions.service';
+import { EmitentsService } from 'src/emitents/emitents.service';
 
 @Injectable()
 export class PrintsService {
-  create(createPrintDto: CreatePrintDto) {
-    return 'This action adds a new print';
-  }
-
-  findAll() {
-    return `This action returns all prints`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} print`;
-  }
-
-  update(id: number, updatePrintDto: UpdatePrintDto) {
-    return `This action updates a #${id} print`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} print`;
+  constructor(
+    private emitentService: EmitentsService,
+    private emissionService: EmissionsService,
+  ){}
+  
+  async emitenCard(id) {
+    const emitent = await this.emitentService.findOne(id)
+    const emissions = await this.emissionService.getEmissionsByEmitentId(id)
+    return {emitent, emissions};
   }
 }
