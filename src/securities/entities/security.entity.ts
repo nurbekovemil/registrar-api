@@ -65,7 +65,8 @@ export class Security extends Model<Security, SecurityCreateAttrs> {
   @Column({ type: DataType.STRING })
   purchased_date: string
 
-
+  @BelongsTo(() => Emission)
+  emission: Emission;
 
   @BelongsTo(() => SecurityType)
   security_type: SecurityType;
