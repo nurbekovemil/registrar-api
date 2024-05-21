@@ -35,8 +35,13 @@ export class AuthService {
     };
   }
 
-  async auth(user) {
-    return this.generateToken(user);
+  async auth(data) {
+    const user = await this.userService.getUserByPk(data.id)
+    const {token} = await this.generateToken(data);
+    return {
+      user,
+      token
+    }
   }
 
   private async generateToken(user: User) {
