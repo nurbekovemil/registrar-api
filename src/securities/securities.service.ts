@@ -1,9 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { CreateSecurityDto } from './dto/create-security.dto';
 import { UpdateSecurityDto } from './dto/update-security.dto';
+import { InjectModel } from '@nestjs/sequelize';
+import { Security } from './entities/security.entity';
 
 @Injectable()
 export class SecuritiesService {
+  constructor(
+    @InjectModel(Security) private securityRepository: typeof Security,
+  ) {}
+
   create(createSecurityDto: CreateSecurityDto) {
     return 'This action adds a new security';
   }
@@ -29,5 +35,12 @@ export class SecuritiesService {
   }
   async getSecurityAttitudes(){
 
+  }
+
+  async getSecuritiesByHolderId(holder_id: number) {
+    const securities  = await this.securityRepository.findAll({
+      where: { holder_id },
+    });
+    return securities
   }
 }
