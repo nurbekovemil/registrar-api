@@ -10,7 +10,7 @@ export class PrintsController {
     return this.printsService.emitenCard(id);
   } 
 
-  @Get('/emitent/:eid/holder/:hid')
+  @Get('/emitent/:eid/reestr/:hid')
   getExtractReestrForHolderId(@Param('eid') eid: number, @Param('hid') hid: number) {
     return this.printsService.getExtractForHolder(eid, hid)
   }

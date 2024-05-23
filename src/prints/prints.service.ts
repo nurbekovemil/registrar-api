@@ -21,7 +21,8 @@ export class PrintsService {
 
   async getExtractForHolder(eid: number, hid: number) {
     const holder = await this.holderService.findOne(hid)
-    const securities = await this.securityService.getSecuritiesByHolderId(hid)
-    return {securities, holder}
+    const emitent = await this.emitentService.findOne(eid)
+    const emission = await this.emissionService.getEmissionsByEmitentId(eid)
+    return {emitent, holder, emission}
   }
 }
