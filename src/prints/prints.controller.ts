@@ -6,13 +6,18 @@ export class PrintsController {
   constructor(private readonly printsService: PrintsService) {}
 
   @Get('/emitent/:id/card')
-  findOne(@Param('id') id: number) {
-    return this.printsService.emitenCard(id);
+  getEmitentCard(@Param('id') id: number) {
+    return this.printsService.getEmitentCard(id);
   } 
 
   @Get('/emitent/:eid/reestr/:hid')
   getExtractReestrForHolderId(@Param('eid') eid: number, @Param('hid') hid: number) {
     return this.printsService.getExtractForHolder(eid, hid)
+  }
+
+  @Get('/transaction/:tid')
+  getTransferOrder(@Param('eid') tid: number) {
+    return this.printsService.getTransferOrder(tid)
   }
 
 }

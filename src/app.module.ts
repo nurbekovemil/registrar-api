@@ -27,6 +27,8 @@ import { TransactionsModule } from './transactions/transactions.module';
 import { PrintsModule } from './prints/prints.module';
 import { CompaniesModule } from './companies/companies.module';
 import { Company } from "./companies/entities/company.entity";
+import { Transaction } from "./transactions/entities/transaction.entity";
+import { TransactionOperation } from "./transactions/entities/transaction-operation.entity";
 
 @Module({
   controllers: [],
@@ -57,7 +59,9 @@ import { Company } from "./companies/entities/company.entity";
         Security, 
         SecurityType,
         SecurityAttitude,
-        SecurityStatus
+        SecurityStatus,
+        Transaction,
+        TransactionOperation
       ],
       autoLoadModels: true,
     }),

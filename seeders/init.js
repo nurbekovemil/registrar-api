@@ -2,7 +2,19 @@
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  async up (queryInterface) {
+  async up (queryInterface, Sequelize) {
+    // Получаем все последовательности в базе данных
+    const sequences = await queryInterface.sequelize.query(`
+      SELECT sequence_name 
+      FROM information_schema.sequences 
+      WHERE sequence_schema = 'public';
+    `, { type: Sequelize.QueryTypes.SELECT });
+
+    // Сбрасываем каждую последовательность
+    for (const seq of sequences) {
+      await queryInterface.sequelize.query(`ALTER SEQUENCE ${seq.sequence_name} RESTART WITH 1`);
+    }
+
     await queryInterface.bulkInsert('companies', 
       [
         {
@@ -104,9 +116,44 @@ module.exports = {
           company_id: 1
         }]
     );
+    await queryInterface.bulkInsert('transaction_operations', [
+      {name: 'Перв. ввод'},
+      {name: 'Эмиссия'},
+      {name: 'Ден, аукцион'},
+      {name: 'Восстанов. ак'},
+      {name: 'Распред. акции'},
+      {name: 'Зак, ден, аукцион'},
+      {name: 'Анулирование'},
+      {name: 'Арест'},
+      {name: 'Снятие арест'},
+      {name: 'Блокирование'},
+      {name: 'Отмена блок'},
+      {name: 'Приватизация'},
+      {name: 'Транзит'},
+      {name: 'Дробление'},
+      {name: 'Протокол №4'},
+      {name: 'Вып. див. ЦБ'},
+      {name: 'Возврат акции'},
+      {name: 'Распред. 40%'},
+      {name: 'На собрание'},
+      {name: 'С собрание'},
+      {name: 'Подписка'},
+      {name: 'Закр. разм/эм'},
+      {name: 'Мена'},
+      {name: 'Номер. дер'},
+      {name: 'Обратно. РЕПО'},
+      {name: 'Откр. л/с'},
+      {name: 'Св. о наслед'},
+      {name: 'Протокол 7/1'},
+      {name: 'Капитализации'},
+      {name: 'Дог. на разме'},
+      {name: 'Дарение'},
+    ])
   },
 
   async down (queryInterface) {
+    await queryInterface.bulkDelete('transactions', null, {});
+    await queryInterface.bulkDelete('transaction_operations', null, {});
     await queryInterface.bulkDelete('emissions', null, {});
     await queryInterface.bulkDelete('emission_types', null, {});
     await queryInterface.bulkDelete('emitents', null, {});

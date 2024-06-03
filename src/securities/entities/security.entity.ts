@@ -62,8 +62,8 @@ export class Security extends Model<Security, SecurityCreateAttrs> {
   @Column({ type: DataType.INTEGER })
   quantity: number;
 
-  @Column({ type: DataType.STRING })
-  purchased_date: string
+  @Column({ type: DataType.DATE })
+  purchased_date: Date
 
   @BelongsTo(() => Emission)
   emission: Emission;

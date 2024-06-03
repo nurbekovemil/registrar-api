@@ -1,7 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { SecuritiesService } from './securities.service';
 import { CreateSecurityDto } from './dto/create-security.dto';
-import { UpdateSecurityDto } from './dto/update-security.dto';
 
 @Controller('securities')
 export class SecuritiesController {
@@ -9,18 +8,9 @@ export class SecuritiesController {
 
   @Post()
   create(@Body() createSecurityDto: CreateSecurityDto) {
-    return this.securitiesService.create(createSecurityDto);
+    return this.securitiesService.createSecurity(createSecurityDto);
   }
 
-  @Get()
-  findAll() {
-    return this.securitiesService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.securitiesService.findOne(+id);
-  }
 
 
 }
