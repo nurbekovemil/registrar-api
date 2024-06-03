@@ -34,11 +34,6 @@ export class EmitentsService {
     return emissions
   }
 
-  async getEmitentHolders(id: number){
-    const holders = await this.holderService.getHoldersByEmitentId(id)
-    return holders
-  }
-
   async update(id: number, updateEmitentDto: UpdateEmitentDto) {
     const emitent = await this.emitentRepository.update(updateEmitentDto, {
       where: {

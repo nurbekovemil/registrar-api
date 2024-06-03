@@ -21,9 +21,4 @@ export class EmissionsController {
   findOne(@Param('id') id: number) {
     return this.emissionsService.findOne(id);
   }
-
-  @Put(':id')
-  update(@Param('id') id: number, @Body() updateEmissionDto: UpdateEmissionDto) {
-    return this.emissionsService.update(id, updateEmissionDto);
-  }
 }

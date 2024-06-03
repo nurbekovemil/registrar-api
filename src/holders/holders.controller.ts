@@ -22,13 +22,8 @@ export class HoldersController {
     return this.holdersService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateHolderDto: UpdateHolderDto) {
-    return this.holdersService.update(+id, updateHolderDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.holdersService.remove(+id);
+  @Get('/:hid/emissions')
+  getHolderEmissions(@Param('hid') hid: number){
+    return this.holdersService.getHolderEmissions(hid)
   }
 }

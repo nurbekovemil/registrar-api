@@ -4,6 +4,7 @@ import { UpdateEmissionDto } from './dto/update-emission.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Emission } from './entities/emission.entity';
 import { EmissionType } from './entities/emission-type.entity';
+import { Security } from 'src/securities/entities/security.entity';
 
 @Injectable()
 export class EmissionsService {
@@ -35,15 +36,7 @@ export class EmissionsService {
     })
     return emissions
   }
-
-  update(id: number, updateEmissionDto: UpdateEmissionDto) {
-    return `This action updates a #${id} emission`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} emission`;
-  }
-
+  
   async createEmissionType(name: {name: string}){
     const emissionType = await this.emissionTypeRepository.create(name)
     return emissionType
@@ -51,5 +44,18 @@ export class EmissionsService {
   async getEmissionTypes(){
     const emissionTypes = await this.emissionTypeRepository.findAll()
     return emissionTypes
+  }
+  async getEmissionsByHolderId(hid: number){
+    const emissions = await this.emissionRepository.findAll({
+      include: [
+        {
+          model: Security,
+          where: {
+            holder_id: hid
+          }
+        }
+      ]
+    })
+    return emissions
   }
 }

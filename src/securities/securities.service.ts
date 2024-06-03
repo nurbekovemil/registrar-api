@@ -20,4 +20,13 @@ export class SecuritiesService {
     });
     return securities
   }
+
+  async getHolderSecurities(hid: number){
+    const securities = await this.securityRepository.findAll({
+      where: {
+        holder_id: hid
+      }
+    })
+    return securities
+  }
 }
