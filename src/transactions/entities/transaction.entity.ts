@@ -18,9 +18,11 @@ import { Security } from 'src/securities/entities/security.entity';
     emission_id: number;
     holder_from_id?: number;
     holder_to_id: number;
+    security_id?: number;
     is_family: boolean;
     quantity: number;
     amount: number;
+    contract_date: string;
   }
   
   @Table({ tableName: 'transactions', updatedAt: false })
@@ -56,6 +58,10 @@ import { Security } from 'src/securities/entities/security.entity';
     @ForeignKey(() => Holder)
     @Column({ type: DataType.INTEGER })
     holder_to_id: number;
+
+    @ForeignKey(() => Security)
+    @Column({ type: DataType.INTEGER })
+    security_id: number;
   
     @Column({ type: DataType.BOOLEAN })
     is_family: boolean;
@@ -65,6 +71,9 @@ import { Security } from 'src/securities/entities/security.entity';
 
     @Column({ type: DataType.INTEGER })
     amount: number;
+
+    @Column({ type: DataType.DATE })
+    contract_date: Date;
 
 
     @BelongsTo(() => TransactionOperation)
@@ -76,9 +85,12 @@ import { Security } from 'src/securities/entities/security.entity';
     @BelongsTo(() => Emission)
     emission: Emission;
 
-    @BelongsTo(() => Holder)
+    @BelongsTo(() => Holder, { as: 'holder_from', foreignKey: 'holder_from_id' })
     holder_from: Holder;
-
-    @BelongsTo(() => Holder)
+  
+    @BelongsTo(() => Holder, { as: 'holder_to', foreignKey: 'holder_to_id' })
     holder_to: Holder;
+
+    @BelongsTo(() => Security)
+    security: Security;
   }

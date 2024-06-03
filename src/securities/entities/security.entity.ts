@@ -3,6 +3,7 @@ import {
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   Table,
 } from 'sequelize-typescript';
@@ -12,6 +13,7 @@ import { Holder } from 'src/holders/entities/holder.entity';
 import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Emission } from 'src/emissions/entities/emission.entity';
 import { SecurityStatus } from './security-status.entity';
+import { Transaction } from 'src/transactions/entities/transaction.entity';
 
 interface SecurityCreateAttrs {
   type_id: number;
@@ -79,4 +81,8 @@ export class Security extends Model<Security, SecurityCreateAttrs> {
 
   @BelongsTo(() => Emitent)
   emitent: Emitent;
+
+  @HasMany(() => Transaction)
+  transaction: Transaction[]
+
 }

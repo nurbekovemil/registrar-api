@@ -1,9 +1,11 @@
 import {
     Column,
     DataType,
+    HasMany,
     Model,
     Table,
   } from 'sequelize-typescript';
+import { Transaction } from 'src/transactions/entities/transaction.entity';
   
   interface HolderCreateAttrs {
     name: string;
@@ -53,4 +55,12 @@ import {
 
     @Column({ type: DataType.STRING })
     inn: string;
+
+
+    @HasMany(() => Transaction, { as: 'holder_from_transactions', foreignKey: 'holder_from_id' })
+    holder_from_transactions: Transaction[];
+  
+    @HasMany(() => Transaction, { as: 'holder_to_transactions', foreignKey: 'holder_to_id' })
+    holder_to_transactions: Transaction[];
+
   }

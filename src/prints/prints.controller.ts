@@ -16,7 +16,7 @@ export class PrintsController {
   }
 
   @Get('/transaction/:tid')
-  getTransferOrder(@Param('eid') tid: number) {
+  getTransferOrder(@Param('tid') tid: number) {
     return this.printsService.getTransferOrder(tid)
   }
 

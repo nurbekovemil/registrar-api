@@ -5,9 +5,21 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Transaction } from './entities/transaction.entity';
 import { SecuritiesModule } from 'src/securities/securities.module';
 import { TransactionOperation } from './entities/transaction-operation.entity';
+import { Emission } from 'src/emissions/entities/emission.entity';
+import { Emitent } from 'src/emitents/entities/emitent.entity';
+import { Holder } from 'src/holders/entities/holder.entity';
 
 @Module({
-  imports: [SequelizeModule.forFeature([Transaction, TransactionOperation]), SecuritiesModule],
+  imports: [
+    SequelizeModule.forFeature([
+      Transaction, 
+      TransactionOperation,
+      Holder,
+      Emitent,
+      Emission
+    ]), 
+    SecuritiesModule
+  ],
   controllers: [TransactionsController],
   providers: [TransactionsService],
   exports: [TransactionsService]

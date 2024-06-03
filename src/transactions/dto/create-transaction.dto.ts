@@ -8,4 +8,5 @@ export class CreateTransactionDto {
     readonly is_family: boolean;
     readonly quantity: number;
     readonly amount: number;
+    readonly contract_date: string;
 }

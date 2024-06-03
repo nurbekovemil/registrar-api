@@ -6,35 +6,77 @@ import { TransactionOperationTypes } from 'src/constants/transaction';
 import { SecuritiesService } from 'src/securities/securities.service';
 import { SecurityStatus, SecurityTypes, SecurityAttitudes } from 'src/constants/security';
 import { TransactionOperation } from './entities/transaction-operation.entity';
+import { Emitent } from 'src/emitents/entities/emitent.entity';
+import { Emission } from 'src/emissions/entities/emission.entity';
+import { Holder } from 'src/holders/entities/holder.entity';
+import { Security } from 'src/securities/entities/security.entity';
+import { SecurityType } from 'src/securities/entities/security-type.entity';
 
 @Injectable()
 export class TransactionsService {
   constructor(
     @InjectModel(Transaction) private transactionRepository: typeof Transaction,
     @InjectModel(TransactionOperation) private transactionOperationRepository: typeof TransactionOperation,
+    @InjectModel(Emitent) private emitentRepository: typeof Emitent,
     private sercurityService: SecuritiesService,
   ) {}
   async createTransaction(createTransactionDto: CreateTransactionDto) {
     const transaction = await this.transactionRepository.create(createTransactionDto)
+    let security
     switch (createTransactionDto.operation_id) {
       case TransactionOperationTypes.DIVIDEND:
         // Логика для начисления дивидендов        
-        await this.createTransactionSecurity(createTransactionDto, transaction)
+        security = await this.createTransactionSecurity(createTransactionDto, transaction)
         break;
       case TransactionOperationTypes.DONATION:
         // Логика для операции дарения
-        await this.createTransactionSecurity(createTransactionDto, transaction)
+        security = await this.createTransactionSecurity(createTransactionDto, transaction)
         break;
       default:
         // Логика по умолчанию или обработка неизвестной операции
         break;
     }
+    transaction.security_id = security.id
+    transaction.save()
     return transaction
   }
+
   async getTransactionById(id: number){
-    const transaction = await this.transactionRepository.findByPk(id)
+    const transaction = await this.transactionRepository.findOne({
+      where: {
+        id
+      },
+      include: [
+        {
+          model: TransactionOperation
+        },
+        {
+          model: Emitent
+        },
+        {
+          model: Emission
+        },
+        {
+          model: Holder,
+          as: 'holder_from'
+        },
+        {
+          model: Holder,
+          as: 'holder_to'
+        },
+        {
+          model: Security,
+          include: [
+            {
+              model: SecurityType
+            }
+          ]
+        }
+      ]
+    })
     return transaction
   }
+  
   async getTransactions(){
     const transactions = await this.transactionRepository.findAll()
     return transactions
