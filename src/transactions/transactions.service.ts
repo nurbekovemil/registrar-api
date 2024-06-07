@@ -78,7 +78,32 @@ export class TransactionsService {
   }
   
   async getTransactions(){
-    const transactions = await this.transactionRepository.findAll()
+    const transactions = await this.transactionRepository.findAll({
+      include: [
+        {
+          model: TransactionOperation
+        },
+        {
+          model: Emission
+        },
+        {
+          model: Holder,
+          as: 'holder_from'
+        },
+        {
+          model: Holder,
+          as: 'holder_to'
+        },
+        {
+          model: Security,
+          include: [
+            {
+              model: SecurityType
+            }
+          ]
+        }
+      ]
+    })
     return transactions
   }
 
