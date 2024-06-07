@@ -26,11 +26,11 @@ export class TransactionsService {
     switch (createTransactionDto.operation_id) {
       case TransactionOperationTypes.DIVIDEND:
         // Логика для начисления дивидендов        
-        security = await this.createTransactionSecurity(createTransactionDto, transaction)
+        security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt)
         break;
       case TransactionOperationTypes.DONATION:
         // Логика для операции дарения
-        security = await this.createTransactionSecurity(createTransactionDto, transaction)
+        security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt)
         break;
       default:
         // Логика по умолчанию или обработка неизвестной операции
@@ -87,7 +87,7 @@ export class TransactionsService {
     return operations
   }
 
-  private async createTransactionSecurity(createTransactionDto, transaction){
+  private async createSecurity(createTransactionDto, transactionDate){
     try {
       const {emitent_id, emission_id, holder_to_id: holder_id, quantity} = createTransactionDto
       const securityCreate = { 
@@ -98,9 +98,32 @@ export class TransactionsService {
         emitent_id, 
         emission_id, 
         quantity,
-        purchased_date: transaction.createdAt
+        purchased_date: transactionDate
       }
       return await this.sercurityService.createSecurity(securityCreate)
+    } catch (error) {
+      
+    }
+  }
+
+  private async createDividendSecurity(createTransactionDto, transactionDate){
+    try {
+      return this.createSecurity(createTransactionDto, transactionDate)
+    } catch (error) {
+      
+    }
+  }
+
+  private async createDonationSecurity(createTransactionDto, transactionDate){
+    try {
+      const {holder_from_id, holder_to_id, emitent_id, emission_id} = createTransactionDto
+      const holder_from_security = await this.sercurityService.getHolderSecurity({holder_id: holder_from_id, emitent_id, emission_id})
+      await this.sercurityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
+      const holder_to_security = await this.sercurityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
+      if(holder_to_security) {
+        return await this.sercurityService.topUpQuentitySecurity(holder_to_security, createTransactionDto.quantity)
+      }
+      return this.createSecurity(createTransactionDto, transactionDate)
     } catch (error) {
       
     }

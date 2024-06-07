@@ -13,18 +13,37 @@ export class SecuritiesService {
     const security = await this.securityRepository.create(createSecurityDto)
     return security
   }
-  
-  async getSecuritiesByHolderId(holder_id: number) {
-    const securities  = await this.securityRepository.findAll({
-      where: { holder_id },
-    });
-    return securities
+
+  async deductQuentitySecurity(holder_security, quantity) {
+    try {
+      const security = await this.securityRepository.findByPk(holder_security.id)
+      if (security && security.quantity >= quantity) {
+        security.quantity = security.quantity - quantity
+        return security.save()
+      } else {
+        return false;
+      }
+    } catch (error) {
+      
+    }
   }
 
-  async getHolderSecurities(hid: number){
-    const securities = await this.securityRepository.findAll({
+  async topUpQuentitySecurity(holder_security, quantity) {
+    try {
+      const security = await this.securityRepository.findByPk(holder_security.id)
+      security.quantity = security.quantity + quantity
+      return security.save()
+    } catch (error) {
+      
+    }
+  }
+
+  async getHolderSecurity({holder_id, emitent_id, emission_id}){
+    const securities = await this.securityRepository.findOne({
       where: {
-        holder_id: hid
+        holder_id,
+        emitent_id,
+        emission_id
       }
     })
     return securities
