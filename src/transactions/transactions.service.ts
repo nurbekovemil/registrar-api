@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
 import { InjectModel } from '@nestjs/sequelize';
@@ -11,6 +11,7 @@ import { Emission } from 'src/emissions/entities/emission.entity';
 import { Holder } from 'src/holders/entities/holder.entity';
 import { Security } from 'src/securities/entities/security.entity';
 import { SecurityType } from 'src/securities/entities/security-type.entity';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class TransactionsService {
@@ -19,25 +20,29 @@ export class TransactionsService {
     @InjectModel(TransactionOperation) private transactionOperationRepository: typeof TransactionOperation,
     @InjectModel(Emitent) private emitentRepository: typeof Emitent,
     private sercurityService: SecuritiesService,
+    private sequelize: Sequelize,
   ) {}
   async createTransaction(createTransactionDto: CreateTransactionDto) {
-    const transaction = await this.transactionRepository.create(createTransactionDto)
+    const t = await this.sequelize.transaction();
+
+    const transaction = await this.transactionRepository.create(createTransactionDto, {transaction: t})
     let security
     switch (createTransactionDto.operation_id) {
       case TransactionOperationTypes.DIVIDEND:
         // Логика для начисления дивидендов        
-        security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt)
+        security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt, t)
         break;
       case TransactionOperationTypes.DONATION:
         // Логика для операции дарения
-        security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt)
+        security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
         break;
       default:
         // Логика по умолчанию или обработка неизвестной операции
         break;
     }
     transaction.security_id = security.id
-    transaction.save()
+    await transaction.save()
+    await t.commit();
     return transaction
   }
 
@@ -131,26 +136,33 @@ export class TransactionsService {
     }
   }
 
-  private async createDividendSecurity(createTransactionDto, transactionDate){
+  private async createDividendSecurity(createTransactionDto, transactionDate, t){
     try {
       return this.createSecurity(createTransactionDto, transactionDate)
     } catch (error) {
-      
+      await t.rollback();
     }
   }
 
-  private async createDonationSecurity(createTransactionDto, transactionDate){
+  private async createDonationSecurity(createTransactionDto, transactionDate, t){
     try {
       const {holder_from_id, holder_to_id, emitent_id, emission_id} = createTransactionDto
       const holder_from_security = await this.sercurityService.getHolderSecurity({holder_id: holder_from_id, emitent_id, emission_id})
+      if(holder_from_security && holder_from_security.quantity < createTransactionDto.quantity){
+        throw new Error('Недостаточно средств для отправки');
+      }
       await this.sercurityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
       const holder_to_security = await this.sercurityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
       if(holder_to_security) {
         return await this.sercurityService.topUpQuentitySecurity(holder_to_security, createTransactionDto.quantity)
       }
-      return this.createSecurity(createTransactionDto, transactionDate)
+      return await this.createSecurity(createTransactionDto, transactionDate)
     } catch (error) {
-      
+      await t.rollback();
+      throw new HttpException(
+        error.message,
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

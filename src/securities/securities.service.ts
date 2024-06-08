@@ -15,17 +15,9 @@ export class SecuritiesService {
   }
 
   async deductQuentitySecurity(holder_security, quantity) {
-    try {
-      const security = await this.securityRepository.findByPk(holder_security.id)
-      if (security && security.quantity >= quantity) {
-        security.quantity = security.quantity - quantity
-        return security.save()
-      } else {
-        return false;
-      }
-    } catch (error) {
-      
-    }
+    const security = await this.securityRepository.findByPk(holder_security.id)
+    security.quantity = security.quantity - quantity
+    return security.save()
   }
 
   async topUpQuentitySecurity(holder_security, quantity) {
