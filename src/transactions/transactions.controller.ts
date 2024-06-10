@@ -15,14 +15,14 @@ export class TransactionsController {
   getTransaction() {
     return this.transactionsService.getTransactions();
   }
-
-  @Get(':id')
-  getTransactionById(@Param('id') id: number) {
-    return this.transactionsService.getTransactionById(id);
-  }
-
   @Get('/operations')
   getTransactionOperations() {
     return this.transactionsService.getTransactionOperations();
   }
+
+  @Get('/:id')
+  getTransactionById(@Param('id') id: number) {
+    return this.transactionsService.getTransactionById(id);
+  }
+
 }
