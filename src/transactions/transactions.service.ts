@@ -59,21 +59,24 @@ export class TransactionsService {
           model: Emitent
         },
         {
-          model: Emission
+          model: Emission,
+          attributes: ['id', 'reg_number']
         },
         {
           model: Holder,
-          as: 'holder_from'
+          as: 'holder_from',
+          attributes: ['id', 'name']
         },
         {
           model: Holder,
-          as: 'holder_to'
+          as: 'holder_to',
+          attributes: ['id', 'name']
         },
         {
           model: Security,
           include: [
             {
-              model: SecurityType
+              model: SecurityType,
             }
           ]
         }
@@ -84,26 +87,36 @@ export class TransactionsService {
   
   async getTransactions(){
     const transactions = await this.transactionRepository.findAll({
+      attributes: ['id'],
       include: [
         {
           model: TransactionOperation
         },
         {
-          model: Emission
+          model: Emitent,
+          attributes: ['id', 'full_name']
+
+        },
+        {
+          model: Emission,
+          attributes: ['id', 'reg_number']
         },
         {
           model: Holder,
-          as: 'holder_from'
+          as: 'holder_from',
+          attributes: ['id', 'name']
         },
         {
           model: Holder,
-          as: 'holder_to'
+          as: 'holder_to',
+          attributes: ['id', 'name']
         },
         {
           model: Security,
+          attributes: ['id'],
           include: [
             {
-              model: SecurityType
+              model: SecurityType,
             }
           ]
         }
