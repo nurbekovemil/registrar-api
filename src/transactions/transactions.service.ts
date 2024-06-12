@@ -87,7 +87,7 @@ export class TransactionsService {
   
   async getTransactions(){
     const transactions = await this.transactionRepository.findAll({
-      attributes: ['id'],
+      attributes: ['id','contract_date'],
       include: [
         {
           model: TransactionOperation
