@@ -12,7 +12,7 @@ export class PrintsController {
 
   @Get('/emitent/:eid/reestr/:hid')
   getExtractReestrForHolderId(@Param('eid') eid: number, @Param('hid') hid: number) {
-    return this.printsService.getExtractForHolder(eid, hid)
+    return this.printsService.getExtractFromRegister(eid, hid)
   }
 
   @Get('/transaction/:tid')

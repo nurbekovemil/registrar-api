@@ -22,12 +22,17 @@ export class PrintsService {
     return {emitent, emissions};
   }
 
-  async getExtractForHolder(eid: number, hid: number) {
+  async getExtractFromRegister(eid: number, hid: number) {
     const holder = await this.holderService.findOne(hid)
     const emitent = await this.emitentService.findOne(eid)
-    const emission = await this.emissionService.getEmissionsByEmitentId(eid)
+    const emission = await this.emissionService.getEmissionsByHolderId(hid)
     return {emitent, holder, emission}
   }
+
+  // async getExtractFromRegister(eid: number, hid: number){
+  //   const security = await this.securityService.extractFromRegister(eid, hid)
+  //   return security
+  // }
 
   async getTransferOrder(tid: number){
     const transaction = await this.transactionService.getTransactionById(tid)
