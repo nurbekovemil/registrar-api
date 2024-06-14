@@ -12,6 +12,7 @@ import { Holder } from 'src/holders/entities/holder.entity';
 import { Security } from 'src/securities/entities/security.entity';
 import { SecurityType } from 'src/securities/entities/security-type.entity';
 import { Sequelize } from 'sequelize-typescript';
+import { EmissionsService } from 'src/emissions/emissions.service';
 
 @Injectable()
 export class TransactionsService {
@@ -20,6 +21,7 @@ export class TransactionsService {
     @InjectModel(TransactionOperation) private transactionOperationRepository: typeof TransactionOperation,
     @InjectModel(Emitent) private emitentRepository: typeof Emitent,
     private sercurityService: SecuritiesService,
+    private emissionService: EmissionsService,
     private sequelize: Sequelize,
   ) {}
   async createTransaction(createTransactionDto: CreateTransactionDto) {
@@ -151,6 +153,7 @@ export class TransactionsService {
 
   private async createDividendSecurity(createTransactionDto, transactionDate, t){
     try {
+      await this.emissionService.deductQuentityEmission(createTransactionDto.emission_id, createTransactionDto.quantity)
       return this.createSecurity(createTransactionDto, transactionDate)
     } catch (error) {
       await t.rollback();

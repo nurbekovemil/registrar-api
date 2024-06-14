@@ -18,6 +18,15 @@ export class HoldersService {
     return holder;
   }
 
+  async update(id: number, updateHolderDto: UpdateHolderDto) {
+    const holder = await this.holderRepository.update(updateHolderDto, {
+      where: {
+        id
+      }
+    })
+    return holder;
+  }
+
   async findAll() {
     const holders = await this.holderRepository.findAll()
     return holders;

@@ -72,6 +72,7 @@ module.exports = {
             "start_count": 4000,
             "new_count": 120500,
             "splitting": "16.0000000000",
+            "count": 4000,
         },
         {
             "reg_number": "KG0101041711",
@@ -83,6 +84,7 @@ module.exports = {
             "start_count": 5978,
             "new_count": 131532,
             "splitting": "22.0000000000",
+            "count": 5978,
         }]
     );
     await queryInterface.bulkInsert('holders',

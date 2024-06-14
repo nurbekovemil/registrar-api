@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
 import { HoldersService } from './holders.service';
 import { CreateHolderDto } from './dto/create-holder.dto';
 import { UpdateHolderDto } from './dto/update-holder.dto';
@@ -10,6 +10,11 @@ export class HoldersController {
   @Post()
   create(@Body() createHolderDto: CreateHolderDto) {
     return this.holdersService.create(createHolderDto);
+  }
+
+  @Put(':id')
+  update(@Param('id') id: number, @Body() updateHolderDto: UpdateHolderDto) {
+    return this.holdersService.update(id, updateHolderDto);
   }
 
   @Get()

@@ -11,6 +11,7 @@ export class SecuritiesService {
 
   async createSecurity(createSecurityDto: CreateSecurityDto) {
     const security = await this.securityRepository.create(createSecurityDto)
+    // const emission = await th
     return security
   }
 

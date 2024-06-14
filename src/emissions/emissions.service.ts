@@ -58,4 +58,10 @@ export class EmissionsService {
     })
     return emissions
   }
+
+  async deductQuentityEmission(emission_id, quantity){
+    const emission = await this.emissionRepository.findByPk(emission_id)
+    emission.count = emission.count - quantity
+    return emission.save()
+  }
 }

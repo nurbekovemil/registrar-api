@@ -8,6 +8,7 @@ import { TransactionOperation } from './entities/transaction-operation.entity';
 import { Emission } from 'src/emissions/entities/emission.entity';
 import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Holder } from 'src/holders/entities/holder.entity';
+import { EmissionsModule } from 'src/emissions/emissions.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { Holder } from 'src/holders/entities/holder.entity';
       Emitent,
       Emission
     ]), 
-    SecuritiesModule
+    SecuritiesModule,
+    EmissionsModule
   ],
   controllers: [TransactionsController],
   providers: [TransactionsService],

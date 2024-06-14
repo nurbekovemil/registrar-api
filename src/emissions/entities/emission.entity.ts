@@ -54,6 +54,9 @@ interface EmissionCreateAttrs {
     @Column({ type: DataType.DECIMAL(18, 10) })
     splitting: number;
 
+    @Column({ type: DataType.INTEGER })
+    count: number;
+
     @BelongsTo(() => EmissionType)
     emission: EmissionType;
 
