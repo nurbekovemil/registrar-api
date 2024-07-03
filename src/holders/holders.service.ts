@@ -5,12 +5,17 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Holder } from './entities/holder.entity';
 import { SecuritiesService } from 'src/securities/securities.service';
 import { EmissionsService } from 'src/emissions/emissions.service';
+import { Security } from 'src/securities/entities/security.entity';
+import sequelize from 'sequelize';
+import { Emission } from 'src/emissions/entities/emission.entity';
+
 
 @Injectable()
 export class HoldersService {
   constructor(
     @InjectModel(Holder) private holderRepository: typeof Holder,
     private emissionService: EmissionsService,
+    private securitiesService: SecuritiesService,
   ){}
 
   async create(createHolderDto: CreateHolderDto) {
@@ -39,7 +44,162 @@ export class HoldersService {
 
   async getHolderEmissions(hid: number){
     const emissions = await this.emissionService.getEmissionsByHolderId(hid)
-
     return emissions
+  }
+
+  async extractFromRegisters(eid: number) {
+    try {
+      if (!eid) {
+        throw new Error('Emitent id is required');
+      }
+      const holders = this.holderRepository.findAll({
+        attributes: [
+          'id',  // Выбор конкретных полей, например, id и name
+          'name',
+          [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
+          [
+            sequelize.literal('0.00'),
+            'percentage'
+          ],
+          [
+            sequelize.literal('0.00'),
+            'ordinary_nominal'
+          ],
+          'actual_address',
+        ],
+        include: [
+          {
+            model: Security,
+            attributes: [],
+            where: {
+              emitent_id: eid
+            },
+          },
+        ],
+        group: ['Holder.id'],
+      })
+
+      return holders;
+    } catch (error) {
+      throw new Error(`Failed to extract from registers: ${error.message}`);
+    }
+  }
+
+  async getExtractReestrOwns(eid: number) {
+    try {
+      if (!eid) {
+        throw new Error('Emitent id is required');
+      }
+      const holders = this.holderRepository.findAll({
+        attributes: [
+          'id',  // Выбор конкретных полей, например, id и name
+          'name',
+          [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
+          [
+            sequelize.literal('0.00'),
+            'percentage'
+          ],
+          [
+            sequelize.literal('0.00'),
+            'ordinary_nominal'
+          ],
+          [
+            sequelize.literal('0'),
+            'privileged'
+          ],
+          [
+            sequelize.literal('0.00'),
+            'privileged_nominal'
+          ],
+          [
+            sequelize.literal('0.00'),
+            'percentage_quantity'
+          ],
+          [
+            sequelize.literal(`CONCAT(passport_type, ' ', passport_number, ' ', passport_agency)`),
+            'passport'
+          ],
+          'actual_address',
+        ],
+        include: [
+          {
+            model: Security,
+            attributes: [],
+            where: {
+              emitent_id: eid
+            }
+          },
+        ],
+        group: ['Holder.id'],
+      })
+
+      return holders;
+    } catch (error) {
+      throw new Error(`Failed to extract from registers: ${error.message}`);
+    }
+  }
+
+  async getExtractReestrOwnsByEmission(eid: number, query: any) {
+    try {
+      if (!eid) {
+        throw new Error('Emitent id is required');
+      }
+      const holders = this.holderRepository.findAll({
+        attributes: [
+          'id',  // Выбор конкретных полей, например, id и name
+          'name',
+          [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
+          [sequelize.col('securities.emission.reg_number'), 'reg_number'],
+          [
+            sequelize.literal('0.00'),
+            'percentage'
+          ],
+          [
+            sequelize.literal('0.00'),
+            'ordinary_nominal'
+          ],
+          [
+            sequelize.literal('0'),
+            'privileged'
+          ],
+          [
+            sequelize.literal('0.00'),
+            'privileged_nominal'
+          ],
+          [
+            sequelize.literal('0.00'),
+            'percentage_quantity'
+          ],
+          [
+            sequelize.literal(`CONCAT(passport_type, ' ', passport_number, ' ', passport_agency)`),
+            'passport_test'
+          ],
+          'actual_address',
+        ],
+        include: [
+          {
+            model: Security,
+            attributes: [],
+            where: {
+              emitent_id: eid
+            },
+            include: [
+              {
+                model: Emission,
+                attributes: [],
+                where: {
+                  reg_number: query.emission
+                }
+              }
+            ],
+          },
+        ],
+        group: ['Holder.id','securities->emission.reg_number'],
+      })
+
+      return holders;
+    } catch (error) {
+      throw new Error(`Failed to extract from registers: ${error.message}`);
+    }
   }
 }

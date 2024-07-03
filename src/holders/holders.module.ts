@@ -5,11 +5,13 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Holder } from './entities/holder.entity';
 import { SecuritiesModule } from 'src/securities/securities.module';
 import { EmissionsModule } from 'src/emissions/emissions.module';
+import { Security } from 'src/securities/entities/security.entity';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([
       Holder,
+      Security
     ]),
     SecuritiesModule,
     EmissionsModule

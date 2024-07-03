@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { PrintsService } from './prints.service';
 
 @Controller('prints')
@@ -10,14 +10,32 @@ export class PrintsController {
     return this.printsService.getEmitentCard(id);
   } 
 
+  // Передаточное распоряжение
   @Get('/emitent/:eid/reestr/:hid')
   getExtractReestrForHolderId(@Param('eid') eid: number, @Param('hid') hid: number) {
     return this.printsService.getExtractFromRegister(eid, hid)
   }
 
+  // Реестр акционеров
+  @Get('/emitent/:eid/reestrs/holders')
+  getExtractReestrHolders(@Param('eid') eid: number, @Query() query: any) {
+    console.log('query', query)
+    return this.printsService.getExtractReestrHolders(eid, query)
+  }
+
+  // Реестр владельцев именных ценных бумаг
+  // @Get('/emitent/:eid/reestrs/owns')
+  // getExtractReestrOwns(@Param('eid') eid: number) {
+  //   return this.printsService.getExtractReestrOwns(eid)
+  // }
+
+  // @Get('/emitent/:eid/reestrs/owns/')
+  // getExtractReestrOwnsByNumberSecurity(@Param('tid') tid: number) {
+  //   return this.printsService.getTransferOrder(tid)
+  // }
+
   @Get('/transaction/:tid')
   getTransferOrder(@Param('tid') tid: number) {
     return this.printsService.getTransferOrder(tid)
   }
-
 }

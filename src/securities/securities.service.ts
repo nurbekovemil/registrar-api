@@ -6,7 +6,7 @@ import { Holder } from 'src/holders/entities/holder.entity';
 import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Emission } from 'src/emissions/entities/emission.entity';
 import { Sequelize, literal } from 'sequelize';
-
+import sequelize from 'sequelize';
 @Injectable()
 export class SecuritiesService {
   constructor(
@@ -46,26 +46,6 @@ export class SecuritiesService {
     return securities
   }
 
-  // async extractFromRegister(eid, hid){
-  //   const security = await this.securityRepository.findAll({
-  //     where: {
-  //       holder_id: hid,
-  //       emitent_id: eid
-  //     },
-  //     include: [
-  //       {
-  //         model: Holder
-  //       },
-  //       {
-  //         model: Emitent
-  //       },
-  //       {
-  //         model: Emission,
-  //       }
-  //     ]
-  //   })
-  //   return security
-  // }
   async extractFromRegister(eid: number, hid: number) {
     const security = await this.securityRepository.findAll({
       where: {

@@ -5,6 +5,7 @@ import {
     Model,
     Table,
   } from 'sequelize-typescript';
+import { Security } from 'src/securities/entities/security.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
   
   interface HolderCreateAttrs {
@@ -62,5 +63,9 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
   
     @HasMany(() => Transaction, { as: 'holder_to_transactions', foreignKey: 'holder_to_id' })
     holder_to_transactions: Transaction[];
+
+
+    @HasMany(() => Security)
+    securities: Security[];
 
   }

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Sequelize } from 'sequelize';
 import { EmissionsService } from 'src/emissions/emissions.service';
 import { EmitentsService } from 'src/emitents/emitents.service';
 import { HoldersService } from 'src/holders/holders.service';
@@ -29,10 +30,19 @@ export class PrintsService {
     return {emitent, holder, emission}
   }
 
-  // async getExtractFromRegister(eid: number, hid: number){
-  //   const security = await this.securityService.extractFromRegister(eid, hid)
-  //   return security
-  // }
+  async getExtractReestrHolders(eid: number, query: any) {
+    let holders = null
+    if(query.report_type === 1) {
+      return holders = await this.holderService.extractFromRegisters(eid)
+    }
+    if(query.report_type === 2) {
+      return holders = await this.holderService.getExtractReestrOwns(eid)
+    }
+    if(query.report_type === 3) {
+      return holders = await this.holderService.getExtractReestrOwnsByEmission(eid, query)
+    }
+    return 'Not found operation for report type'
+  }
 
   async getTransferOrder(tid: number){
     const transaction = await this.transactionService.getTransactionById(tid)
