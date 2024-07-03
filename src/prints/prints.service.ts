@@ -31,15 +31,15 @@ export class PrintsService {
   }
 
   async getExtractReestrHolders(eid: number, query: any) {
-    let holders = null
-    if(query.report_type === 1) {
-      return holders = await this.holderService.extractFromRegisters(eid)
+    console.log(query)
+    if(query.report_type == 1) {
+      return await this.holderService.extractFromRegisters(eid)
     }
-    if(query.report_type === 2) {
-      return holders = await this.holderService.getExtractReestrOwns(eid)
+    if(query.report_type == 2) {
+      return await this.holderService.getExtractReestrOwns(eid)
     }
-    if(query.report_type === 3) {
-      return holders = await this.holderService.getExtractReestrOwnsByEmission(eid, query)
+    if(query.report_type == 3) {
+      return await this.holderService.getExtractReestrOwnsByEmission(eid, query)
     }
     return 'Not found operation for report type'
   }
