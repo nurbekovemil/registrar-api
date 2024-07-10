@@ -25,6 +25,10 @@ export class EmitentsController {
   getEmitentEmissions(@Param('id') id: number) {
     return this.emitentsService.getEmitentEmissions(id);
   }
+  @Get(':id/holders')
+  getEmitentHolders(@Param('id') id: number) {
+    return this.emitentsService.getEmitentHolders(id);
+  }
 
   @Put(':id')
   update(@Param('id') id: number, @Body() updateEmitentDto: UpdateEmitentDto) {

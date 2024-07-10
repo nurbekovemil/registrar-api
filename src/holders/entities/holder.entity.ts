@@ -57,6 +57,9 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
     @Column({ type: DataType.STRING })
     inn: string;
 
+    @Column({ type: DataType.STRING })
+    district: string;
+
 
     @HasMany(() => Transaction, { as: 'holder_from_transactions', foreignKey: 'holder_from_id' })
     holder_from_transactions: Transaction[];

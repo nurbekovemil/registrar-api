@@ -52,20 +52,24 @@ export class HoldersService {
       if (!eid) {
         throw new Error('Emitent id is required');
       }
+      const totalSecurities = await Security.sum('quantity', {
+        where: { emitent_id: eid }
+      });
       const holders = this.holderRepository.findAll({
         attributes: [
           'id',  // Выбор конкретных полей, например, id и name
           'name',
           [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
           [
-            sequelize.literal('0.00'),
+            sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
             'percentage'
           ],
           [
-            sequelize.literal('0.00'),
+            sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
             'ordinary_nominal'
           ],
           'actual_address',
+          'district'
         ],
         include: [
           {
@@ -74,9 +78,15 @@ export class HoldersService {
             where: {
               emitent_id: eid
             },
+            include: [
+              {
+                model: Emission,
+                attributes: [],
+              }
+            ]
           },
         ],
-        group: ['Holder.id'],
+        group: ['Holder.id', 'securities->emission.nominal'],
       })
 
       return holders;
@@ -90,17 +100,20 @@ export class HoldersService {
       if (!eid) {
         throw new Error('Emitent id is required');
       }
+      const totalSecurities = await Security.sum('quantity', {
+        where: { emitent_id: eid }
+      });
       const holders = this.holderRepository.findAll({
         attributes: [
           'id',  // Выбор конкретных полей, например, id и name
           'name',
           [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
           [
-            sequelize.literal('0.00'),
+            sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
             'percentage'
           ],
           [
-            sequelize.literal('0.00'),
+            sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
             'ordinary_nominal'
           ],
           [
@@ -120,6 +133,8 @@ export class HoldersService {
             'passport'
           ],
           'actual_address',
+          'district'
+
         ],
         include: [
           {
@@ -127,10 +142,16 @@ export class HoldersService {
             attributes: [],
             where: {
               emitent_id: eid
-            }
+            },
+            include: [
+              {
+                model: Emission,
+                attributes: [],
+              }
+            ]
           },
         ],
-        group: ['Holder.id'],
+        group: ['Holder.id', 'securities->emission.nominal'],
       })
 
       return holders;
@@ -144,6 +165,9 @@ export class HoldersService {
       if (!eid) {
         throw new Error('Emitent id is required');
       }
+      const totalSecurities = await Security.sum('quantity', {
+        where: { emitent_id: eid },
+      });
       const holders = this.holderRepository.findAll({
         attributes: [
           'id',  // Выбор конкретных полей, например, id и name
@@ -151,11 +175,11 @@ export class HoldersService {
           [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
           [sequelize.col('securities.emission.reg_number'), 'reg_number'],
           [
-            sequelize.literal('0.00'),
+            sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
             'percentage'
           ],
           [
-            sequelize.literal('0.00'),
+            sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
             'ordinary_nominal'
           ],
           [
@@ -175,6 +199,8 @@ export class HoldersService {
             'passport_test'
           ],
           'actual_address',
+          'district'
+
         ],
         include: [
           {
@@ -188,13 +214,13 @@ export class HoldersService {
                 model: Emission,
                 attributes: [],
                 where: {
-                  reg_number: query.emission
+                  id: query.emission
                 }
               }
             ],
           },
         ],
-        group: ['Holder.id','securities->emission.reg_number'],
+        group: ['Holder.id','securities->emission.reg_number', 'securities->emission.nominal'],
       })
 
       return holders;

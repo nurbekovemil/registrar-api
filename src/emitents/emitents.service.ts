@@ -1,3 +1,4 @@
+import { SecuritiesService } from 'src/securities/securities.service';
 import { Injectable } from '@nestjs/common';
 import { CreateEmitentDto } from './dto/create-emitent.dto';
 import { UpdateEmitentDto } from './dto/update-emitent.dto';
@@ -12,6 +13,7 @@ export class EmitentsService {
     @InjectModel(Emitent) private emitentRepository: typeof Emitent,
     private emissionService: EmissionsService,
     private holderService: HoldersService,
+    private securityService: SecuritiesService
   ){}
   
   async create(createEmitentDto: CreateEmitentDto) {
@@ -34,6 +36,10 @@ export class EmitentsService {
     return emissions
   }
 
+  async getEmitentHolders(id: number){
+    const holders = await this.securityService.getEmitentHolders(id)
+    return holders
+  }
   async update(id: number, updateEmitentDto: UpdateEmitentDto) {
     const emitent = await this.emitentRepository.update(updateEmitentDto, {
       where: {

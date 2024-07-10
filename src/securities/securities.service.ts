@@ -67,4 +67,26 @@ export class SecuritiesService {
   
     return security;
   }
+
+  async getEmitentHolders(eid: number){
+    const holders = await this.securityRepository.findAll({
+      where: {
+        emitent_id: eid
+      },
+      attributes: [
+        'holder_id',
+        'quantity',
+        [sequelize.literal('Holder.name'), 'holder_name'], // Add this line
+      ],
+      include: [
+        {
+          model: Holder,
+          attributes: []
+          // attributes: ['id', 'name']
+        }
+      ],
+      group: ['Security.id','holder.id']
+    })
+    return holders
+  }
 }
