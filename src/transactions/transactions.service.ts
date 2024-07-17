@@ -95,7 +95,7 @@ export class TransactionsService {
   }
 
   async getTransactionByEmitent(id: number){
-    const transactions = await this.transactionRepository.findOne({
+    const transactions = await this.transactionRepository.findAll({
       where: {
         emitent_id: id
       },
