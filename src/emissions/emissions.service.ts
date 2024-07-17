@@ -61,7 +61,10 @@ export class EmissionsService {
 
   async deductQuentityEmission(emission_id, quantity){
     const emission = await this.emissionRepository.findByPk(emission_id)
-    emission.count = emission.count - quantity
-    return emission.save()
+    if(emission.count > 0 && emission.count >= quantity){
+      emission.count = emission.count - quantity
+      return emission.save()
+    }
+    throw new Error('Недостаточно средств')
   }
 }

@@ -191,10 +191,6 @@ export class HoldersService {
             'privileged_nominal'
           ],
           [
-            sequelize.literal('0.00'),
-            'percentage_quantity'
-          ],
-          [
             sequelize.literal(`CONCAT(passport_type, ' ', passport_number, ' ', passport_agency)`),
             'passport_test'
           ],

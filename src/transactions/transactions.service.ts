@@ -26,26 +26,33 @@ export class TransactionsService {
   ) {}
   async createTransaction(createTransactionDto: CreateTransactionDto) {
     const t = await this.sequelize.transaction();
-
-    const transaction = await this.transactionRepository.create(createTransactionDto, {transaction: t})
-    let security
-    switch (createTransactionDto.operation_id) {
-      case TransactionOperationTypes.DIVIDEND:
-        // Логика для начисления дивидендов        
-        security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-      case TransactionOperationTypes.DONATION:
-        // Логика для операции дарения
-        security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-      default:
-        // Логика по умолчанию или обработка неизвестной операции
-        break;
+    try {
+      const transaction = await this.transactionRepository.create(createTransactionDto, {transaction: t})
+      let security
+      switch (createTransactionDto.operation_id) {
+        case TransactionOperationTypes.DIVIDEND:
+          // Логика для начисления дивидендов        
+          security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt, t)
+          break;
+        case TransactionOperationTypes.DONATION:
+          // Логика для операции дарения
+          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+          break;
+        default:
+          // Логика по умолчанию или обработка неизвестной операции
+          break;
+      }
+      transaction.security_id = await security.id
+      await transaction.save()
+      await t.commit();
+      return transaction
+    } catch (error) {
+      t.rollback();
+      throw new HttpException(
+        error.message,
+        HttpStatus.BAD_REQUEST,
+      )
     }
-    transaction.security_id = security.id
-    await transaction.save()
-    await t.commit();
-    return transaction
   }
 
   async getTransactionById(id: number){
@@ -85,6 +92,47 @@ export class TransactionsService {
       ]
     })
     return transaction
+  }
+
+  async getTransactionByEmitent(id: number){
+    const transactions = await this.transactionRepository.findOne({
+      where: {
+        emitent_id: id
+      },
+      attributes: ['id','contract_date'],
+      include: [
+        {
+          model: TransactionOperation
+        },
+        {
+          model: Emitent,
+          attributes: ['id', 'full_name']
+        },
+        {
+          model: Emission,
+          attributes: ['id', 'reg_number']
+        },
+        {
+          model: Holder,
+          as: 'holder_from',
+          attributes: ['id', 'name']
+        },
+        {
+          model: Holder,
+          as: 'holder_to',
+          attributes: ['id', 'name']
+        },
+        {
+          model: Security,
+          include: [
+            {
+              model: SecurityType,
+            }
+          ]
+        }
+      ]
+    })  
+    return transactions
   }
   
   async getTransactions(){
@@ -147,21 +195,16 @@ export class TransactionsService {
       }
       return await this.sercurityService.createSecurity(securityCreate)
     } catch (error) {
-      
+      throw new Error(error)
     }
   }
 
   private async createDividendSecurity(createTransactionDto, transactionDate, t){
-    try {
-      await this.emissionService.deductQuentityEmission(createTransactionDto.emission_id, createTransactionDto.quantity)
-      return this.createSecurity(createTransactionDto, transactionDate)
-    } catch (error) {
-      await t.rollback();
-    }
+    await this.emissionService.deductQuentityEmission(createTransactionDto.emission_id, createTransactionDto.quantity)
+    return this.createSecurity(createTransactionDto, transactionDate)
   }
 
   private async createDonationSecurity(createTransactionDto, transactionDate, t){
-    try {
       const {holder_from_id, holder_to_id, emitent_id, emission_id} = createTransactionDto
       const holder_from_security = await this.sercurityService.getHolderSecurity({holder_id: holder_from_id, emitent_id, emission_id})
       if(holder_from_security && holder_from_security.quantity < createTransactionDto.quantity){
@@ -173,12 +216,5 @@ export class TransactionsService {
         return await this.sercurityService.topUpQuentitySecurity(holder_to_security, createTransactionDto.quantity)
       }
       return await this.createSecurity(createTransactionDto, transactionDate)
-    } catch (error) {
-      await t.rollback();
-      throw new HttpException(
-        error.message,
-        HttpStatus.BAD_REQUEST,
-      );
-    }
   }
 }

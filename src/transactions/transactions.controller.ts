@@ -25,4 +25,9 @@ export class TransactionsController {
     return this.transactionsService.getTransactionById(id);
   }
 
+  @Get('/emitent/:id')
+  getTransactionByEmitent(@Param('id') id: number) {
+    return this.transactionsService.getTransactionByEmitent(id);
+  }
+
 }
