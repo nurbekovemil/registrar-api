@@ -64,8 +64,12 @@ export class HoldersService {
             sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
             'percentage'
           ],
+          // [
+          //   sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
+          //   'ordinary_nominal'
+          // ],
           [
-            sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
+            sequelize.literal(`SUM(securities.quantity * "securities->emission"."nominal")`),
             'ordinary_nominal'
           ],
           'actual_address',
@@ -86,7 +90,7 @@ export class HoldersService {
             ]
           },
         ],
-        group: ['Holder.id', 'securities->emission.nominal'],
+        group: ['Holder.id'],
       })
 
       return holders;
@@ -112,8 +116,12 @@ export class HoldersService {
             sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
             'percentage'
           ],
+          // [
+          //   sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
+          //   'ordinary_nominal'
+          // ],
           [
-            sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
+            sequelize.literal(`SUM(securities.quantity * "securities->emission"."nominal")`),
             'ordinary_nominal'
           ],
           [
@@ -151,7 +159,7 @@ export class HoldersService {
             ]
           },
         ],
-        group: ['Holder.id', 'securities->emission.nominal'],
+        group: ['Holder.id'],
       })
 
       return holders;
@@ -178,8 +186,12 @@ export class HoldersService {
             sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
             'percentage'
           ],
+          // [
+          //   sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
+          //   'ordinary_nominal'
+          // ],
           [
-            sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
+            sequelize.literal(`SUM(securities.quantity * "securities->emission"."nominal")`),
             'ordinary_nominal'
           ],
           [
@@ -216,7 +228,7 @@ export class HoldersService {
             ],
           },
         ],
-        group: ['Holder.id','securities->emission.reg_number', 'securities->emission.nominal'],
+        group: ['Holder.id','securities->emission.reg_number'],
       })
 
       return holders;
