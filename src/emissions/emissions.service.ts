@@ -14,7 +14,7 @@ export class EmissionsService {
   ){}
 
   async create(createEmissionDto: CreateEmissionDto) {
-    const emission = await this.emissionRepository.create(createEmissionDto)
+    const emission = await this.emissionRepository.create({...createEmissionDto, count: createEmissionDto.start_count})
     return emission
   }
 

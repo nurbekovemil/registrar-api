@@ -10,6 +10,7 @@ interface EmissionCreateAttrs {
     emitent_id: number;
     nominal: number;
     start_count: number;
+    count: number;
   }
 
   @Table({ tableName: 'emissions', createdAt: false, updatedAt: false })
