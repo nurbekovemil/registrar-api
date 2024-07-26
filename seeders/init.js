@@ -48,7 +48,7 @@ module.exports = {
           "id_number": "00108199510201",
           "capital": "1195632",
           "contract_date": "13.01.2014"
-      }
+      },
     ]
     );
     await queryInterface.bulkInsert('emission_types', [
@@ -91,7 +91,8 @@ module.exports = {
           passport_number: '0',
           passport_agency: null,
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Манжос Александр Иванович',
@@ -101,7 +102,8 @@ module.exports = {
           passport_number: '719789',
           passport_agency: 'ОВД Ленинского РИК г.Фрунзе',
           inn: null,
-          district: 'Алмата'
+          district: 'Алмата',
+          emitent_id:1
         },
         {
           name: 'Султангазиева Шекербубу',
@@ -111,7 +113,8 @@ module.exports = {
           passport_number: '691268',
           passport_agency: 'ОВД Ленинским РИК г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Джамангулов Турганбек Токтогонович',
@@ -121,7 +124,8 @@ module.exports = {
           passport_number: '7871',
           passport_agency: 'МВД 50-58',
           inn: null,
-          district: 'Алмата'
+          district: 'Алмата',
+          emitent_id:1
         },
         {
           name: 'Федянин Леонид Митрофанович',
@@ -131,7 +135,8 @@ module.exports = {
           passport_number: '603292',
           passport_agency: 'ОВД Свердловского РИК г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Матсаков Каныбек Сулайманкулович',
@@ -141,7 +146,8 @@ module.exports = {
           passport_number: '1265065',
           passport_agency: 'МВД',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Нуркулов Бектурсун Мамадраинович',
@@ -151,7 +157,8 @@ module.exports = {
           passport_number: '633876',
           passport_agency: 'Дж-Джольский РОВД Ошской обл.',
           inn: null,
-          district: 'Алмата'
+          district: 'Алмата',
+          emitent_id:1
         },
         {
           name: 'Бурлаякова Надежда Афанасьевна',
@@ -161,7 +168,8 @@ module.exports = {
           passport_number: '608441',
           passport_agency: 'Алтын-Топканский ПОМ Ленинаб.обл.',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Килебаева Салтанат Кабланбековна',
@@ -171,7 +179,8 @@ module.exports = {
           passport_number: '590231',
           passport_agency: 'ОВД Ленинпольского РИК Кырг. ССР',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Абакасов Нурлан Акинович',
@@ -181,7 +190,8 @@ module.exports = {
           passport_number: '0535866',
           passport_agency: 'ИИМ 50-00',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Жумаев Жакыпбек Кенешбекович',
@@ -191,7 +201,8 @@ module.exports = {
           passport_number: '2023115',
           passport_agency: 'ИИМ 50-55',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Джакобаев Батырбек Абдраимович',
@@ -201,7 +212,8 @@ module.exports = {
           passport_number: '654861',
           passport_agency: 'ОВД Аламедиского РИК',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Пантелеева Ирина Вадимовна',
@@ -211,7 +223,8 @@ module.exports = {
           passport_number: '1311763',
           passport_agency: 'ИИМ 50-03',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Тен Сергей Владимирович',
@@ -221,7 +234,8 @@ module.exports = {
           passport_number: '539409',
           passport_agency: 'Первомайским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Тен Владимир Сыннепович',
@@ -231,7 +245,8 @@ module.exports = {
           passport_number: '541724',
           passport_agency: 'Первомайским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Чыйбылов Кадырбек Акматкулович',
@@ -241,7 +256,8 @@ module.exports = {
           passport_number: '2193995',
           passport_agency: 'ИИМ 50-00',
           inn: '20404196400364',
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Окунов Алымбай',
@@ -251,7 +267,8 @@ module.exports = {
           passport_number: '1917527',
           passport_agency: 'ИИМ 50-01',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Федоренко Владимир Александрович',
@@ -261,7 +278,8 @@ module.exports = {
           passport_number: '722268',
           passport_agency: 'ОВД Ленинского р-на г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'ПФК "Нийет-Аракет",Джангазиев Д.И.',
@@ -271,7 +289,8 @@ module.exports = {
           passport_number: '580549',
           passport_agency: 'Свердловским РОВД',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Чомоев Дуйшенбек',
@@ -281,7 +300,8 @@ module.exports = {
           passport_number: '585325',
           passport_agency: 'ОВД Джумгальского р-на',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Ахтямова Нина Александровна',
@@ -291,7 +311,8 @@ module.exports = {
           passport_number: '738616',
           passport_agency: 'г.Фрунзе Октябрьским РОВД',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Витовецкий Владимир Михайлович',
@@ -301,7 +322,8 @@ module.exports = {
           passport_number: '2893666',
           passport_agency: 'МКК 50-03',
           inn: '21411196300016',
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Сычев Валерий Михайлович',
@@ -311,7 +333,8 @@ module.exports = {
           passport_number: '564394',
           passport_agency: 'Свердловским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Гавришев Юрий Васильевич',
@@ -321,7 +344,8 @@ module.exports = {
           passport_number: '648020',
           passport_agency: 'Первомайским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Гришко Григорий Иванович',
@@ -331,7 +355,8 @@ module.exports = {
           passport_number: '2518464',
           passport_agency: 'МВД 50-03',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Гришко Юрий Григорьевич',
@@ -341,7 +366,8 @@ module.exports = {
           passport_number: '1288898',
           passport_agency: 'МВД 50-03',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Матвеев Генадий Алексеевич',
@@ -351,7 +377,8 @@ module.exports = {
           passport_number: '589996',
           passport_agency: 'Ленинским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Межевикин Владимир Николаевич',
@@ -361,7 +388,8 @@ module.exports = {
           passport_number: '671624',
           passport_agency: 'Свердловским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Гражданкин Владимир Иванович',
@@ -371,7 +399,8 @@ module.exports = {
           passport_number: '654926',
           passport_agency: 'Ленинским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Аленкин Борис Иванович',
@@ -381,7 +410,8 @@ module.exports = {
           passport_number: '0089973',
           passport_agency: 'МКК 211031',
           inn: '20810195200015',
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Латта Валерий Иванович',
@@ -391,7 +421,8 @@ module.exports = {
           passport_number: '575907',
           passport_agency: 'Ленинским РОВД',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Ляускин Геннадий Николаевич',
@@ -401,7 +432,8 @@ module.exports = {
           passport_number: '1056686',
           passport_agency: 'ИИМ 50-03',
           inn: '21604195000012',
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Коркин Юрий Игнатьевич',
@@ -411,7 +443,8 @@ module.exports = {
           passport_number: '508638',
           passport_agency: 'Свердловским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Исахунов Арзамат Турдукулович',
@@ -421,7 +454,8 @@ module.exports = {
           passport_number: '687754',
           passport_agency: 'ОВД Пржевальского г-ма',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Лапаева Галина Ивановна',
@@ -431,7 +465,8 @@ module.exports = {
           passport_number: '670618',
           passport_agency: 'Первомайским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Шайдилдаева Роза',
@@ -441,7 +476,8 @@ module.exports = {
           passport_number: '531439',
           passport_agency: 'Ленинским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Бокоев Анарбай Садыкбекович',
@@ -451,7 +487,8 @@ module.exports = {
           passport_number: '2004872',
           passport_agency: 'ИИМ 50-02',
           inn: '21201195500558',
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'НПА "Промгеосервис"',
@@ -461,7 +498,8 @@ module.exports = {
           passport_number: '55544',
           passport_agency: 'зарегестрирован Бишкекским нацстатком.',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Конев Сергей Николаевич',
@@ -471,7 +509,8 @@ module.exports = {
           passport_number: '658068',
           passport_agency: 'ОВД Панфиловского РИК Чуйской обл.',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Нуржанов Джумасарлык',
@@ -481,7 +520,8 @@ module.exports = {
           passport_number: '193',
           passport_agency: 'МВД Кыргызской Республики',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Мамбетова Надира Сайдуровна',
@@ -491,7 +531,8 @@ module.exports = {
           passport_number: '2118334',
           passport_agency: 'ИИМ 50-03',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Исахунова Джамикуль Казакпаевна',
@@ -501,7 +542,8 @@ module.exports = {
           passport_number: '702466',
           passport_agency: 'ОВД Пржевальского г-ма',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Исахунова Айнура Арзаматовна',
@@ -511,7 +553,8 @@ module.exports = {
           passport_number: '617339',
           passport_agency: 'ОВД Аксуйского р-на',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'счет эмитента АО "Нур"',
@@ -521,7 +564,8 @@ module.exports = {
           passport_number: null,
           passport_agency: null,
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'резерв',
@@ -531,7 +575,8 @@ module.exports = {
           passport_number: null,
           passport_agency: null,
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Нуржанов Джумасарлык Тюлебекович',
@@ -541,7 +586,8 @@ module.exports = {
           passport_number: '1348241',
           passport_agency: 'МВД 50-55',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Самратов Жумакул Керимбекович',
@@ -551,7 +597,8 @@ module.exports = {
           passport_number: '0014631',
           passport_agency: 'МВД 50-03',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Гавришева Мария Филипповна',
@@ -561,7 +608,8 @@ module.exports = {
           passport_number: '2507157',
           passport_agency: 'МВД 50-02',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Милицкий Геннадий Алексеевич',
@@ -571,7 +619,8 @@ module.exports = {
           passport_number: '0255363',
           passport_agency: 'МВД 50-01',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'ном.дер.ЗАО "ФБК-БТС"',
@@ -581,7 +630,8 @@ module.exports = {
           passport_number: '234-3310-АО',
           passport_agency: 'Управлением юстиции г.Ош',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'ТОО "Бату-Тараз"',
@@ -591,7 +641,8 @@ module.exports = {
           passport_number: '11386-1919-ТОО',
           passport_agency: 'Департамент юстиции Жамбылской обл.',
           inn: '100940003067',
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'ном.дер ЗАО "Центральный депозитарий"',
@@ -601,7 +652,8 @@ module.exports = {
           passport_number: '3407-3300-АО(ИУ',
           passport_agency: ') ГПР №074072 мин.юст.КР',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         },
         {
           name: 'Алаев Руслан Деканбаевич',
@@ -611,7 +663,8 @@ module.exports = {
           passport_number: '2559777',
           passport_agency: 'МКК 50-58',
           inn: null,
-          district: 'Бишкек'
+          district: 'Бишкек',
+          emitent_id:1
         }
       ]
     );

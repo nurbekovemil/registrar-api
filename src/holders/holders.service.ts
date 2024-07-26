@@ -42,6 +42,15 @@ export class HoldersService {
     return holder;
   }
 
+  async getEmitentAllHolders(eid: number) {
+    const holders = await this.holderRepository.findAll({
+      where: {
+        emitent_id: eid
+      }
+    })
+    return holders
+  }
+
   async getHolderEmissions(hid: number){
     const emissions = await this.emissionService.getEmissionsByHolderId(hid)
     return emissions

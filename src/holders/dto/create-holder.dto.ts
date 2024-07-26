@@ -7,4 +7,5 @@ export class CreateHolderDto {
     readonly passport_number: string;
     readonly passport_agency: string;
     readonly inn: string;
+    readonly emitent_id: number;
 }

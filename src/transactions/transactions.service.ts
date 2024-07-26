@@ -200,7 +200,12 @@ export class TransactionsService {
   }
 
   private async createDividendSecurity(createTransactionDto, transactionDate, t){
+    const { holder_to_id, emitent_id, emission_id} = createTransactionDto
     await this.emissionService.deductQuentityEmission(createTransactionDto.emission_id, createTransactionDto.quantity)
+    const holder_to_security = await this.sercurityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
+    if(holder_to_security) {
+      return await this.sercurityService.topUpQuentitySecurity(holder_to_security, createTransactionDto.quantity)
+    }
     return this.createSecurity(createTransactionDto, transactionDate)
   }
 

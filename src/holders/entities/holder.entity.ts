@@ -1,10 +1,12 @@
 import {
     Column,
     DataType,
+    ForeignKey,
     HasMany,
     Model,
     Table,
   } from 'sequelize-typescript';
+import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Security } from 'src/securities/entities/security.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
   
@@ -17,6 +19,7 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
     passport_number: string;
     passport_agency: string;
     inn: string;
+    emitent_id: number;
   }
   
   @Table({ tableName: 'holders', createdAt: false, updatedAt: false })
@@ -59,6 +62,10 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
 
     @Column({ type: DataType.STRING })
     district: string;
+
+    @ForeignKey(() => Emitent)
+    @Column({ type: DataType.INTEGER })
+    emitent_id: number;
 
 
     @HasMany(() => Transaction, { as: 'holder_from_transactions', foreignKey: 'holder_from_id' })

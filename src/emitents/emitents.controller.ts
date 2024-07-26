@@ -30,6 +30,11 @@ export class EmitentsController {
     return this.emitentsService.getEmitentHolders(id);
   }
 
+  @Get(':id/all-holders')
+  getEmitentAllHolders(@Param('id') id: number) {
+    return this.emitentsService.getEmitentAllHolders(id);
+  }
+
   @Put(':id')
   update(@Param('id') id: number, @Body() updateEmitentDto: UpdateEmitentDto) {
     return this.emitentsService.update(id, updateEmitentDto);
