@@ -55,6 +55,10 @@ export class HoldersService {
     const emissions = await this.emissionService.getEmissionsByHolderId(hid)
     return emissions
   }
+  async getHolderSecurities(hid: number){
+    const emissions = await this.emissionService.getHolderSecurities(hid)
+    return emissions
+  }
 
   async extractFromRegisters(eid: number) {
     try {

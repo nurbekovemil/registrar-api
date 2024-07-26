@@ -46,6 +46,7 @@ export class SecuritiesService {
     return securities
   }
 
+
   async extractFromRegister(eid: number, hid: number) {
     const security = await this.securityRepository.findAll({
       where: {

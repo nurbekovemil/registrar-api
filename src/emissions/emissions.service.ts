@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Emission } from './entities/emission.entity';
 import { EmissionType } from './entities/emission-type.entity';
 import { Security } from 'src/securities/entities/security.entity';
+import sequelize from 'sequelize';
 
 @Injectable()
 export class EmissionsService {
@@ -66,5 +67,26 @@ export class EmissionsService {
       return emission.save()
     }
     throw new Error('Недостаточно средств')
+  }
+
+  async getHolderSecurities(hid: number){
+    const securities = await this.emissionRepository.findAll({
+      attributes: [
+        'id',
+        'reg_number',
+        'nominal',
+        [sequelize.col('securities.quantity'), 'quantity'],
+      ],
+      include: [
+        { 
+          model: Security,
+          attributes: [],
+          where: {
+            holder_id: hid
+          }
+        }
+      ]
+    })
+    return securities
   }
 }

@@ -31,4 +31,8 @@ export class HoldersController {
   getHolderEmissions(@Param('hid') hid: number){
     return this.holdersService.getHolderEmissions(hid)
   }
+  @Get('/:hid/securities')
+  getHolderSecurities(@Param('hid') hid: number){
+    return this.holdersService.getHolderSecurities(hid)
+  }
 }
