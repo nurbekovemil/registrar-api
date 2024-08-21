@@ -74,12 +74,12 @@ export class TransactionsService {
         {
           model: Holder,
           as: 'holder_from',
-          attributes: ['id', 'name']
+          // attributes: ['id', 'name']
         },
         {
           model: Holder,
           as: 'holder_to',
-          attributes: ['id', 'name']
+          // attributes: ['id', 'name']
         },
         {
           model: Security,
