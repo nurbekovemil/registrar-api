@@ -39,7 +39,6 @@ export class TransactionsService {
           security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
           break;
         default:
-          // Логика по умолчанию или обработка неизвестной операции
           break;
       }
       transaction.security_id = await security.id
