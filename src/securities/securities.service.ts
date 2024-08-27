@@ -7,10 +7,12 @@ import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Emission } from 'src/emissions/entities/emission.entity';
 import { Sequelize, literal } from 'sequelize';
 import sequelize from 'sequelize';
+import { SecurityBlock } from './entities/security-block.entity';
 @Injectable()
 export class SecuritiesService {
   constructor(
     @InjectModel(Security) private securityRepository: typeof Security,
+    @InjectModel(SecurityBlock) private securityBlockRepository: typeof SecurityBlock,
   ) {}
 
   async createSecurity(createSecurityDto: CreateSecurityDto) {
@@ -89,5 +91,39 @@ export class SecuritiesService {
       group: ['Security.id','holder.id']
     })
     return holders
+  }
+
+  async getSecurityBlock(security_id: number) {
+    const security = await this.securityBlockRepository.findOne({
+      where: {
+        security_id
+      }
+    })
+    return security
+  }
+
+  async lockingSecurity({security_id, quantity, block_date}) {
+    const security = await this.securityBlockRepository.findByPk(security_id)
+    if(!security) {
+      return await this.securityBlockRepository.create({
+        security_id,
+        quantity,
+        block_date,
+      })
+    }
+    security.quantity = security.quantity + quantity
+    security.block_date = block_date
+    return security.save()
+  }
+
+  async unlockingSecurity({security_id, quantity, unblock_date}) {
+    const security = await this.securityBlockRepository.findByPk(security_id)
+    if(!security) throw new Error('Ценная бумага не найдена')
+    if(security.quantity >= quantity) {
+      security.quantity = security.quantity - quantity
+      security.unblock_date = unblock_date
+      return security.save()
+    }
+    throw new Error('Недостаточно средств для разблокировки')
   }
 }

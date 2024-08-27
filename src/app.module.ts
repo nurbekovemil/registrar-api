@@ -29,6 +29,7 @@ import { CompaniesModule } from './companies/companies.module';
 import { Company } from "./companies/entities/company.entity";
 import { Transaction } from "./transactions/entities/transaction.entity";
 import { TransactionOperation } from "./transactions/entities/transaction-operation.entity";
+import { SecurityBlock } from "./securities/entities/security-block.entity";
 
 @Module({
   controllers: [],
@@ -60,6 +61,7 @@ import { TransactionOperation } from "./transactions/entities/transaction-operat
         SecurityType,
         SecurityAttitude,
         SecurityStatus,
+        SecurityBlock,
         Transaction,
         TransactionOperation
       ],

@@ -31,7 +31,6 @@ export class PrintsService {
   }
 
   async getExtractReestrHolders(eid: number, query: any) {
-    console.log(query)
     if(query.report_type == 1) {
       return await this.holderService.extractFromRegisters(eid)
     }
@@ -42,6 +41,13 @@ export class PrintsService {
       return await this.holderService.getExtractReestrOwnsByEmission(eid, query)
     }
     return 'Not found operation for report type'
+  }
+
+  async getEmitentHolderAccount(eid: number, hid: number) {
+    const holder = await this.holderService.findOne(hid)
+    const emitent = await this.emitentService.findOne(eid)
+    const operations = await this.transactionService.getTransactionByHolderAccount(eid, hid)
+    return {emitent, holder, operations}
   }
 
   async getTransferOrder(tid: number){

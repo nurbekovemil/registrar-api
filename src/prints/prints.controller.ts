@@ -5,6 +5,7 @@ import { PrintsService } from './prints.service';
 export class PrintsController {
   constructor(private readonly printsService: PrintsService) {}
 
+  // Карточка эмитента
   @Get('/emitent/:id/card')
   getEmitentCard(@Param('id') id: number) {
     return this.printsService.getEmitentCard(id);
@@ -23,19 +24,16 @@ export class PrintsController {
     return this.printsService.getExtractReestrHolders(eid, query)
   }
 
-  // Реестр владельцев именных ценных бумаг
-  // @Get('/emitent/:eid/reestrs/owns')
-  // getExtractReestrOwns(@Param('eid') eid: number) {
-  //   return this.printsService.getExtractReestrOwns(eid)
-  // }
+  // Лицевой счет держателя по эмитенту
+  @Get('/emitent/:eid/account/:hid')
+  getEmitentHolderAccount(@Param('eid') eid: number, @Param('hid') hid: number) {
+    return this.printsService.getEmitentHolderAccount(eid, hid)
+  }
 
-  // @Get('/emitent/:eid/reestrs/owns/')
-  // getExtractReestrOwnsByNumberSecurity(@Param('tid') tid: number) {
-  //   return this.printsService.getTransferOrder(tid)
-  // }
-
+  // Получить операцию по id
   @Get('/transaction/:tid')
   getTransferOrder(@Param('tid') tid: number) {
     return this.printsService.getTransferOrder(tid)
   }
+
 }

@@ -738,6 +738,7 @@ module.exports = {
     await queryInterface.bulkDelete('emission_types', null, {});
     await queryInterface.bulkDelete('emitents', null, {});
     await queryInterface.bulkDelete('holders', null, {});
+    await queryInterface.bulkDelete('security_blocks', null, {});
     await queryInterface.bulkDelete('security_attitudes', null, {});
     await queryInterface.bulkDelete('security_types', null, {});
     await queryInterface.bulkDelete('security_status', null, {});

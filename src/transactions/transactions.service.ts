@@ -13,6 +13,7 @@ import { Security } from 'src/securities/entities/security.entity';
 import { SecurityType } from 'src/securities/entities/security-type.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { EmissionsService } from 'src/emissions/emissions.service';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class TransactionsService {
@@ -30,20 +31,28 @@ export class TransactionsService {
       const transaction = await this.transactionRepository.create(createTransactionDto, {transaction: t})
       let security
       switch (createTransactionDto.operation_id) {
-        case TransactionOperationTypes.DIVIDEND:
-          // Логика для начисления дивидендов        
+        // Логика для начисления дивидендов
+        case TransactionOperationTypes.DIVIDEND:        
           security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt, t)
           break;
+        // Логика для операции дарения
         case TransactionOperationTypes.DONATION:
-          // Логика для операции дарения
           security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+          break;
+        // Логика для операции блокировки
+        case TransactionOperationTypes.LOCKING:
+          security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t)
+          break;
+        // Логика для операции разблокировки
+        case TransactionOperationTypes.UNLOCKING:
+          security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
           break;
         default:
           break;
       }
+      await t.commit();
       transaction.security_id = await security.id
       await transaction.save()
-      await t.commit();
       return transaction
     } catch (error) {
       t.rollback();
@@ -174,6 +183,19 @@ export class TransactionsService {
     return transactions
   }
 
+  async getTransactionByHolderAccount(emitent_id: number, holder_id: number){
+    const operations = await this.transactionRepository.findAll({
+      where: {
+        emitent_id,
+        [Op.or]: [
+          {holder_from_id: holder_id},
+          {holder_to_id: holder_id}
+        ]
+      },
+    })
+    return operations
+  }
+
   async getTransactionOperations(){
     const operations = await this.transactionOperationRepository.findAll()
     return operations
@@ -209,16 +231,43 @@ export class TransactionsService {
   }
 
   private async createDonationSecurity(createTransactionDto, transactionDate, t){
-      const {holder_from_id, holder_to_id, emitent_id, emission_id} = createTransactionDto
-      const holder_from_security = await this.sercurityService.getHolderSecurity({holder_id: holder_from_id, emitent_id, emission_id})
-      if(holder_from_security && holder_from_security.quantity < createTransactionDto.quantity){
-        throw new Error('Недостаточно средств для отправки');
-      }
-      await this.sercurityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
-      const holder_to_security = await this.sercurityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
-      if(holder_to_security) {
-        return await this.sercurityService.topUpQuentitySecurity(holder_to_security, createTransactionDto.quantity)
-      }
-      return await this.createSecurity(createTransactionDto, transactionDate)
+    const {holder_from_id, holder_to_id, emitent_id, emission_id} = createTransactionDto
+    const holder_from_security = await this.sercurityService.getHolderSecurity({holder_id: holder_from_id, emitent_id, emission_id})
+    if(holder_from_security && holder_from_security.quantity < createTransactionDto.quantity){
+      throw new Error(`Недостаточно ценных бумаг: доступно ${holder_from_security.quantity}`);
+    }
+    const holder_from_security_block = await this.sercurityService.getSecurityBlock(holder_from_security.id)
+    const balance =  holder_from_security.quantity - holder_from_security_block.quantity
+    if(holder_from_security_block && balance < createTransactionDto.quantity){
+      throw new Error(`Заблокированы: доступно ${holder_from_security_block.quantity} ценных бумаг из ${holder_from_security.quantity}`);
+    }
+    await this.sercurityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
+    const holder_to_security = await this.sercurityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
+    if(holder_to_security) {
+      return await this.sercurityService.topUpQuentitySecurity(holder_to_security, createTransactionDto.quantity)
+    }
+    return await this.createSecurity(createTransactionDto, transactionDate)
+}
+
+  private async createLockingSecurity(createTransactionDto, transactionDate, t){
+    const {holder_to_id, emitent_id, emission_id} = createTransactionDto
+    const holder_to_security = await this.sercurityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
+    
+    if(holder_to_security && holder_to_security.quantity < createTransactionDto.quantity){
+      throw new Error(`Недостаточно ценных бумаг: доступно ${holder_to_security.quantity}`);
+    }
+    
+    return await this.sercurityService.lockingSecurity({security_id: holder_to_security.id, quantity: createTransactionDto.quantity, block_date: transactionDate})
+  }
+
+  private async createUnlockingSecurity(createTransactionDto, transactionDate, t){
+    const { holder_to_id, emitent_id, emission_id } = createTransactionDto
+    const holder_to_security = await this.sercurityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
+    
+    if(holder_to_security && holder_to_security.quantity < createTransactionDto.quantity){
+      throw new Error(`Недостаточно ценных бумаг: доступно ${holder_to_security.quantity}`);
+    }
+    
+    return await this.sercurityService.unlockingSecurity({security_id: holder_to_security.id, quantity: createTransactionDto.quantity, unblock_date: transactionDate})
   }
 }
