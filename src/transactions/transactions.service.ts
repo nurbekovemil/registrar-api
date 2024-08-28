@@ -263,7 +263,7 @@ export class TransactionsService {
     }
     const holder_from_security_block = await this.sercurityService.getSecurityBlock(holder_from_security.id)
     if(holder_from_security_block && (holder_from_security.quantity - holder_from_security_block.quantity) < createTransactionDto.quantity){
-      throw new Error(`Заблокированы: доступно ${holder_from_security_block.quantity} ценных бумаг из ${holder_from_security.quantity}`);
+      throw new Error(`Заблокированы: ${holder_from_security_block.quantity} ценных бумаг из ${holder_from_security.quantity}`);
     }
     await this.sercurityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
     const holder_to_security = await this.sercurityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
