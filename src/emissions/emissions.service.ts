@@ -75,7 +75,7 @@ export class EmissionsService {
         'id',
         'reg_number',
         'nominal',
-        [sequelize.col('securities.quantity'), 'quantity'],
+        [sequelize.col('securities.quantity'), 'count'],
       ],
       include: [
         { 

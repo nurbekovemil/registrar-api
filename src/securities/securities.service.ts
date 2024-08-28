@@ -8,11 +8,13 @@ import { Emission } from 'src/emissions/entities/emission.entity';
 import { Sequelize, literal } from 'sequelize';
 import sequelize from 'sequelize';
 import { SecurityBlock } from './entities/security-block.entity';
+import { Transaction } from 'src/transactions/entities/transaction.entity';
 @Injectable()
 export class SecuritiesService {
   constructor(
     @InjectModel(Security) private securityRepository: typeof Security,
     @InjectModel(SecurityBlock) private securityBlockRepository: typeof SecurityBlock,
+    // @InjectModel(Transaction) private transactionRepository: typeof Transaction,
   ) {}
 
   async createSecurity(createSecurityDto: CreateSecurityDto) {
@@ -126,4 +128,19 @@ export class SecuritiesService {
     }
     throw new Error('Недостаточно средств для разблокировки')
   }
+
+  // async getOperationsBySecurity(emitent_id: number, holder_id: number) {
+  //   const operations = await this.securityRepository.findAll({
+  //     where: {
+  //       emitent_id,
+  //       holder_id
+  //     },
+  //     include: [
+  //       {
+  //         model: Transaction
+  //       }
+  //     ]
+  //   })
+  //   return operations
+  // }
 }

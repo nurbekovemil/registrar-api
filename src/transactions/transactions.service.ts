@@ -13,7 +13,8 @@ import { Security } from 'src/securities/entities/security.entity';
 import { SecurityType } from 'src/securities/entities/security-type.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { EmissionsService } from 'src/emissions/emissions.service';
-import { Op } from 'sequelize';
+import { literal, Op } from 'sequelize';
+import { SecurityBlock } from 'src/securities/entities/security-block.entity';
 
 @Injectable()
 export class TransactionsService {
@@ -185,13 +186,37 @@ export class TransactionsService {
 
   async getTransactionByHolderAccount(emitent_id: number, holder_id: number){
     const operations = await this.transactionRepository.findAll({
+      attributes: [
+        'id',
+        'contract_date',
+        'quantity',
+        'emission_id',
+      ],
       where: {
         emitent_id,
-        [Op.or]: [
-          {holder_from_id: holder_id},
-          {holder_to_id: holder_id}
+        [Op.or] : [
+          {
+            holder_from_id: holder_id,
+          },
+          {
+            holder_to_id: holder_id
+          }
         ]
       },
+      include: [
+        {
+          model: TransactionOperation
+        },
+        {
+          model: Security,
+          attributes: ['id'],
+          include: [
+            {
+              model: SecurityType,
+            },
+          ]
+        }
+      ]
     })
     return operations
   }
@@ -237,8 +262,7 @@ export class TransactionsService {
       throw new Error(`Недостаточно ценных бумаг: доступно ${holder_from_security.quantity}`);
     }
     const holder_from_security_block = await this.sercurityService.getSecurityBlock(holder_from_security.id)
-    const balance =  holder_from_security.quantity - holder_from_security_block.quantity
-    if(holder_from_security_block && balance < createTransactionDto.quantity){
+    if(holder_from_security_block && (holder_from_security.quantity - holder_from_security_block.quantity) < createTransactionDto.quantity){
       throw new Error(`Заблокированы: доступно ${holder_from_security_block.quantity} ценных бумаг из ${holder_from_security.quantity}`);
     }
     await this.sercurityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
