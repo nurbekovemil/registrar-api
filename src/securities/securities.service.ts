@@ -105,7 +105,7 @@ export class SecuritiesService {
   }
 
   async lockingSecurity({security_id, quantity, block_date}) {
-    const security = await this.securityBlockRepository.findByPk(security_id)
+    const security = await this.securityBlockRepository.findOne({where: {security_id}})
     if(!security) {
       return await this.securityBlockRepository.create({
         security_id,
