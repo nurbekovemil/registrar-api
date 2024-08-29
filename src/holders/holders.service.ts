@@ -73,14 +73,14 @@ export class HoldersService {
           'id',  // Выбор конкретных полей, например, id и name
           'name',
           [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
+          // [
+          //   sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
+          //   'percentage'
+          // ],
           [
-            sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
+            sequelize.literal(`(SUM(securities.quantity) * 100.0 / ${totalSecurities})::numeric(10, 2)`),
             'percentage'
           ],
-          // [
-          //   sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
-          //   'ordinary_nominal'
-          // ],
           [
             sequelize.literal(`SUM(securities.quantity * "securities->emission"."nominal")`),
             'ordinary_nominal'
@@ -125,8 +125,12 @@ export class HoldersService {
           'id',  // Выбор конкретных полей, например, id и name
           'name',
           [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
+          // [
+          //   sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
+          //   'percentage'
+          // ],
           [
-            sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
+            sequelize.literal(`(SUM(securities.quantity) * 100.0 / ${totalSecurities})::numeric(10, 2)`),
             'percentage'
           ],
           // [
@@ -195,14 +199,22 @@ export class HoldersService {
           'name',
           [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
           [sequelize.col('securities.emission.reg_number'), 'reg_number'],
+          // [
+          //   sequelize.literal(`(SUM(securities.quantity) * 100.0 / ${totalSecurities})`),
+          //   'percentage'
+          // ],
+          // [
+          //   sequelize.literal(`(CAST(SUM(securities.quantity) * 100.0 / ${totalSecurities} AS numeric(10, 2)))`),
+          //   'percentage_test'
+          // ],
+          // [
+          //   sequelize.literal(`TO_CHAR((SUM(securities.quantity) * 100.0 / ${totalSecurities}), 'FM999999999.00')`),
+          //   'percentage_test_2'
+          // ],
           [
-            sequelize.literal(`(SUM(securities.quantity) * 100 / ${totalSecurities})`),
+            sequelize.literal(`(SUM(securities.quantity) * 100.0 / ${totalSecurities})::numeric(10, 2)`),
             'percentage'
           ],
-          // [
-          //   sequelize.literal(`(SUM(securities.quantity) * "securities->emission"."nominal")`),
-          //   'ordinary_nominal'
-          // ],
           [
             sequelize.literal(`SUM(securities.quantity * "securities->emission"."nominal")`),
             'ordinary_nominal'
@@ -217,7 +229,7 @@ export class HoldersService {
           ],
           [
             sequelize.literal(`CONCAT(passport_type, ' ', passport_number, ' ', passport_agency)`),
-            'passport_test'
+            'passport'
           ],
           'actual_address',
           'district'

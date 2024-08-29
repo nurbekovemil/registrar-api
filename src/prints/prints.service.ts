@@ -47,7 +47,8 @@ export class PrintsService {
     const holder = await this.holderService.findOne(hid)
     const emitent = await this.emitentService.findOne(eid)
     const operations = await this.transactionService.getTransactionByHolderAccount(eid, hid)
-    return {emitent, holder, operations}
+    const emissions  = await this.emissionService.getHolderSecurities(hid)
+    return {emitent, holder, operations, emissions}
   }
 
   async getTransferOrder(tid: number){

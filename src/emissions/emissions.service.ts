@@ -6,6 +6,7 @@ import { Emission } from './entities/emission.entity';
 import { EmissionType } from './entities/emission-type.entity';
 import { Security } from 'src/securities/entities/security.entity';
 import sequelize from 'sequelize';
+import { SecurityBlock } from 'src/securities/entities/security-block.entity';
 
 @Injectable()
 export class EmissionsService {
@@ -76,6 +77,7 @@ export class EmissionsService {
         'reg_number',
         'nominal',
         [sequelize.col('securities.quantity'), 'count'],
+        [sequelize.col('securities->security_block.quantity'), 'blocked_count'],
       ],
       include: [
         { 
@@ -83,7 +85,12 @@ export class EmissionsService {
           attributes: [],
           where: {
             holder_id: hid
-          }
+          },
+          include: [
+            
+              SecurityBlock
+            
+          ]
         }
       ]
     })
