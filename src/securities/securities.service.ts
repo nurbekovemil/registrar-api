@@ -119,7 +119,7 @@ export class SecuritiesService {
   }
 
   async unlockingSecurity({security_id, quantity, unblock_date}) {
-    const security = await this.securityBlockRepository.findByPk(security_id)
+    const security = await this.securityBlockRepository.findOne({where: {security_id}})
     if(!security) throw new Error('Ценная бумага не найдена')
     if(security.quantity >= quantity) {
       security.quantity = security.quantity - quantity
