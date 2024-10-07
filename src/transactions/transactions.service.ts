@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
 import { InjectModel } from '@nestjs/sequelize';
@@ -23,7 +23,7 @@ export class TransactionsService {
     @InjectModel(TransactionOperation) private transactionOperationRepository: typeof TransactionOperation,
     @InjectModel(Emitent) private emitentRepository: typeof Emitent,
     private sercurityService: SecuritiesService,
-    private emissionService: EmissionsService,
+    @Inject(forwardRef(() => EmissionsService)) private emissionService: EmissionsService,
     private sequelize: Sequelize,
   ) {}
   async createTransaction(createTransactionDto: CreateTransactionDto) {
@@ -52,7 +52,9 @@ export class TransactionsService {
           break;
       }
       await t.commit();
-      transaction.security_id = await security.id
+      if(createTransactionDto.operation_id != 2){
+        transaction.security_id = await security.id
+      }
       await transaction.save()
       return transaction
     } catch (error) {

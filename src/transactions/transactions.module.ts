@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { TransactionsController } from './transactions.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
@@ -12,6 +12,7 @@ import { EmissionsModule } from 'src/emissions/emissions.module';
 
 @Module({
   imports: [
+    forwardRef(() => EmissionsModule),
     SequelizeModule.forFeature([
       Transaction, 
       TransactionOperation,
@@ -20,7 +21,6 @@ import { EmissionsModule } from 'src/emissions/emissions.module';
       Emission
     ]), 
     SecuritiesModule,
-    EmissionsModule
   ],
   controllers: [TransactionsController],
   providers: [TransactionsService],

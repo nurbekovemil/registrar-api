@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { CreateEmissionDto } from './dto/create-emission.dto';
 import { UpdateEmissionDto } from './dto/update-emission.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -7,16 +7,31 @@ import { EmissionType } from './entities/emission-type.entity';
 import { Security } from 'src/securities/entities/security.entity';
 import sequelize from 'sequelize';
 import { SecurityBlock } from 'src/securities/entities/security-block.entity';
+import { TransactionsService } from 'src/transactions/transactions.service';
 
 @Injectable()
 export class EmissionsService {
   constructor(
     @InjectModel(Emission) private emissionRepository: typeof Emission,
     @InjectModel(EmissionType) private emissionTypeRepository: typeof EmissionType,
+    @Inject(forwardRef(() => TransactionsService)) private transactionsService: TransactionsService,
   ){}
 
   async create(createEmissionDto: CreateEmissionDto) {
     const emission = await this.emissionRepository.create({...createEmissionDto, count: createEmissionDto.start_count})
+    await this.transactionsService.createTransaction({
+      is_exchange: false,
+      operation_id: 2,
+      emitent_id: createEmissionDto.emitent_id,
+      emission_id: emission.id,
+      holder_from_id: null,
+      holder_to_id: null,
+      is_family: false,
+      quantity: createEmissionDto.start_count,
+      amount: 0,
+      contract_date: new Date().toISOString()
+      
+    })
     return emission
   }
 

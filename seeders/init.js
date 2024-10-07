@@ -28,29 +28,29 @@ module.exports = {
     //     }
     //   ]
     // );
-    // await queryInterface.bulkInsert('emitents',
-    // [
-    //   {
-    //       "id":1,
-    //       "full_name": "ЗАО НУР",
-    //       "short_name": "ЗАО НУР",
-    //       "director_company": "Керимкулов Мирлан Абылкасымович",
-    //       "director_registrar": "Тентишова Гульнара Мысановна",
-    //       "accountant": "Хашим-Ходжаева Г.Н",
-    //       "gov_name": "МЮ КР",
-    //       "gov_number": "10216-3301-ЗАО 01.01.2016 г",
-    //       "legal_address": "г.Бишкек, ул.Льва Толстого, 17/1",
-    //       "postal_address": "КР, г.Бишкек, ул.Льва Толстого, д. 17/1",
-    //       "phone_number": "642336",
-    //       "email": "",
-    //       "bank_name": "АК ПСБ г.Бишкек МФО 330103328",
-    //       "bank_account": "200609848",
-    //       "id_number": "00108199510201",
-    //       "capital": "1195632",
-    //       "contract_date": "13.01.2014"
-    //   },
-    // ]
-    // );
+    await queryInterface.bulkInsert('emitents',
+    [
+      {
+          "id":1,
+          "full_name": "ЗАО НУР",
+          "short_name": "ЗАО НУР",
+          "director_company": "Керимкулов Мирлан Абылкасымович",
+          "director_registrar": "Тентишова Гульнара Мысановна",
+          "accountant": "Хашим-Ходжаева Г.Н",
+          "gov_name": "МЮ КР",
+          "gov_number": "10216-3301-ЗАО 01.01.2016 г",
+          "legal_address": "г.Бишкек, ул.Льва Толстого, 17/1",
+          "postal_address": "КР, г.Бишкек, ул.Льва Толстого, д. 17/1",
+          "phone_number": "642336",
+          "email": "",
+          "bank_name": "АК ПСБ г.Бишкек МФО 330103328",
+          "bank_account": "200609848",
+          "id_number": "00108199510201",
+          "capital": "1195632",
+          "contract_date": "13.01.2014"
+      },
+    ]
+    );
     await queryInterface.bulkInsert('emission_types', [
         { 
           id: 1,
