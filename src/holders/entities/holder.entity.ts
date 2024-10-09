@@ -9,6 +9,7 @@ import {
 import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Security } from 'src/securities/entities/security.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
+import { HolderType } from './holder-type.entity';
   
   interface HolderCreateAttrs {
     name: string;
@@ -20,6 +21,7 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
     passport_agency: string;
     inn: string;
     emitent_id: number;
+    holder_type: number;
   }
   
   @Table({ tableName: 'holders', createdAt: false, updatedAt: false })
@@ -66,6 +68,10 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
     @ForeignKey(() => Emitent)
     @Column({ type: DataType.INTEGER })
     emitent_id: number;
+
+    @ForeignKey(() => HolderType)
+    @Column({ type: DataType.INTEGER })
+    holder_type: number;
 
 
     @HasMany(() => Transaction, { as: 'holder_from_transactions', foreignKey: 'holder_from_id' })

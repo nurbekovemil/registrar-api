@@ -23,7 +23,8 @@ export class DividendsService {
       const existDividend = await this.dividendRepository.findOne({
         where: {
           emitent_id: createDividendDto.emitent_id,
-          date_payment: createDividendDto.date_payment
+          date_payment: createDividendDto.date_payment,
+          holder_type: createDividendDto.holder_type
         }
       })
       if (existDividend) {
@@ -32,11 +33,19 @@ export class DividendsService {
       const createDividendPromises = shareholders.map(async (shareholder) => {
         const share_count = shareholder.quantity;
         const share_credited = shareholder.quantity * createDividendDto.share_price;
-        const share_debited = 0.00;
-        const amount_pay = share_credited;
         const date_payment = createDividendDto.date_payment;
-  
+        let amount_pay = 0;
+        let share_debited = 0;
+        if(createDividendDto.holder_type === 1) {
+          share_debited = (createDividendDto.share_debited / 100) * share_credited
+          amount_pay = share_credited - share_debited
+        }else {
+          share_debited = 0.00
+          amount_pay = share_credited
+        }
         return this.dividendRepository.create({
+          title: createDividendDto.title,
+          holder_type: createDividendDto.holder_type,
           holder_id: shareholder.holder_id,
           emitent_id: createDividendDto.emitent_id,
           share_count,

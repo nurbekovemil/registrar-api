@@ -32,6 +32,7 @@ import { TransactionOperation } from "./transactions/entities/transaction-operat
 import { SecurityBlock } from "./securities/entities/security-block.entity";
 import { DividendsModule } from './dividends/dividends.module';
 import { Dividend } from "./dividends/entities/dividend.entity";
+import { HolderType } from "./holders/entities/holder-type.entity";
 
 @Module({
   controllers: [],
@@ -57,7 +58,8 @@ import { Dividend } from "./dividends/entities/dividend.entity";
         EmissionType, 
         Emission, 
         Account, 
-        AccountType, 
+        AccountType,
+        HolderType,
         Holder, 
         Security, 
         SecurityType,

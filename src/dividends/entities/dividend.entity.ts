@@ -8,10 +8,13 @@ import {
     Table,
   } from 'sequelize-typescript';
 import { Emitent } from 'src/emitents/entities/emitent.entity';
+import { HolderType } from 'src/holders/entities/holder-type.entity';
 import { Holder } from 'src/holders/entities/holder.entity'
   
   interface DividendCreateAttrs {
+    title: string;
     holder_id: number;
+    holder_type: number;
     emitent_id: number;
     share_count: number
     share_credited: number;
@@ -31,9 +34,16 @@ import { Holder } from 'src/holders/entities/holder.entity'
     })
     id: number;
 
+    @Column({ type: DataType.STRING })
+    title: string;
+
     @ForeignKey(() => Holder)
     @Column({ type: DataType.INTEGER })
     holder_id: number;
+
+    @ForeignKey(() => HolderType)
+    @Column({ type: DataType.INTEGER })
+    holder_type: number;
 
     @ForeignKey(() => Emitent)
     @Column({ type: DataType.INTEGER })

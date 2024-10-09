@@ -35,4 +35,9 @@ export class HoldersController {
   getHolderSecurities(@Param('hid') hid: number){
     return this.holdersService.getHolderSecurities(hid)
   }
+  
+  @Get('/holder-types')
+  getHolderTypes(){
+    return this.holdersService.getHolderTypes()
+  }
 }

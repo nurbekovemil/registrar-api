@@ -8,12 +8,14 @@ import { EmissionsService } from 'src/emissions/emissions.service';
 import { Security } from 'src/securities/entities/security.entity';
 import sequelize from 'sequelize';
 import { Emission } from 'src/emissions/entities/emission.entity';
+import { HolderType } from './entities/holder-type.entity';
 
 
 @Injectable()
 export class HoldersService {
   constructor(
     @InjectModel(Holder) private holderRepository: typeof Holder,
+    @InjectModel(HolderType) private holderTypeRepository: typeof HolderType,
     private emissionService: EmissionsService,
     private securitiesService: SecuritiesService,
   ){}
@@ -260,5 +262,9 @@ export class HoldersService {
     } catch (error) {
       throw new Error(`Failed to extract from registers: ${error.message}`);
     }
+  }
+
+  async getHolderTypes(){
+    return await this.holderTypeRepository.findAll()
   }
 }
