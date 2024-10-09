@@ -34,6 +34,7 @@ export class DividendsService {
         const share_count = shareholder.quantity;
         const share_credited = shareholder.quantity * createDividendDto.share_price;
         const date_payment = createDividendDto.date_payment;
+        const month_year = createDividendDto.month_year;
         let amount_pay = 0;
         let share_debited = 0;
         if(createDividendDto.holder_type === 1) {
@@ -53,6 +54,7 @@ export class DividendsService {
           share_debited,
           amount_pay,
           date_payment,
+          month_year
         });
       });
   

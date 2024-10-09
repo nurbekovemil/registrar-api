@@ -5,4 +5,5 @@ export class CreateDividendDto {
     readonly share_price: number
     readonly share_debited?: number
     readonly date_payment: string
+    readonly month_year: string
 }

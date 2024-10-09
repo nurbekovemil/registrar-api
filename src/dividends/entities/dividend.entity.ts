@@ -21,6 +21,7 @@ import { Holder } from 'src/holders/entities/holder.entity'
     share_debited: number;
     amount_pay: number;
     date_payment: string;
+    month_year: string;
   }
   
   @Table({ tableName: 'dividends', updatedAt: false })
@@ -63,6 +64,9 @@ import { Holder } from 'src/holders/entities/holder.entity'
 
     @Column({ type: DataType.DATE })
     date_payment: Date;
+
+    @Column({ type: DataType.DATE })
+    month_year: Date;
 
     @BelongsTo(() => Holder)
     holder: Holder;
