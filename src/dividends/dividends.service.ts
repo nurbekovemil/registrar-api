@@ -78,7 +78,13 @@ export class DividendsService {
       where: {
         emitent_id: eid,
         date_payment: date
-      }
+      },
+      include: [
+        {
+          model: Holder,
+          attributes: ['id', 'name']
+        }
+      ]
     });
   }
 }
