@@ -30,6 +30,8 @@ import { Company } from "./companies/entities/company.entity";
 import { Transaction } from "./transactions/entities/transaction.entity";
 import { TransactionOperation } from "./transactions/entities/transaction-operation.entity";
 import { SecurityBlock } from "./securities/entities/security-block.entity";
+import { DividendsModule } from './dividends/dividends.module';
+import { Dividend } from "./dividends/entities/dividend.entity";
 
 @Module({
   controllers: [],
@@ -63,7 +65,8 @@ import { SecurityBlock } from "./securities/entities/security-block.entity";
         SecurityStatus,
         SecurityBlock,
         Transaction,
-        TransactionOperation
+        TransactionOperation,
+        Dividend
       ],
       autoLoadModels: true,
     }),
@@ -77,6 +80,7 @@ import { SecurityBlock } from "./securities/entities/security-block.entity";
     TransactionsModule,
     PrintsModule,
     CompaniesModule,
+    DividendsModule,
   ],
 })
 export class AppModule {}

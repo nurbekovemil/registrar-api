@@ -20,7 +20,6 @@ export class PrintsController {
   // Реестр акционеров
   @Get('/emitent/:eid/reestrs/holders')
   getExtractReestrHolders(@Param('eid') eid: number, @Query() query: any) {
-    console.log('query', query)
     return this.printsService.getExtractReestrHolders(eid, query)
   }
 
