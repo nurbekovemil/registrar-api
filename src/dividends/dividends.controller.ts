@@ -7,18 +7,23 @@ import { UpdateDividendDto } from './dto/update-dividend.dto';
 export class DividendsController {
   constructor(private readonly dividendsService: DividendsService) {}
 
-  @Post()
+  @Post('/create')
   createDividend(@Body() createDividendDto: CreateDividendDto) {
     return this.dividendsService.createDividend(createDividendDto);
   }
 
-  @Get('/:did')
-  getDividendsByDate(@Param('did') did: number) {
-    return this.dividendsService.getDividendsByDid(did);
+  @Get('/:did/details')
+  getDividendDetails(@Param('did') did: number) {
+    return this.dividendsService.getDividendDetails(did);
   }
 
-  @Get('/:eid/all')
+  @Get('/:did/transactions')
+  getDividendTransactions(@Param('did') did: number) {
+    return this.dividendsService.getDividendTransactions(did);
+  }
+
+  @Get('/:eid/all-list')
   getAllDividends(@Param('eid') eid: number) {
-    return this.dividendsService.getAllDividends(eid);
+    return this.dividendsService.getAllDividendList(eid);
   }
 }

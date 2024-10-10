@@ -79,7 +79,7 @@ export class DividendsService {
     }
   }
 
-  async getAllDividends(eid: number) {
+  async getAllDividendList(eid: number) {
     const dividends = await this.dividendRepository.findAll({
       where: {
         emitent_id: eid,
@@ -97,11 +97,50 @@ export class DividendsService {
     return dividends
   }
 
-  async getDividendsByDid(did: number) {
-    const dividend_transactions = await this.dividendTransactionRepository.findAll({
+  async getDividendDetails(did: number) {
+    const dividend_transactions = await this.dividendRepository.findOne({
       where: {
-        dividend_id: did
-      }
+        id: did
+      },
+      include: [
+        {
+          model: Emitent,
+          attributes: ['id', 'full_name']
+        },
+        {
+          model: HolderType
+        },
+      ]
+    })
+    return dividend_transactions
+  }
+
+  async getDividendTransactions(did: number) {
+    const dividend_transactions = await this.dividendRepository.findOne({
+      where: {
+        id: did
+      },
+      attributes: {
+        exclude: ['emitent_id']
+      },
+      include: [
+        {
+          model: Emitent,
+          attributes: ['id', 'full_name']
+        },
+        {
+          model: HolderType
+        },
+        {
+          model: DividendTransaction,
+          include: [
+            {
+              model: Holder,
+              attributes: ['id', 'name']
+            }
+          ]
+        }
+      ]
     })
     return dividend_transactions
   }
