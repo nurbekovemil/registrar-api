@@ -32,6 +32,7 @@ import { TransactionOperation } from "./transactions/entities/transaction-operat
 import { SecurityBlock } from "./securities/entities/security-block.entity";
 import { DividendsModule } from './dividends/dividends.module';
 import { Dividend } from "./dividends/entities/dividend.entity";
+import { DividendTransaction } from "./dividends/entities/dividend-transaction.entity";
 import { HolderType } from "./holders/entities/holder-type.entity";
 
 @Module({
@@ -68,7 +69,8 @@ import { HolderType } from "./holders/entities/holder-type.entity";
         SecurityBlock,
         Transaction,
         TransactionOperation,
-        Dividend
+        Dividend,
+        DividendTransaction
       ],
       autoLoadModels: true,
     }),

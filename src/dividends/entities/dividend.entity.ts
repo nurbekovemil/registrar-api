@@ -13,18 +13,18 @@ import { Holder } from 'src/holders/entities/holder.entity'
   
   interface DividendCreateAttrs {
     title: string;
-    holder_id: number;
-    holder_type: number;
     emitent_id: number;
-    share_count: number
-    share_credited: number;
-    share_debited: number;
-    amount_pay: number;
-    date_payment: string;
+    type: number;
+    date_close_reestr: string;
     month_year: string;
+    share_price: number;
+    amount_share: number
+    amount_share_credited: number;
+    amount_share_debited: number;
+    amount_pay: number;
   }
   
-  @Table({ tableName: 'dividends', updatedAt: false })
+  @Table({ tableName: 'dividends', createdAt: false, updatedAt: false })
   export class Dividend extends Model<Dividend, DividendCreateAttrs> {
 
     @Column({
@@ -37,41 +37,41 @@ import { Holder } from 'src/holders/entities/holder.entity'
 
     @Column({ type: DataType.STRING })
     title: string;
-
-    @ForeignKey(() => Holder)
-    @Column({ type: DataType.INTEGER })
-    holder_id: number;
-
-    @ForeignKey(() => HolderType)
-    @Column({ type: DataType.INTEGER })
-    holder_type: number;
-
+    
     @ForeignKey(() => Emitent)
     @Column({ type: DataType.INTEGER })
     emitent_id: number;
 
+    @ForeignKey(() => HolderType)
     @Column({ type: DataType.INTEGER })
-    share_count: number;
+    type: number;
+
+    @Column({ type: DataType.DATE })
+    date_close_reestr: Date;
+
+    @Column({ type: DataType.STRING })
+    month_year: string;
 
     @Column({ type: DataType.FLOAT })
-    share_credited: number;
+    share_price: number;
 
     @Column({ type: DataType.FLOAT })
-    share_debited: number;
+    amount_share: number;
+
+    @Column({ type: DataType.FLOAT })
+    amount_share_credited: number;
+
+    @Column({ type: DataType.FLOAT })
+    amount_share_debited: number;
 
     @Column({ type: DataType.FLOAT })
     amount_pay: number;
 
-    @Column({ type: DataType.DATE })
-    date_payment: Date;
-
-    @Column({ type: DataType.DATE })
-    month_year: Date;
-
-    @BelongsTo(() => Holder)
-    holder: Holder;
+    @BelongsTo(() => HolderType)
+    dividend_type: HolderType;
 
     @BelongsTo(() => Emitent)
     emitent: Emitent;
+
   }
 

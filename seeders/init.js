@@ -103,7 +103,7 @@ module.exports = {
           inn: null,
           district: 'Бишкек',
           emitent_id:1,
-          holder_type: 1
+          holder_type: 2
         },
         {
           name: 'Манжос Александр Иванович',
@@ -319,7 +319,7 @@ module.exports = {
           inn: null,
           district: 'Бишкек',
           emitent_id:1,
-          holder_type: 1
+          holder_type: 2
         },
         {
           name: 'Чомоев Дуйшенбек',
@@ -547,7 +547,7 @@ module.exports = {
           inn: null,
           district: 'Бишкек',
           emitent_id:1,
-          holder_type: 1
+          holder_type: 2
         },
         {
           name: 'Конев Сергей Николаевич',
@@ -619,7 +619,7 @@ module.exports = {
           inn: null,
           district: 'Бишкек',
           emitent_id:1,
-          holder_type: 1
+          holder_type: 2
         },
         {
           name: 'резерв',
@@ -691,7 +691,7 @@ module.exports = {
           inn: null,
           district: 'Бишкек',
           emitent_id:1,
-          holder_type: 1
+          holder_type: 2
         },
         {
           name: 'ТОО "Бату-Тараз"',
@@ -703,7 +703,7 @@ module.exports = {
           inn: '100940003067',
           district: 'Бишкек',
           emitent_id:1,
-          holder_type: 1
+          holder_type: 2
         },
         {
           name: 'ном.дер ЗАО "Центральный депозитарий"',
@@ -715,7 +715,7 @@ module.exports = {
           inn: null,
           district: 'Бишкек',
           emitent_id:1,
-          holder_type: 1
+          holder_type: 2
         },
         {
           name: 'Алаев Руслан Деканбаевич',
