@@ -66,7 +66,6 @@ export class DividendsService {
           amount_pay: holder_amount_pay,
         });
       });
-  
       const dividendTrnsaction = await Promise.all(createDividendPromises);
       return {
         dividend,
@@ -81,43 +80,29 @@ export class DividendsService {
   }
 
   async getAllDividends(eid: number) {
-    return await this.dividendRepository.findAll({
-      attributes: [
-        'date_payment',
-        [sequelize.fn('SUM', sequelize.col('amount_pay')), 'total_amount'],
-        [sequelize.fn('COUNT', sequelize.col('Dividend.id')), 'holder_count'],
-
-      ],
+    const dividends = await this.dividendRepository.findAll({
       where: {
-        emitent_id: eid
+        emitent_id: eid,
       },
       include: [
         {
-          model: HolderType,
-          attributes: ['id', 'name']
+          model: HolderType
+        },
+        {
+          model: Emitent,
+          attributes: ['id', 'full_name']
         }
-      ],
-      group: [
-        'Dividend.emitent_id', 
-        'Dividend.date_payment',
-        'type.id'
-      ],
-    });
+      ]
+    })
+    return dividends
   }
 
-  async getDividendsByDate(eid: number, date: string) {
-    // return await this.dividendRepository.findAll({
-    //   where: {
-    //     emitent_id: eid,
-    //     date_payment: date
-    //   },
-    //   include: [
-    //     {
-    //       model: Holder,
-    //       attributes: ['id', 'name']
-    //     }
-    //   ]
-    // });
-    return 'test'
+  async getDividendsByDid(did: number) {
+    const dividend_transactions = await this.dividendTransactionRepository.findAll({
+      where: {
+        dividend_id: did
+      }
+    })
+    return dividend_transactions
   }
 }

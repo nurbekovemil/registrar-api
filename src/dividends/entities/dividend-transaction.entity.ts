@@ -53,6 +53,9 @@ import { Dividend } from './dividend.entity';
     amount_pay: number;
 
     @BelongsTo(() => Holder)
-    holder: Holder;    
+    holder: Holder;   
+    
+    @BelongsTo(() => Dividend)
+    dividend: Dividend;
   }
 

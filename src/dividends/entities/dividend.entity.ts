@@ -4,12 +4,14 @@ import {
     Column,
     DataType,
     ForeignKey,
+    HasMany,
     Model,
     Table,
   } from 'sequelize-typescript';
 import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { HolderType } from 'src/holders/entities/holder-type.entity';
 import { Holder } from 'src/holders/entities/holder.entity'
+import { DividendTransaction } from './dividend-transaction.entity';
   
   interface DividendCreateAttrs {
     title: string;
@@ -72,6 +74,9 @@ import { Holder } from 'src/holders/entities/holder.entity'
 
     @BelongsTo(() => Emitent)
     emitent: Emitent;
+
+    @HasMany(() => DividendTransaction)
+    dividend_transactions: DividendTransaction[]
 
   }
 

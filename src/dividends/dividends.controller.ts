@@ -12,9 +12,9 @@ export class DividendsController {
     return this.dividendsService.createDividend(createDividendDto);
   }
 
-  @Get('/:eid/date') // /dividends/1/date?date=2024-10-10
-  getDividendsByDate(@Param('eid') eid: number, @Query() query: any) {
-    return this.dividendsService.getDividendsByDate(eid, query.date);
+  @Get('/:did')
+  getDividendsByDate(@Param('did') did: number) {
+    return this.dividendsService.getDividendsByDid(did);
   }
 
   @Get('/:eid/all')
