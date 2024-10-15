@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
     Column,
     DataType,
     ForeignKey,
@@ -82,8 +83,10 @@ import { HolderDistrict } from './holder-district.entity';
     @HasMany(() => Transaction, { as: 'holder_to_transactions', foreignKey: 'holder_to_id' })
     holder_to_transactions: Transaction[];
 
-
     @HasMany(() => Security)
     securities: Security[];
+
+    @BelongsTo(() => HolderDistrict)
+    district: HolderDistrict;
 
   }

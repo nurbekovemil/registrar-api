@@ -9,6 +9,7 @@ import { Security } from 'src/securities/entities/security.entity';
 import sequelize from 'sequelize';
 import { Emission } from 'src/emissions/entities/emission.entity';
 import { HolderType } from './entities/holder-type.entity';
+import { HolderDistrict } from './entities/holder-district.entity';
 
 
 @Injectable()
@@ -72,7 +73,7 @@ export class HoldersService {
       });
       const holders = this.holderRepository.findAll({
         attributes: [
-          'id',  // Выбор конкретных полей, например, id и name
+          'id',
           'name',
           [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
           // [
@@ -88,7 +89,7 @@ export class HoldersService {
             'ordinary_nominal'
           ],
           'actual_address',
-          'district'
+          // 'district_id'
         ],
         include: [
           {
@@ -104,8 +105,12 @@ export class HoldersService {
               }
             ]
           },
+          {
+            model: HolderDistrict,
+            attributes: ['name'],
+          }
         ],
-        group: ['Holder.id'],
+        group: ['Holder.id','district.id'],
       })
 
       return holders;
@@ -160,7 +165,7 @@ export class HoldersService {
             'passport'
           ],
           'actual_address',
-          'district'
+          // 'district'
 
         ],
         include: [
@@ -177,8 +182,12 @@ export class HoldersService {
               }
             ]
           },
+          {
+            model: HolderDistrict,
+            attributes: ['name'],
+          }
         ],
-        group: ['Holder.id'],
+        group: ['Holder.id', 'district.id'],
       })
 
       return holders;
@@ -234,7 +243,7 @@ export class HoldersService {
             'passport'
           ],
           'actual_address',
-          'district'
+          // 'district'
 
         ],
         include: [
@@ -254,8 +263,12 @@ export class HoldersService {
               }
             ],
           },
+          {
+            model: HolderDistrict,
+            attributes: ['name'],
+          }
         ],
-        group: ['Holder.id','securities->emission.reg_number'],
+        group: ['Holder.id','securities->emission.reg_number','district.id'],
       })
 
       return holders;
