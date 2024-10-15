@@ -104,7 +104,16 @@ export class SecuritiesService {
       },
       attributes: [
         'holder_id',
-        'quantity',
+        // 'quantity',
+        [sequelize.literal(`
+          "Security"."quantity" - COALESCE(
+            (SELECT SUM(sb.quantity) 
+             FROM security_blocks sb 
+             WHERE sb.security_id = "Security"."id" 
+               AND sb.unblock_date IS NULL), 
+            0
+          )
+        `), 'quantity'], // Вычисление доступного количества
         [sequelize.literal('Holder.name'), 'holder_name'], // Add this line
       ],
       include: [
