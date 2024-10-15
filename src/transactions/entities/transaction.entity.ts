@@ -69,7 +69,7 @@ import { Security } from 'src/securities/entities/security.entity';
     @Column({ type: DataType.INTEGER })
     quantity: number;
 
-    @Column({ type: DataType.INTEGER })
+    @Column({ type: DataType.FLOAT })
     amount: number;
 
     @Column({ type: DataType.DATE })
