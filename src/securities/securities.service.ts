@@ -98,6 +98,9 @@ export class SecuritiesService {
     const holders = await this.securityRepository.findAll({
       where: {
         emitent_id: eid,
+        quantity: {
+          [sequelize.Op.ne]: 0
+        }
       },
       attributes: [
         'holder_id',
