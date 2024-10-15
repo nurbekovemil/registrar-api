@@ -8,5 +8,6 @@ export class CreateHolderDto {
     readonly passport_agency: string;
     readonly inn: string;
     readonly emitent_id: number;
+    readonly district_id: number;
     readonly holder_type: number;
 }

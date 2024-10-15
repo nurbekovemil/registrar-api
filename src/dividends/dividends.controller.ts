@@ -7,7 +7,7 @@ import { UpdateDividendDto } from './dto/update-dividend.dto';
 export class DividendsController {
   constructor(private readonly dividendsService: DividendsService) {}
 
-  @Post('/create')
+  @Post()
   createDividend(@Body() createDividendDto: CreateDividendDto) {
     return this.dividendsService.createDividend(createDividendDto);
   }

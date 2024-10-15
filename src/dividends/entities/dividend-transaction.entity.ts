@@ -15,7 +15,8 @@ import { Dividend } from './dividend.entity';
   interface DividendTransactionCreateAttrs {
     dividend_id: number;
     holder_id: number;
-    share_count: number
+    share_count: number;
+    percent: number;
     share_credited: number;
     share_debited: number;
     amount_pay: number;
@@ -42,6 +43,9 @@ import { Dividend } from './dividend.entity';
 
     @Column({ type: DataType.INTEGER })
     share_count: number;
+
+    @Column({ type: DataType.FLOAT })
+    percent: number;
 
     @Column({ type: DataType.FLOAT })
     share_credited: number;

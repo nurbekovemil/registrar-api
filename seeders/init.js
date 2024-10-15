@@ -91,6 +91,17 @@ module.exports = {
         name: 'Юридическое лицо'
       }]
   );
+    await queryInterface.bulkInsert('holder_districts', [
+        { 
+          id: 1,
+          name: 'Бишкек'
+        },
+        { 
+          id: 2,
+          name: 'Алмата'
+        }
+      ]
+    );
     await queryInterface.bulkInsert('holders',
       [
         {
@@ -101,7 +112,7 @@ module.exports = {
           passport_number: '0',
           passport_agency: null,
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 2
         },
@@ -113,7 +124,7 @@ module.exports = {
           passport_number: '719789',
           passport_agency: 'ОВД Ленинского РИК г.Фрунзе',
           inn: null,
-          district: 'Алмата',
+          district_id: 2,
           emitent_id:1,
           holder_type: 1
         },
@@ -125,7 +136,7 @@ module.exports = {
           passport_number: '691268',
           passport_agency: 'ОВД Ленинским РИК г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -137,7 +148,7 @@ module.exports = {
           passport_number: '7871',
           passport_agency: 'МВД 50-58',
           inn: null,
-          district: 'Алмата',
+          district_id: 2,
           emitent_id:1,
           holder_type: 1
         },
@@ -149,7 +160,7 @@ module.exports = {
           passport_number: '603292',
           passport_agency: 'ОВД Свердловского РИК г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -161,7 +172,7 @@ module.exports = {
           passport_number: '1265065',
           passport_agency: 'МВД',
           inn: null,
-          district: 'Бишкек',
+          district_id: 2,
           emitent_id:1,
           holder_type: 1
         },
@@ -173,7 +184,7 @@ module.exports = {
           passport_number: '633876',
           passport_agency: 'Дж-Джольский РОВД Ошской обл.',
           inn: null,
-          district: 'Алмата',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -185,7 +196,7 @@ module.exports = {
           passport_number: '608441',
           passport_agency: 'Алтын-Топканский ПОМ Ленинаб.обл.',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -197,7 +208,7 @@ module.exports = {
           passport_number: '590231',
           passport_agency: 'ОВД Ленинпольского РИК Кырг. ССР',
           inn: null,
-          district: 'Бишкек',
+          district_id: 2,
           emitent_id:1,
           holder_type: 1
         },
@@ -209,7 +220,7 @@ module.exports = {
           passport_number: '0535866',
           passport_agency: 'ИИМ 50-00',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -221,7 +232,7 @@ module.exports = {
           passport_number: '2023115',
           passport_agency: 'ИИМ 50-55',
           inn: null,
-          district: 'Бишкек',
+          district_id: 2,
           emitent_id:1,
           holder_type: 1
         },
@@ -233,7 +244,7 @@ module.exports = {
           passport_number: '654861',
           passport_agency: 'ОВД Аламедиского РИК',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -245,7 +256,7 @@ module.exports = {
           passport_number: '1311763',
           passport_agency: 'ИИМ 50-03',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -257,7 +268,7 @@ module.exports = {
           passport_number: '539409',
           passport_agency: 'Первомайским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -269,7 +280,7 @@ module.exports = {
           passport_number: '541724',
           passport_agency: 'Первомайским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -281,7 +292,7 @@ module.exports = {
           passport_number: '2193995',
           passport_agency: 'ИИМ 50-00',
           inn: '20404196400364',
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -293,7 +304,7 @@ module.exports = {
           passport_number: '1917527',
           passport_agency: 'ИИМ 50-01',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -305,7 +316,7 @@ module.exports = {
           passport_number: '722268',
           passport_agency: 'ОВД Ленинского р-на г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -317,7 +328,7 @@ module.exports = {
           passport_number: '580549',
           passport_agency: 'Свердловским РОВД',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 2
         },
@@ -329,7 +340,7 @@ module.exports = {
           passport_number: '585325',
           passport_agency: 'ОВД Джумгальского р-на',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -341,7 +352,7 @@ module.exports = {
           passport_number: '738616',
           passport_agency: 'г.Фрунзе Октябрьским РОВД',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -353,7 +364,7 @@ module.exports = {
           passport_number: '2893666',
           passport_agency: 'МКК 50-03',
           inn: '21411196300016',
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -365,7 +376,7 @@ module.exports = {
           passport_number: '564394',
           passport_agency: 'Свердловским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -377,7 +388,7 @@ module.exports = {
           passport_number: '648020',
           passport_agency: 'Первомайским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -389,7 +400,7 @@ module.exports = {
           passport_number: '2518464',
           passport_agency: 'МВД 50-03',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -401,7 +412,7 @@ module.exports = {
           passport_number: '1288898',
           passport_agency: 'МВД 50-03',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -413,7 +424,7 @@ module.exports = {
           passport_number: '589996',
           passport_agency: 'Ленинским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -425,7 +436,7 @@ module.exports = {
           passport_number: '671624',
           passport_agency: 'Свердловским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -437,7 +448,7 @@ module.exports = {
           passport_number: '654926',
           passport_agency: 'Ленинским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -449,7 +460,7 @@ module.exports = {
           passport_number: '0089973',
           passport_agency: 'МКК 211031',
           inn: '20810195200015',
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -461,7 +472,7 @@ module.exports = {
           passport_number: '575907',
           passport_agency: 'Ленинским РОВД',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -473,7 +484,7 @@ module.exports = {
           passport_number: '1056686',
           passport_agency: 'ИИМ 50-03',
           inn: '21604195000012',
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -485,7 +496,7 @@ module.exports = {
           passport_number: '508638',
           passport_agency: 'Свердловским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -497,7 +508,7 @@ module.exports = {
           passport_number: '687754',
           passport_agency: 'ОВД Пржевальского г-ма',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -509,7 +520,7 @@ module.exports = {
           passport_number: '670618',
           passport_agency: 'Первомайским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -521,7 +532,7 @@ module.exports = {
           passport_number: '531439',
           passport_agency: 'Ленинским РОВД г.Фрунзе',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -533,7 +544,7 @@ module.exports = {
           passport_number: '2004872',
           passport_agency: 'ИИМ 50-02',
           inn: '21201195500558',
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -545,7 +556,7 @@ module.exports = {
           passport_number: '55544',
           passport_agency: 'зарегестрирован Бишкекским нацстатком.',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 2
         },
@@ -557,7 +568,7 @@ module.exports = {
           passport_number: '658068',
           passport_agency: 'ОВД Панфиловского РИК Чуйской обл.',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -569,7 +580,7 @@ module.exports = {
           passport_number: '193',
           passport_agency: 'МВД Кыргызской Республики',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -581,7 +592,7 @@ module.exports = {
           passport_number: '2118334',
           passport_agency: 'ИИМ 50-03',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -593,7 +604,7 @@ module.exports = {
           passport_number: '702466',
           passport_agency: 'ОВД Пржевальского г-ма',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -605,7 +616,7 @@ module.exports = {
           passport_number: '617339',
           passport_agency: 'ОВД Аксуйского р-на',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -617,7 +628,7 @@ module.exports = {
           passport_number: null,
           passport_agency: null,
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 2
         },
@@ -629,7 +640,7 @@ module.exports = {
           passport_number: null,
           passport_agency: null,
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -641,7 +652,7 @@ module.exports = {
           passport_number: '1348241',
           passport_agency: 'МВД 50-55',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -653,7 +664,7 @@ module.exports = {
           passport_number: '0014631',
           passport_agency: 'МВД 50-03',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -665,7 +676,7 @@ module.exports = {
           passport_number: '2507157',
           passport_agency: 'МВД 50-02',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -677,7 +688,7 @@ module.exports = {
           passport_number: '0255363',
           passport_agency: 'МВД 50-01',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         },
@@ -689,7 +700,7 @@ module.exports = {
           passport_number: '234-3310-АО',
           passport_agency: 'Управлением юстиции г.Ош',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 2
         },
@@ -701,7 +712,7 @@ module.exports = {
           passport_number: '11386-1919-ТОО',
           passport_agency: 'Департамент юстиции Жамбылской обл.',
           inn: '100940003067',
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 2
         },
@@ -713,7 +724,7 @@ module.exports = {
           passport_number: '3407-3300-АО(ИУ',
           passport_agency: ') ГПР №074072 мин.юст.КР',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 2
         },
@@ -725,7 +736,7 @@ module.exports = {
           passport_number: '2559777',
           passport_agency: 'МКК 50-58',
           inn: null,
-          district: 'Бишкек',
+          district_id: 1,
           emitent_id:1,
           holder_type: 1
         }
@@ -737,7 +748,7 @@ module.exports = {
         {id: 3, name: 'Номинальн. держатель'}]
     );
     await queryInterface.bulkInsert('security_types', [
-        {id: 1, name: 'Акция'},
+        {id: 1, name: 'Простые именные'},
         {id: 2, name: 'Облигация'}]
     );
     await queryInterface.bulkInsert('security_status', [
@@ -797,10 +808,13 @@ module.exports = {
   async down (queryInterface) {
     await queryInterface.bulkDelete('transactions', null, {});
     await queryInterface.bulkDelete('transaction_operations', null, {});
+    await queryInterface.bulkDelete('dividend_transactions', null, {});
+    await queryInterface.bulkDelete('dividends', null, {});
     await queryInterface.bulkDelete('emissions', null, {});
     await queryInterface.bulkDelete('emission_types', null, {});
     await queryInterface.bulkDelete('emitents', null, {});
     await queryInterface.bulkDelete('holder_types', null, {});
+    await queryInterface.bulkDelete('holder_districts', null, {});
     await queryInterface.bulkDelete('holders', null, {});
     await queryInterface.bulkDelete('security_blocks', null, {});
     await queryInterface.bulkDelete('security_attitudes', null, {});

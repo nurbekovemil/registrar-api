@@ -34,6 +34,7 @@ import { DividendsModule } from './dividends/dividends.module';
 import { Dividend } from "./dividends/entities/dividend.entity";
 import { DividendTransaction } from "./dividends/entities/dividend-transaction.entity";
 import { HolderType } from "./holders/entities/holder-type.entity";
+import { HolderDistrict } from "./holders/entities/holder-district.entity";
 
 @Module({
   controllers: [],
@@ -61,6 +62,7 @@ import { HolderType } from "./holders/entities/holder-type.entity";
         Account, 
         AccountType,
         HolderType,
+        HolderDistrict,
         Holder, 
         Security, 
         SecurityType,

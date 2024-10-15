@@ -27,7 +27,7 @@ export class DividendsService {
       const amount_share_credited = amount_share * createDividendDto.share_price;
       let amount_share_debited, amount_pay = 0;
       if(createDividendDto.type === 1) {
-        amount_share_debited = (createDividendDto.share_debited / 100) * amount_share_credited
+        amount_share_debited = (createDividendDto.percent / 100) * amount_share_credited
         amount_pay = amount_share_credited - amount_share_debited
       }else {
         amount_share_debited = 0
@@ -38,6 +38,7 @@ export class DividendsService {
         type: createDividendDto.type,
         emitent_id: createDividendDto.emitent_id,
         share_price: createDividendDto.share_price,
+        percent: createDividendDto.percent,
         amount_share,
         amount_share_credited,
         amount_share_debited,
@@ -51,7 +52,7 @@ export class DividendsService {
         let holder_amount_pay = 0;
         let share_debited = 0;
         if(createDividendDto.type === 1) {
-          share_debited = (createDividendDto.share_debited / 100) * share_credited
+          share_debited = (createDividendDto.percent / 100) * share_credited
           holder_amount_pay = share_credited - share_debited
         }else {
           share_debited = 0.00
@@ -61,6 +62,7 @@ export class DividendsService {
           dividend_id: dividend.id,
           holder_id: shareholder.holder_id,
           share_count,
+          percent: createDividendDto.percent,
           share_credited,
           share_debited,
           amount_pay: holder_amount_pay,

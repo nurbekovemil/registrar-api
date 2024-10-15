@@ -10,6 +10,7 @@ import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Security } from 'src/securities/entities/security.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { HolderType } from './holder-type.entity';
+import { HolderDistrict } from './holder-district.entity';
   
   interface HolderCreateAttrs {
     name: string;
@@ -21,6 +22,7 @@ import { HolderType } from './holder-type.entity';
     passport_agency: string;
     inn: string;
     emitent_id: number;
+    district_id: number;
     holder_type: number;
   }
   
@@ -34,6 +36,18 @@ import { HolderType } from './holder-type.entity';
       primaryKey: true,
     })
     id: number;
+
+    @ForeignKey(() => Emitent)
+    @Column({ type: DataType.INTEGER })
+    emitent_id: number;
+    
+    @ForeignKey(() => HolderType)
+    @Column({ type: DataType.INTEGER })
+    holder_type: number;
+
+    @ForeignKey(() => HolderDistrict)
+    @Column({ type: DataType.INTEGER })
+    district_id: number;
 
     @Column({ type: DataType.STRING })
     name: string;
@@ -61,18 +75,6 @@ import { HolderType } from './holder-type.entity';
 
     @Column({ type: DataType.STRING })
     inn: string;
-
-    @Column({ type: DataType.STRING })
-    district: string;
-
-    @ForeignKey(() => Emitent)
-    @Column({ type: DataType.INTEGER })
-    emitent_id: number;
-
-    @ForeignKey(() => HolderType)
-    @Column({ type: DataType.INTEGER })
-    holder_type: number;
-
 
     @HasMany(() => Transaction, { as: 'holder_from_transactions', foreignKey: 'holder_from_id' })
     holder_from_transactions: Transaction[];

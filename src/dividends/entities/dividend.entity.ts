@@ -20,6 +20,7 @@ import { DividendTransaction } from './dividend-transaction.entity';
     date_close_reestr: string;
     month_year: string;
     share_price: number;
+    percent: number;
     amount_share: number
     amount_share_credited: number;
     amount_share_debited: number;
@@ -56,6 +57,9 @@ import { DividendTransaction } from './dividend-transaction.entity';
 
     @Column({ type: DataType.FLOAT })
     share_price: number;
+
+    @Column({ type: DataType.FLOAT })
+    percent: number;
 
     @Column({ type: DataType.FLOAT })
     amount_share: number;
