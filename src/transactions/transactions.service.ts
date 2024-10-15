@@ -58,6 +58,7 @@ export class TransactionsService {
       await transaction.save()
       return transaction
     } catch (error) {
+      console.log(error)
       t.rollback();
       throw new HttpException(
         error.message,
