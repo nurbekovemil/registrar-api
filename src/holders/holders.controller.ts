@@ -40,4 +40,27 @@ export class HoldersController {
   getHolderTypes(){
     return this.holdersService.getHolderTypes()
   }
+
+  @Post('/district')
+  createDistrict(@Body() createDistrictDto: CreateHolderDto) {
+    return this.holdersService.createDistrict(createDistrictDto)
+  }
+
+  @Get('/district/list')
+  getDistricts(){
+    return this.holdersService.getDistricts()
+  }
+
+  @Put('/district/:id')
+  updateDistrict(@Param('id') id: number, @Body() updateDistrictDto: UpdateHolderDto) {
+    return this.holdersService.updateDistrict(id, updateDistrictDto)
+  }
+
+  @Delete('/district/:id')
+  deleteDistrict(@Param('id') id: number){
+    return this.holdersService.deleteDistrict(id)
+  }
+
+
+
 }

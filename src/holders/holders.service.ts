@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateHolderDto } from './dto/create-holder.dto';
 import { UpdateHolderDto } from './dto/update-holder.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -10,6 +10,8 @@ import sequelize from 'sequelize';
 import { Emission } from 'src/emissions/entities/emission.entity';
 import { HolderType } from './entities/holder-type.entity';
 import { HolderDistrict } from './entities/holder-district.entity';
+import { CreateDistrictDto } from './dto/create-holder-district.dto';
+import { UpdateDistrictDto } from './dto/update-holder-district.dto';
 
 
 @Injectable()
@@ -17,6 +19,7 @@ export class HoldersService {
   constructor(
     @InjectModel(Holder) private holderRepository: typeof Holder,
     @InjectModel(HolderType) private holderTypeRepository: typeof HolderType,
+    @InjectModel(HolderDistrict) private holderDistrictRepository: typeof HolderDistrict,
     private emissionService: EmissionsService,
     private securitiesService: SecuritiesService,
   ){}
@@ -279,5 +282,37 @@ export class HoldersService {
 
   async getHolderTypes(){
     return await this.holderTypeRepository.findAll()
+  }
+
+
+  async createDistrict(createDistrictDto: CreateDistrictDto) {
+    const is_district = await this.holderDistrictRepository.findOne({
+      where: {
+        name: createDistrictDto.name
+      }
+    })
+    if(is_district){
+      throw new HttpException('Регион уже существует', HttpStatus.BAD_REQUEST)
+    }
+    const district = await this.holderDistrictRepository.create(createDistrictDto)
+    return district;
+  }
+
+  async getDistricts(){
+    const districts = await this.holderDistrictRepository.findAll()
+    return districts
+  }
+
+  async updateDistrict(id: number, updateDistrictDto: UpdateDistrictDto) {
+    let district = await this.holderDistrictRepository.findByPk(id)
+    district.name = updateDistrictDto.name
+    district = await district.save()
+    return district
+  }
+  async deleteDistrict(id: number) {
+    const district = await this.holderDistrictRepository.destroy({
+      where: { id }
+    })
+    return district
   }
 }

@@ -8,9 +8,13 @@ import {
   } from 'sequelize-typescript';
 import { Holder } from './holder.entity';
 
-    
+
+interface HolderDistrictAttributes {
+  name: string;
+}
+
   @Table({ tableName: 'holder_districts', createdAt: false, updatedAt: false })
-  export class HolderDistrict extends Model<HolderDistrict>{
+  export class HolderDistrict extends Model<HolderDistrict, HolderDistrictAttributes>{
 
     @Column({
       type: DataType.INTEGER,
