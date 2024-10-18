@@ -35,6 +35,7 @@ import { Dividend } from "./dividends/entities/dividend.entity";
 import { DividendTransaction } from "./dividends/entities/dividend-transaction.entity";
 import { HolderType } from "./holders/entities/holder-type.entity";
 import { HolderDistrict } from "./holders/entities/holder-district.entity";
+import { AnalysisModule } from './analysis/analysis.module';
 
 @Module({
   controllers: [],
@@ -87,6 +88,7 @@ import { HolderDistrict } from "./holders/entities/holder-district.entity";
     PrintsModule,
     CompaniesModule,
     DividendsModule,
+    AnalysisModule,
   ],
 })
 export class AppModule {}
