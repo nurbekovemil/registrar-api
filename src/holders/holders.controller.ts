@@ -22,20 +22,6 @@ export class HoldersController {
     return this.holdersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: number) {
-    return this.holdersService.findOne(id);
-  }
-
-  @Get('/:hid/emissions')
-  getHolderEmissions(@Param('hid') hid: number){
-    return this.holdersService.getHolderEmissions(hid)
-  }
-  @Get('/:hid/securities')
-  getHolderSecurities(@Param('hid') hid: number){
-    return this.holdersService.getHolderSecurities(hid)
-  }
-  
   @Get('/holder-types')
   getHolderTypes(){
     return this.holdersService.getHolderTypes()
@@ -61,6 +47,18 @@ export class HoldersController {
     return this.holdersService.deleteDistrict(id)
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.holdersService.findOne(id);
+  }
 
+  @Get('/:hid/emissions')
+  getHolderEmissions(@Param('hid') hid: number){
+    return this.holdersService.getHolderEmissions(hid)
+  }
+  @Get('/:hid/securities')
+  getHolderSecurities(@Param('hid') hid: number){
+    return this.holdersService.getHolderSecurities(hid)
+  }
 
 }

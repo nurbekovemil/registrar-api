@@ -281,7 +281,8 @@ export class HoldersService {
   }
 
   async getHolderTypes(){
-    return await this.holderTypeRepository.findAll()
+    const types = await this.holderTypeRepository.findAll()
+    return types
   }
 
 
