@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/
 import { HoldersService } from './holders.service';
 import { CreateHolderDto } from './dto/create-holder.dto';
 import { UpdateHolderDto } from './dto/update-holder.dto';
+import { CreateDocumentDto, CreateHolderDocumentDto } from './dto/create-holder-document.dto';
 
 @Controller('holders')
 export class HoldersController {
@@ -61,4 +62,23 @@ export class HoldersController {
     return this.holdersService.getHolderSecurities(hid)
   }
 
+  @Post('/document/create')
+  createHolderDocument(@Body() createHolderDocumentDto: CreateHolderDocumentDto) {
+    return this.holdersService.createHolderDocument(createHolderDocumentDto)
+  }
+
+  @Get('/document/holder/:hid')
+  getHolderDocuments(@Param('hid') hid: number){
+    return this.holdersService.getHolderDocuments(hid)
+  }
+
+  @Get('/document/:id')
+  getDocument(@Param('id') id: number){
+    return this.holdersService.getDocument(id)
+  }
+
+  @Get('/document/emitent/:eid')
+  getEmitentHolderDocuments(@Param('eid') eid: number){
+    return this.holdersService.getEmitentHolderDocuments(eid)
+  }
 }

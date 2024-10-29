@@ -113,7 +113,6 @@ module.exports = {
     //       passport_agency: null,
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 2
     //     },
     //     {
@@ -125,7 +124,6 @@ module.exports = {
     //       passport_agency: 'ОВД Ленинского РИК г.Фрунзе',
     //       inn: null,
     //       district_id: 2,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -137,7 +135,6 @@ module.exports = {
     //       passport_agency: 'ОВД Ленинским РИК г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -149,7 +146,6 @@ module.exports = {
     //       passport_agency: 'МВД 50-58',
     //       inn: null,
     //       district_id: 2,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -161,7 +157,6 @@ module.exports = {
     //       passport_agency: 'ОВД Свердловского РИК г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -173,7 +168,6 @@ module.exports = {
     //       passport_agency: 'МВД',
     //       inn: null,
     //       district_id: 2,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -185,7 +179,6 @@ module.exports = {
     //       passport_agency: 'Дж-Джольский РОВД Ошской обл.',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -197,7 +190,6 @@ module.exports = {
     //       passport_agency: 'Алтын-Топканский ПОМ Ленинаб.обл.',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -209,7 +201,6 @@ module.exports = {
     //       passport_agency: 'ОВД Ленинпольского РИК Кырг. ССР',
     //       inn: null,
     //       district_id: 2,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -221,7 +212,6 @@ module.exports = {
     //       passport_agency: 'ИИМ 50-00',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -233,7 +223,6 @@ module.exports = {
     //       passport_agency: 'ИИМ 50-55',
     //       inn: null,
     //       district_id: 2,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -245,7 +234,6 @@ module.exports = {
     //       passport_agency: 'ОВД Аламедиского РИК',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -257,7 +245,6 @@ module.exports = {
     //       passport_agency: 'ИИМ 50-03',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -269,7 +256,6 @@ module.exports = {
     //       passport_agency: 'Первомайским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -281,7 +267,6 @@ module.exports = {
     //       passport_agency: 'Первомайским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -293,7 +278,6 @@ module.exports = {
     //       passport_agency: 'ИИМ 50-00',
     //       inn: '20404196400364',
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -305,7 +289,6 @@ module.exports = {
     //       passport_agency: 'ИИМ 50-01',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -317,7 +300,6 @@ module.exports = {
     //       passport_agency: 'ОВД Ленинского р-на г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -329,7 +311,6 @@ module.exports = {
     //       passport_agency: 'Свердловским РОВД',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 2
     //     },
     //     {
@@ -341,7 +322,6 @@ module.exports = {
     //       passport_agency: 'ОВД Джумгальского р-на',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -353,7 +333,6 @@ module.exports = {
     //       passport_agency: 'г.Фрунзе Октябрьским РОВД',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -365,7 +344,6 @@ module.exports = {
     //       passport_agency: 'МКК 50-03',
     //       inn: '21411196300016',
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -377,7 +355,6 @@ module.exports = {
     //       passport_agency: 'Свердловским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -389,7 +366,6 @@ module.exports = {
     //       passport_agency: 'Первомайским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -401,7 +377,6 @@ module.exports = {
     //       passport_agency: 'МВД 50-03',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -413,7 +388,6 @@ module.exports = {
     //       passport_agency: 'МВД 50-03',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -425,7 +399,6 @@ module.exports = {
     //       passport_agency: 'Ленинским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -437,7 +410,6 @@ module.exports = {
     //       passport_agency: 'Свердловским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -449,7 +421,6 @@ module.exports = {
     //       passport_agency: 'Ленинским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -461,7 +432,6 @@ module.exports = {
     //       passport_agency: 'МКК 211031',
     //       inn: '20810195200015',
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -473,7 +443,6 @@ module.exports = {
     //       passport_agency: 'Ленинским РОВД',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -485,7 +454,6 @@ module.exports = {
     //       passport_agency: 'ИИМ 50-03',
     //       inn: '21604195000012',
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -497,7 +465,6 @@ module.exports = {
     //       passport_agency: 'Свердловским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -509,7 +476,6 @@ module.exports = {
     //       passport_agency: 'ОВД Пржевальского г-ма',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -521,7 +487,6 @@ module.exports = {
     //       passport_agency: 'Первомайским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -533,7 +498,6 @@ module.exports = {
     //       passport_agency: 'Ленинским РОВД г.Фрунзе',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -545,7 +509,6 @@ module.exports = {
     //       passport_agency: 'ИИМ 50-02',
     //       inn: '21201195500558',
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -557,7 +520,6 @@ module.exports = {
     //       passport_agency: 'зарегестрирован Бишкекским нацстатком.',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 2
     //     },
     //     {
@@ -569,7 +531,6 @@ module.exports = {
     //       passport_agency: 'ОВД Панфиловского РИК Чуйской обл.',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -581,7 +542,6 @@ module.exports = {
     //       passport_agency: 'МВД Кыргызской Республики',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -593,7 +553,6 @@ module.exports = {
     //       passport_agency: 'ИИМ 50-03',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -605,7 +564,6 @@ module.exports = {
     //       passport_agency: 'ОВД Пржевальского г-ма',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -617,7 +575,6 @@ module.exports = {
     //       passport_agency: 'ОВД Аксуйского р-на',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -629,7 +586,6 @@ module.exports = {
     //       passport_agency: null,
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 2
     //     },
     //     {
@@ -641,7 +597,6 @@ module.exports = {
     //       passport_agency: null,
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -653,7 +608,6 @@ module.exports = {
     //       passport_agency: 'МВД 50-55',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -665,7 +619,6 @@ module.exports = {
     //       passport_agency: 'МВД 50-03',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -677,7 +630,6 @@ module.exports = {
     //       passport_agency: 'МВД 50-02',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -689,7 +641,6 @@ module.exports = {
     //       passport_agency: 'МВД 50-01',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     },
     //     {
@@ -701,7 +652,6 @@ module.exports = {
     //       passport_agency: 'Управлением юстиции г.Ош',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 2
     //     },
     //     {
@@ -713,7 +663,6 @@ module.exports = {
     //       passport_agency: 'Департамент юстиции Жамбылской обл.',
     //       inn: '100940003067',
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 2
     //     },
     //     {
@@ -725,7 +674,6 @@ module.exports = {
     //       passport_agency: ') ГПР №074072 мин.юст.КР',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 2
     //     },
     //     {
@@ -737,7 +685,6 @@ module.exports = {
     //       passport_agency: 'МКК 50-58',
     //       inn: null,
     //       district_id: 1,
-    //       emitent_id:1,
     //       holder_type: 1
     //     }
     //   ]
@@ -820,7 +767,7 @@ module.exports = {
     await queryInterface.bulkDelete('security_attitudes', null, {});
     await queryInterface.bulkDelete('security_types', null, {});
     await queryInterface.bulkDelete('security_status', null, {});
-    await queryInterface.bulkDelete('users', null, {});
-    await queryInterface.bulkDelete('companies', null, {});
+    // await queryInterface.bulkDelete('users', null, {});
+    // await queryInterface.bulkDelete('companies', null, {});
   }
 };

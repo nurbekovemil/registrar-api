@@ -1,3 +1,4 @@
+import { CreateDocumentDto, CreateHolderDocumentDto } from './dto/create-holder-document.dto';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateHolderDto } from './dto/create-holder.dto';
 import { UpdateHolderDto } from './dto/update-holder.dto';
@@ -12,6 +13,7 @@ import { HolderType } from './entities/holder-type.entity';
 import { HolderDistrict } from './entities/holder-district.entity';
 import { CreateDistrictDto } from './dto/create-holder-district.dto';
 import { UpdateDistrictDto } from './dto/update-holder-district.dto';
+import { HolderDocument } from './entities/holder-document.entity';
 
 
 @Injectable()
@@ -20,6 +22,7 @@ export class HoldersService {
     @InjectModel(Holder) private holderRepository: typeof Holder,
     @InjectModel(HolderType) private holderTypeRepository: typeof HolderType,
     @InjectModel(HolderDistrict) private holderDistrictRepository: typeof HolderDistrict,
+    @InjectModel(HolderDocument) private holderDocumentRepository: typeof HolderDocument,
     private emissionService: EmissionsService,
     private securitiesService: SecuritiesService,
   ){}
@@ -49,11 +52,7 @@ export class HoldersService {
   }
 
   async getEmitentAllHolders(eid: number) {
-    const holders = await this.holderRepository.findAll({
-      where: {
-        emitent_id: eid
-      }
-    })
+    const holders = await this.holderRepository.findAll()
     return holders
   }
 
@@ -315,5 +314,47 @@ export class HoldersService {
       where: { id }
     })
     return district
+  }
+
+  async createHolderDocument(createHolderDocumentDto: CreateHolderDocumentDto) {
+    try {
+      const holder = await this.holderRepository.findByPk(createHolderDocumentDto.holder_document.holder_id)
+      const holder_document = createHolderDocumentDto.holder_document
+      await this.update(holder_document.holder_id, createHolderDocumentDto.holder_data)
+      const data = {
+        before: holder,
+        after: createHolderDocumentDto.holder_data,
+      }
+      const document = await this.holderDocumentRepository.create({
+        ...holder_document,
+        data
+      })
+      return document
+    } catch (error) {
+      throw new Error(`Failed to create holder document: ${error.message}`);
+    }
+  }
+
+  async getHolderDocuments(hid: number){
+    const documents = await this.holderDocumentRepository.findAll({
+      where: {
+        holder_id: hid
+      }
+    })
+    return documents
+  }
+
+  async getDocument(id: number){
+    const document = await this.holderDocumentRepository.findByPk(id)
+    return document
+  }
+
+  async getEmitentHolderDocuments(eid: number){
+    const documents = await this.holderDocumentRepository.findAll({
+      where: {
+        emitent_id : eid
+      }
+    })
+    return documents
   }
 }

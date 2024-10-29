@@ -1,5 +1,6 @@
 import {
   BelongsTo,
+    BelongsToMany,
     Column,
     DataType,
     ForeignKey,
@@ -22,7 +23,6 @@ import { HolderDistrict } from './holder-district.entity';
     passport_number: string;
     passport_agency: string;
     inn: string;
-    emitent_id: number;
     district_id: number;
     holder_type: number;
   }
@@ -37,10 +37,6 @@ import { HolderDistrict } from './holder-district.entity';
       primaryKey: true,
     })
     id: number;
-
-    @ForeignKey(() => Emitent)
-    @Column({ type: DataType.INTEGER })
-    emitent_id: number;
     
     @ForeignKey(() => HolderType)
     @Column({ type: DataType.INTEGER })
@@ -88,5 +84,4 @@ import { HolderDistrict } from './holder-district.entity';
 
     @BelongsTo(() => HolderDistrict)
     district: HolderDistrict;
-
   }

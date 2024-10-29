@@ -1,4 +1,5 @@
 import {
+  BelongsToMany,
     Column,
     DataType,
     HasMany,
@@ -6,6 +7,7 @@ import {
     Table,
   } from 'sequelize-typescript';
 import { Emission } from 'src/emissions/entities/emission.entity';
+import { Holder } from 'src/holders/entities/holder.entity';
 import { Security } from 'src/securities/entities/security.entity';
   
   interface EmitentCreateAttrs {
