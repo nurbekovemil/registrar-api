@@ -17,6 +17,11 @@ export class EmitentsController {
     return this.emitentsService.findAll();
   }
 
+  @Get('all-holders')
+  getEmitentAllHolders() {
+    return this.emitentsService.getEmitentAllHolders();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.emitentsService.findOne(id);
@@ -28,11 +33,6 @@ export class EmitentsController {
   @Get(':id/holders')
   getEmitentHolders(@Param('id') id: number) {
     return this.emitentsService.getEmitentHolders(id);
-  }
-
-  @Get('all-holders')
-  getEmitentAllHolders(@Param('id') id: number) {
-    return this.emitentsService.getEmitentAllHolders(id);
   }
 
   @Put(':id')

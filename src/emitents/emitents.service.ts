@@ -40,8 +40,8 @@ export class EmitentsService {
     const holders = await this.securityService.getEmitentHolders(id)
     return holders
   }
-  async getEmitentAllHolders(id: number){
-    const holders = await this.holderService.getEmitentAllHolders(id)
+  async getEmitentAllHolders(){
+    const holders = await this.holderService.getEmitentAllHolders()
     return holders
   }
   async update(id: number, updateEmitentDto: UpdateEmitentDto) {

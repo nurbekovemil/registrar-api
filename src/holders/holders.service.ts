@@ -51,7 +51,7 @@ export class HoldersService {
     return holder;
   }
 
-  async getEmitentAllHolders(eid: number) {
+  async getEmitentAllHolders() {
     const holders = await this.holderRepository.findAll()
     return holders
   }
