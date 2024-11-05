@@ -30,7 +30,7 @@ export class EmitentsController {
     return this.emitentsService.getEmitentHolders(id);
   }
 
-  @Get(':id/all-holders')
+  @Get('all-holders')
   getEmitentAllHolders(@Param('id') id: number) {
     return this.emitentsService.getEmitentAllHolders(id);
   }
