@@ -79,9 +79,9 @@ export class SecuritiesService {
         emitent_id: eid
       },
       attributes: [
-        'holder_id',
+        [sequelize.col('Security.holder_id'), 'id'],
         'quantity',
-        [sequelize.literal('Holder.name'), 'holder_name'], // Add this line
+        [sequelize.literal('Holder.name'), 'name'], // Add this line
       ],
       include: [
         {
