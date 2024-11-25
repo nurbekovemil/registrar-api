@@ -28,6 +28,16 @@ export class HoldersController {
     return this.holdersService.getHolderTypes()
   }
 
+  @Post('/holder-types')
+  createHolderTypes(@Body() data:{name: string}) {
+    return this.holdersService.createHolderType(data)
+  }
+
+  @Put('/holder-types/:id')
+  updateHolderTypes(@Param('id') id: number, @Body() data: { name: string}){
+    return this.holdersService.updateHolderType(id, data)
+  }
+
   @Post('/district')
   createDistrict(@Body() createDistrictDto: CreateHolderDto) {
     return this.holdersService.createDistrict(createDistrictDto)

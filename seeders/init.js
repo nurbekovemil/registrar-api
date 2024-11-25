@@ -81,16 +81,16 @@ module.exports = {
     //         "count": 5978,
     //     }]
     // );
-    await queryInterface.bulkInsert('holder_types', [
-      { 
-        id: 1,
-        name: 'Физическое лицо нерезидент'
-      },
-      { 
-        id: 2,
-        name: 'Юридическое лицо'
-      }]
-  );
+  //   await queryInterface.bulkInsert('holder_types', [
+  //     { 
+  //       id: 1,
+  //       name: 'Физическое лицо нерезидент'
+  //     },
+  //     { 
+  //       id: 2,
+  //       name: 'Юридическое лицо'
+  //     }]
+  // );
     await queryInterface.bulkInsert('holder_districts', [
         { 
           id: 1,

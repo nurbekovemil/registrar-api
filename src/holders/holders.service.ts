@@ -284,6 +284,20 @@ export class HoldersService {
     return types
   }
 
+  async createHolderType({name}: {name: string}){
+    const type = await this.holderTypeRepository.create({name})
+    return type
+  }
+
+  async updateHolderType(id: number, data: {name: string}){
+    let type = await this.holderTypeRepository.findByPk(id)
+    if(!type){
+      throw new HttpException('Тип участника не найден', HttpStatus.BAD_REQUEST)
+    }
+    type.name = data.name
+    await type.save()
+    return type
+  }
 
   async createDistrict(createDistrictDto: CreateDistrictDto) {
     const is_district = await this.holderDistrictRepository.findOne({

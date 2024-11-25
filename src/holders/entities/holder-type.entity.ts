@@ -8,9 +8,11 @@ import {
   } from 'sequelize-typescript';
 import { Holder } from './holder.entity';
 
-    
+  interface HolderTypeAttributes {
+    name: string
+  }
   @Table({ tableName: 'holder_types', createdAt: false, updatedAt: false })
-  export class HolderType extends Model<HolderType>{
+  export class HolderType extends Model<HolderType, HolderTypeAttributes>{
 
     @Column({
       type: DataType.INTEGER,
