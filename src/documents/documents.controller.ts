@@ -6,7 +6,7 @@ import { UpdateDocumentDto } from './dto/update-document.dto';
 @Controller('documents')
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
-  @Post('/create')
+  @Post('')
   createDocument(@Body() createDocumentDto: CreateDocumentDto) {
     return this.documentsService.createDocument(createDocumentDto)
   }
