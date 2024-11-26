@@ -1,5 +1,5 @@
 import { Journal } from './entities/journal.entity';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateJournalDto } from './dto/create-journal.dto';
 import { InjectModel } from '@nestjs/sequelize';
 
@@ -14,5 +14,18 @@ export class JournalsService {
 
   async findAll() {
     return await this.journalRepository.findAll();
+  }
+
+  async findOne(id: number) {
+    try {
+      const journal = await this.journalRepository.findByPk(id);
+      if(!journal) throw new Error('Журнал не найден')
+      return journal;
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
   }
 }
