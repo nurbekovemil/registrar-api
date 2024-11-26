@@ -38,6 +38,8 @@ import { HolderDistrict } from "./holders/entities/holder-district.entity";
 import { AnalysisModule } from './analysis/analysis.module';
 import { DocumentsModule } from './documents/documents.module';
 import { Document } from "./documents/entities/document.entity";
+import { JournalsModule } from './journals/journals.module';
+import { Journal } from "./journals/entities/journal.entity";
 
 @Module({
   controllers: [],
@@ -76,7 +78,8 @@ import { Document } from "./documents/entities/document.entity";
         Transaction,
         TransactionOperation,
         Dividend,
-        DividendTransaction
+        DividendTransaction,
+        Journal
       ],
       autoLoadModels: true,
     }),
@@ -93,6 +96,7 @@ import { Document } from "./documents/entities/document.entity";
     DividendsModule,
     AnalysisModule,
     DocumentsModule,
+    JournalsModule,
   ],
 })
 export class AppModule {}

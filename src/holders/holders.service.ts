@@ -1,10 +1,9 @@
-import { CreateDocumentDto, CreateHolderDocumentDto } from './dto/create-holder-document.dto';
+import { JournalsService } from './../journals/journals.service';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateHolderDto } from './dto/create-holder.dto';
 import { UpdateHolderDto } from './dto/update-holder.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Holder } from './entities/holder.entity';
-import { SecuritiesService } from 'src/securities/securities.service';
 import { EmissionsService } from 'src/emissions/emissions.service';
 import { Security } from 'src/securities/entities/security.entity';
 import sequelize from 'sequelize';
@@ -13,7 +12,6 @@ import { HolderType } from './entities/holder-type.entity';
 import { HolderDistrict } from './entities/holder-district.entity';
 import { CreateDistrictDto } from './dto/create-holder-district.dto';
 import { UpdateDistrictDto } from './dto/update-holder-district.dto';
-// import { HolderDocument } from './entities/holder-document.entity';
 
 
 @Injectable()
@@ -22,9 +20,8 @@ export class HoldersService {
     @InjectModel(Holder) private holderRepository: typeof Holder,
     @InjectModel(HolderType) private holderTypeRepository: typeof HolderType,
     @InjectModel(HolderDistrict) private holderDistrictRepository: typeof HolderDistrict,
-    // @InjectModel(HolderDocument) private holderDocumentRepository: typeof HolderDocument,
     private emissionService: EmissionsService,
-    private securitiesService: SecuritiesService,
+    private journalsService: JournalsService
   ){}
 
   async create(createHolderDto: CreateHolderDto) {
@@ -33,12 +30,21 @@ export class HoldersService {
   }
 
   async update(id: number, updateHolderDto: UpdateHolderDto) {
+    const old_holder_value = await this.holderRepository.findByPk(id)
     const holder = await this.holderRepository.update(updateHolderDto, {
       where: {
         id
       }
     })
-    return holder;
+    const journal = {
+      title: `Запись изменена в участнике: ${updateHolderDto.name}`,
+      old_value: old_holder_value,
+      new_value: updateHolderDto,
+      change_type: 'update',
+      changed_by: 1
+    }
+    await this.journalsService.create(journal)
+    return 'Updated';
   }
 
   async findAll() {

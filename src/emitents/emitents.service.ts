@@ -1,3 +1,4 @@
+import { JournalsService } from './../journals/journals.service';
 import { SecuritiesService } from 'src/securities/securities.service';
 import { Injectable } from '@nestjs/common';
 import { CreateEmitentDto } from './dto/create-emitent.dto';
@@ -13,7 +14,8 @@ export class EmitentsService {
     @InjectModel(Emitent) private emitentRepository: typeof Emitent,
     private emissionService: EmissionsService,
     private holderService: HoldersService,
-    private securityService: SecuritiesService
+    private securityService: SecuritiesService,
+    private journalsService: JournalsService
   ){}
   
   async create(createEmitentDto: CreateEmitentDto) {
@@ -45,11 +47,20 @@ export class EmitentsService {
     return holders
   }
   async update(id: number, updateEmitentDto: UpdateEmitentDto) {
+    const old_emitent_value = await this.emitentRepository.findByPk(id)
     const emitent = await this.emitentRepository.update(updateEmitentDto, {
       where: {
         id
       }
     })
-    return emitent;
+    const journal = {
+      title: `Запись изменена в эмитенте: ${updateEmitentDto.full_name}`,
+      old_value: old_emitent_value,
+      new_value: updateEmitentDto,
+      change_type: 'update',
+      changed_by: 1
+    }
+    await this.journalsService.create(journal)
+    return 'Updated';
   }
 }

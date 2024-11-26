@@ -53,14 +53,11 @@ export class TransactionsService {
       }
       await t.commit();
       if(security && createTransactionDto.operation_id != 2){
-        console.log('if(security && createTransactionDto.operation_id != 2){', createTransactionDto)
-        console.log('if(security && createTransactionDto.operation_id != 2){', security)
         transaction.security_id = await security.id
       }
       await transaction.save()
       return transaction
     } catch (error) {
-      console.log('transaction create error: ---- ', error)
       t.rollback();
       throw new HttpException(
         error.message,
