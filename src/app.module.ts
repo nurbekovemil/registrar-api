@@ -36,7 +36,8 @@ import { DividendTransaction } from "./dividends/entities/dividend-transaction.e
 import { HolderType } from "./holders/entities/holder-type.entity";
 import { HolderDistrict } from "./holders/entities/holder-district.entity";
 import { AnalysisModule } from './analysis/analysis.module';
-import { HolderDocument } from "./holders/entities/holder-document.entity";
+import { DocumentsModule } from './documents/documents.module';
+import { Document } from "./documents/entities/document.entity";
 
 @Module({
   controllers: [],
@@ -63,7 +64,7 @@ import { HolderDocument } from "./holders/entities/holder-document.entity";
         Emission, 
         Account, 
         AccountType,
-        HolderDocument,
+        Document,
         HolderType,
         HolderDistrict,
         Holder, 
@@ -91,6 +92,7 @@ import { HolderDocument } from "./holders/entities/holder-document.entity";
     CompaniesModule,
     DividendsModule,
     AnalysisModule,
+    DocumentsModule,
   ],
 })
 export class AppModule {}

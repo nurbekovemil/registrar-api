@@ -13,6 +13,7 @@ import { Security } from 'src/securities/entities/security.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { HolderType } from './holder-type.entity';
 import { HolderDistrict } from './holder-district.entity';
+import { Document } from 'src/documents/entities/document.entity';
   
   interface HolderCreateAttrs {
     name: string;
@@ -45,6 +46,10 @@ import { HolderDistrict } from './holder-district.entity';
     @ForeignKey(() => HolderDistrict)
     @Column({ type: DataType.INTEGER })
     district_id: number;
+
+    @ForeignKey(() => Document)
+    @Column({ type: DataType.INTEGER, allowNull: true })
+    document_id: number | null;
 
     @Column({ type: DataType.STRING })
     name: string;

@@ -11,6 +11,7 @@ import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Emission } from 'src/emissions/entities/emission.entity';
 import { Holder } from 'src/holders/entities/holder.entity';
 import { Security } from 'src/securities/entities/security.entity';
+import { Document } from 'src/documents/entities/document.entity';
   
   interface TransactionCreateAttrs {
     is_exchange: boolean;
@@ -62,6 +63,10 @@ import { Security } from 'src/securities/entities/security.entity';
     @ForeignKey(() => Security)
     @Column({ type: DataType.INTEGER })
     security_id: number;
+
+    @ForeignKey(() => Document)
+    @Column({ type: DataType.INTEGER, allowNull: true })
+    document_id: number | null;
   
     @Column({ type: DataType.BOOLEAN })
     is_family: boolean;
