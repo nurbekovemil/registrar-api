@@ -91,17 +91,17 @@ module.exports = {
   //       name: 'Юридическое лицо'
   //     }]
   // );
-    await queryInterface.bulkInsert('holder_districts', [
-        { 
-          id: 1,
-          name: 'Бишкек'
-        },
-        { 
-          id: 2,
-          name: 'Алмата'
-        }
-      ]
-    );
+    // await queryInterface.bulkInsert('holder_districts', [
+    //     { 
+    //       id: 1,
+    //       name: 'Бишкек'
+    //     },
+    //     { 
+    //       id: 2,
+    //       name: 'Алмата'
+    //     }
+    //   ]
+    // );
     // await queryInterface.bulkInsert('holders',
     //   [
     //     {
