@@ -6,4 +6,5 @@ export class CreateDividendDto {
     readonly percent?: number
     readonly date_close_reestr: string
     readonly month_year: string
+    readonly district_id: number
 }

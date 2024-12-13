@@ -58,6 +58,9 @@ import { Journal } from "./journals/entities/journal.entity";
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRESS_PASSWORD,
       database: process.env.POSTGRES_DB,
+      sync: {
+        alter: process.env.NODE_ENV === 'development',
+      },
       models: [
         Company,
         User, 

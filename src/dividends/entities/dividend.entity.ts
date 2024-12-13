@@ -25,6 +25,7 @@ import { DividendTransaction } from './dividend-transaction.entity';
     amount_share_credited: number;
     amount_share_debited: number;
     amount_pay: number;
+    district_id: number
   }
   
   @Table({ tableName: 'dividends', createdAt: false, updatedAt: false })
@@ -48,6 +49,9 @@ import { DividendTransaction } from './dividend-transaction.entity';
     @ForeignKey(() => HolderType)
     @Column({ type: DataType.INTEGER })
     type: number;
+
+    @Column({ type: DataType.INTEGER })
+    district_id: number;
 
     @Column({ type: DataType.DATE })
     date_close_reestr: Date;

@@ -131,6 +131,42 @@ export class SecuritiesService {
     return holders
   }
 
+  async getEmitentHoldersByHolderDictrict(eid: number, type: number, dsid: number){
+    const holders = await this.securityRepository.findAll({
+      where: {
+        emitent_id: eid,
+        quantity: {
+          [sequelize.Op.ne]: 0
+        }
+      },
+      attributes: [
+        'holder_id',
+        [sequelize.literal(`
+          "Security"."quantity" - COALESCE(
+            (SELECT SUM(sb.quantity) 
+             FROM security_blocks sb 
+             WHERE sb.security_id = "Security"."id" 
+               AND sb.unblock_date IS NULL), 
+            0
+          )
+        `), 'quantity'], // Вычисление доступного количества
+        [sequelize.literal('Holder.name'), 'holder_name'], // Add this line
+      ],
+      include: [
+        {
+          model: Holder,
+          attributes: [],
+          where: {
+            holder_type: type,
+            district_id: dsid
+          }
+        }
+      ],
+      group: ['Security.id','holder.id']
+    })
+    return holders
+  }
+
   async getSecurityBlock(security_id: number) {
     const security = await this.securityBlockRepository.findOne({
       where: {

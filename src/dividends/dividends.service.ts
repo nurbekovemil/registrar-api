@@ -19,7 +19,12 @@ export class DividendsService {
   ){}
   async createDividend(createDividendDto: CreateDividendDto) {
     try {
-      const shareholders = await this.securityService.getEmitentHoldersByHolderType(createDividendDto.emitent_id, createDividendDto.type);
+      let shareholders;
+      if(!createDividendDto.district_id) {
+        shareholders = await this.securityService.getEmitentHoldersByHolderType(createDividendDto.emitent_id, createDividendDto.type);
+      } else {
+        shareholders = await this.securityService.getEmitentHoldersByHolderDictrict(createDividendDto.emitent_id, createDividendDto.type, createDividendDto.district_id);
+      }
       if (!shareholders.length) {
         throw new HttpException('Акционеры не найдены', HttpStatus.NOT_FOUND);
       }
@@ -44,7 +49,8 @@ export class DividendsService {
         amount_share_debited,
         amount_pay,
         month_year: createDividendDto.month_year,
-        date_close_reestr: createDividendDto.date_close_reestr
+        date_close_reestr: createDividendDto.date_close_reestr,
+        district_id: createDividendDto.district_id
       })
       const createDividendPromises = shareholders.map(async (shareholder) => {
         const share_count = shareholder.quantity;
