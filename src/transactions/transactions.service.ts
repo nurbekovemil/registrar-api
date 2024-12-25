@@ -48,6 +48,15 @@ export class TransactionsService {
         case TransactionOperationTypes.UNLOCKING:
           security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
           break;
+        case TransactionOperationTypes.SALE:
+          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+          break;
+        case TransactionOperationTypes.NOMINEE_TRANSFER:
+          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+          break;
+        case TransactionOperationTypes.INHERITANCE:
+            security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+            break;
         default:
           break;
       }
