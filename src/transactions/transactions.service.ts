@@ -48,7 +48,8 @@ export class TransactionsService {
         case TransactionOperationTypes.UNLOCKING:
           security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
           break;
-        case TransactionOperationTypes.SALE:
+        // Test
+          case TransactionOperationTypes.SALE:
           security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
           break;
         case TransactionOperationTypes.NOMINEE_TRANSFER:
@@ -56,7 +57,19 @@ export class TransactionsService {
           break;
         case TransactionOperationTypes.INHERITANCE:
             security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
-            break;
+        break;
+        case TransactionOperationTypes.ARREST:
+          security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t)
+        break;
+        case TransactionOperationTypes.ARREST_REMOVAL:
+          security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
+        break;
+        case TransactionOperationTypes.PLEDGE:
+          security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t)
+        break;
+        case TransactionOperationTypes.GRATUITOUS:
+          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+        break;
         default:
           break;
       }

@@ -5,5 +5,9 @@ export const TransactionOperationTypes = {
   UNLOCKING: 11,
   SALE: 32, // Купля-продажа
   NOMINEE_TRANSFER: 33, // Передача в ном.держ
-  INHERITANCE: 34 // Наследство
+  INHERITANCE: 34, // Наследство
+  ARREST: 8, // Арест
+  ARREST_REMOVAL: 9, // Снятие ареста
+  PLEDGE: 35, // Залог
+  GRATUITOUS: 36 // Безвозмездно
 };
