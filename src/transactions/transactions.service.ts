@@ -48,26 +48,40 @@ export class TransactionsService {
         case TransactionOperationTypes.UNLOCKING:
           security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
           break;
-        // Test
+        // Логика для операции купли-продажи
           case TransactionOperationTypes.SALE:
           security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
           break;
+        // Логика для операции передачи в номинальный держатель
         case TransactionOperationTypes.NOMINEE_TRANSFER:
           security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
           break;
+        // Логика для операции наследства
         case TransactionOperationTypes.INHERITANCE:
             security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
         break;
+        // Логика для операции арест
         case TransactionOperationTypes.ARREST:
           security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t)
         break;
+        // Логика для операции снятия ареста
         case TransactionOperationTypes.ARREST_REMOVAL:
           security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
         break;
+        // Логика для операции залог
         case TransactionOperationTypes.PLEDGE:
           security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t)
         break;
+        // Логика для операции безвозмездно
         case TransactionOperationTypes.GRATUITOUS:
+          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+        break;
+        // Логика для операции доверительного управления
+        case TransactionOperationTypes.TRUST_MANAGEMENT:
+          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+        break;
+        // Логика для операции возврата доверительного управления
+        case TransactionOperationTypes.TRUST_MANAGEMENT_RETURN:
           security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
         break;
         default:
