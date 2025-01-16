@@ -39,4 +39,9 @@ export class EmitentsController {
   update(@Param('id') id: number, @Body() updateEmitentDto: UpdateEmitentDto) {
     return this.emitentsService.update(id, updateEmitentDto);
   }
+
+  @Delete(':id')
+  delete(@Param('id') id: number) {
+    return this.emitentsService.delete(id);
+  }
 }

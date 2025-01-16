@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateSecurityDto } from './dto/create-security.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Security } from './entities/security.entity';
@@ -9,11 +9,13 @@ import { Sequelize, literal } from 'sequelize';
 import sequelize from 'sequelize';
 import { SecurityBlock } from './entities/security-block.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
+import { SecurityPledge } from './entities/security-pledge.entity';
 @Injectable()
 export class SecuritiesService {
   constructor(
     @InjectModel(Security) private securityRepository: typeof Security,
     @InjectModel(SecurityBlock) private securityBlockRepository: typeof SecurityBlock,
+    @InjectModel(SecurityPledge) private securityPledgeRepository: typeof SecurityPledge,
     // @InjectModel(Transaction) private transactionRepository: typeof Transaction,
   ) {}
 
@@ -215,4 +217,49 @@ export class SecuritiesService {
   //   })
   //   return operations
   // }
+
+  async deleteEmitentSecurities(emitent_id: number, transaction: any) {
+    await this.securityRepository.destroy({
+      where: {
+        emitent_id
+      },
+      transaction
+    })
+  }
+
+  async pledgeSecurity(data) {
+    const {security_id, quantity, holder_from_id, holder_to_id} = data
+    const pledge = await this.securityPledgeRepository.findByPk(security_id)
+    if(!pledge) {
+      return await this.securityPledgeRepository.create({
+        security_id,
+        pledged_quantity: quantity,
+        pledger_id: holder_from_id,
+        pledgee_id: holder_to_id
+      })
+    }
+    pledge.pledged_quantity = pledge.pledged_quantity + quantity
+    return pledge.save()
+  }
+  async unpledgeSecurity(data) {
+    const {security_id, quantity, holder_from_id, holder_to_id} = data
+    const pledge = await this.securityPledgeRepository.findByPk(security_id)
+    if(!pledge) {
+      throw new HttpException('Залогированная ценная бумага не найдена', HttpStatus.BAD_REQUEST)
+    }
+    pledge.pledged_quantity = pledge.pledged_quantity - quantity
+    return pledge.save()
+  }
+
+  async getPledgedSecurity(security_id: number) {
+    const pledge = await this.securityPledgeRepository.findOne({
+      where: {
+        security_id
+      }
+    })
+    return pledge
+  }
 }
+
+
+

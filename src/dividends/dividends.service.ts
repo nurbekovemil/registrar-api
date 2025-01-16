@@ -152,4 +152,13 @@ export class DividendsService {
     })
     return dividend_transactions
   }
+
+  async deleteEmitentDividends(eid: number, transaction: any) {
+    await this.dividendRepository.destroy({
+      where: {
+        emitent_id:eid
+      },
+      transaction
+    })
+  }
 }

@@ -12,6 +12,7 @@ import { HolderType } from './entities/holder-type.entity';
 import { HolderDistrict } from './entities/holder-district.entity';
 import { CreateDistrictDto } from './dto/create-holder-district.dto';
 import { UpdateDistrictDto } from './dto/update-holder-district.dto';
+import { SecuritiesService } from 'src/securities/securities.service';
 
 
 @Injectable()
@@ -21,7 +22,8 @@ export class HoldersService {
     @InjectModel(HolderType) private holderTypeRepository: typeof HolderType,
     @InjectModel(HolderDistrict) private holderDistrictRepository: typeof HolderDistrict,
     private emissionService: EmissionsService,
-    private journalsService: JournalsService
+    private journalsService: JournalsService,
+    private securityService: SecuritiesService
   ){}
 
   async create(createHolderDto: CreateHolderDto) {
@@ -334,5 +336,12 @@ export class HoldersService {
       where: { id }
     })
     return district
+  }
+  async getHolderPledgeSecurities (holder_from_id, emitent_id, emission_id){
+    const holder_from_security = await this.securityService.getHolderSecurity({holder_id: holder_from_id, emitent_id, emission_id})
+    if(!holder_from_security) {
+      throw new HttpException('Ценная бумага не найден', HttpStatus.BAD_REQUEST)
+    }
+    return await this.securityService.getPledgedSecurity(holder_from_security.id)
   }
 }

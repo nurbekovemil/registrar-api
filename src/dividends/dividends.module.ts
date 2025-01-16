@@ -13,6 +13,7 @@ import { SecuritiesModule } from 'src/securities/securities.module';
     SecuritiesModule
   ],
   controllers: [DividendsController],
-  providers: [DividendsService]
+  providers: [DividendsService],
+  exports: [DividendsService]
 })
 export class DividendsModule {}

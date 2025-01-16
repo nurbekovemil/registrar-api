@@ -7,6 +7,7 @@ import { EmissionsModule } from 'src/emissions/emissions.module';
 import { HoldersModule } from 'src/holders/holders.module';
 import { SecuritiesModule } from 'src/securities/securities.module';
 import { JournalsModule } from 'src/journals/journals.module';
+import { DividendsModule } from 'src/dividends/dividends.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { JournalsModule } from 'src/journals/journals.module';
     EmissionsModule,
     HoldersModule,
     SecuritiesModule,
-    JournalsModule
+    JournalsModule,
+    DividendsModule
   ],
   controllers: [EmitentsController],
   providers: [EmitentsService],

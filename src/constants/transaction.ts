@@ -9,6 +9,7 @@ export const TransactionOperationTypes = {
   ARREST: 8, // Арест
   ARREST_REMOVAL: 9, // Снятие ареста
   PLEDGE: 35, // Залог
+  UNPLEDGE: 39, // Снять Залог
   GRATUITOUS: 36, // Безвозмездно
   TRUST_MANAGEMENT: 70, // Доверительное управление
   TRUST_MANAGEMENT_RETURN: 71 // Возврат из доверительного управления

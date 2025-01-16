@@ -71,4 +71,13 @@ export class HoldersController {
   getHolderSecurities(@Param('id', ParseIntPipe) id: number) {
     return this.holdersService.getHolderSecurities(id);
   }
+
+  @Get('/pledges/:eid/:esid/:hid')
+  getExtractReestrOwns(
+    @Param('eid', ParseIntPipe) eid: number, 
+    @Param('esid', ParseIntPipe) esid: number, 
+    @Param('hid', ParseIntPipe) hid: number) {
+    return this.holdersService.getHolderPledgeSecurities(hid, eid, esid);
+  }
+
 }

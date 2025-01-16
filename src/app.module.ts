@@ -40,6 +40,7 @@ import { DocumentsModule } from './documents/documents.module';
 import { Document } from "./documents/entities/document.entity";
 import { JournalsModule } from './journals/journals.module';
 import { Journal } from "./journals/entities/journal.entity";
+import { SecurityPledge } from "./securities/entities/security-pledge.entity";
 
 @Module({
   controllers: [],
@@ -78,6 +79,7 @@ import { Journal } from "./journals/entities/journal.entity";
         SecurityAttitude,
         SecurityStatus,
         SecurityBlock,
+        SecurityPledge,
         Transaction,
         TransactionOperation,
         Dividend,

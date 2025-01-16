@@ -1,3 +1,4 @@
+import { DividendsService } from './../dividends/dividends.service';
 import { JournalsService } from './../journals/journals.service';
 import { SecuritiesService } from 'src/securities/securities.service';
 import { Injectable } from '@nestjs/common';
@@ -15,7 +16,8 @@ export class EmitentsService {
     private emissionService: EmissionsService,
     private holderService: HoldersService,
     private securityService: SecuritiesService,
-    private journalsService: JournalsService
+    private journalsService: JournalsService,
+    private dividendsService: DividendsService
   ){}
   
   async create(createEmitentDto: CreateEmitentDto) {
@@ -62,5 +64,27 @@ export class EmitentsService {
     }
     await this.journalsService.create(journal)
     return 'Updated';
+  }
+
+  async delete(id: number) {
+    const transaction = await this.emitentRepository.sequelize.transaction();
+    try {
+      await this.securityService.deleteEmitentSecurities(id, transaction)
+      await this.dividendsService.deleteEmitentDividends(id, transaction)
+      const result =await this.emitentRepository.destroy({
+        where: {
+          id
+        },
+        transaction
+      })
+      if (!result) {
+        throw new Error(`Emitent with ID ${id} not found.`);
+      }
+      await transaction.commit();
+      return 'Deleted';
+    } catch (error) {
+      await transaction.rollback();
+      throw new Error(`Failed to delete emitent: ${error.message}`);
+    }
   }
 }
