@@ -51,16 +51,16 @@ module.exports = {
     //   },
     // ]
     // );
-    await queryInterface.bulkInsert('emission_types', [
-        { 
-          id: 1,
-          name: 'Акция'
-        },
-        { 
-          id: 2,
-          name: 'Облигация'
-        }]
-    );
+    // await queryInterface.bulkInsert('emission_types', [
+    //     { 
+    //       id: 1,
+    //       name: 'Акция'
+    //     },
+    //     { 
+    //       id: 2,
+    //       name: 'Облигация'
+    //     }]
+    // );
     // await queryInterface.bulkInsert('emissions',[
     //     {
     //         "reg_number": "KG0101041711",
@@ -689,25 +689,25 @@ module.exports = {
     //     }
     //   ]
     // );
-    await queryInterface.bulkInsert('security_attitudes', [
-        {id: 1, name: 'Владелец акций'},
-        {id: 2, name: 'Доверительное лицо'},
-        {id: 3, name: 'Номинальн. держатель'}]
-    );
-    await queryInterface.bulkInsert('security_types', [
-        {id: 1, name: 'Простые именные'},
-        {id: 2, name: 'Облигация'}]
-    );
-    await queryInterface.bulkInsert('security_status', [
-        {name: 'Активные'},
-        {name: 'Заблокированные'},
-        {name: 'Погашенные'},
-        {name: 'Приостановленные'},
-        {name: 'Испорченные'},
-        {name: 'Проданные'},
-        {name: 'Переданные в дар'},
-        {name: 'Утерянные'}]
-    );
+    // await queryInterface.bulkInsert('security_attitudes', [
+    //     {id: 1, name: 'Владелец акций'},
+    //     {id: 2, name: 'Доверительное лицо'},
+    //     {id: 3, name: 'Номинальн. держатель'}]
+    // );
+    // await queryInterface.bulkInsert('security_types', [
+    //     {id: 1, name: 'Простые именные'},
+    //     {id: 2, name: 'Облигация'}]
+    // );
+    // await queryInterface.bulkInsert('security_status', [
+    //     {name: 'Активные'},
+    //     {name: 'Заблокированные'},
+    //     {name: 'Погашенные'},
+    //     {name: 'Приостановленные'},
+    //     {name: 'Испорченные'},
+    //     {name: 'Проданные'},
+    //     {name: 'Переданные в дар'},
+    //     {name: 'Утерянные'}]
+    // );
     // await queryInterface.bulkInsert('users', [
     //     { 
     //       login: 'admin', 
@@ -717,47 +717,47 @@ module.exports = {
     //       company_id: 1
     //     }]
     // );
-    await queryInterface.bulkInsert('transaction_operations', [
-      {name: 'Перв. ввод'},
-      {name: 'Эмиссия'},
-      {name: 'Ден, аукцион'},
-      {name: 'Восстанов. ак'},
-      {name: 'Распред. акции'},
-      {name: 'Зак, ден, аукцион'},
-      {name: 'Анулирование'},
-      {name: 'Арест'},
-      {name: 'Снятие арест'},
-      {name: 'Блокирование'},
-      {name: 'Отмена блок'},
-      {name: 'Приватизация'},
-      {name: 'Транзит'},
-      {name: 'Дробление'},
-      {name: 'Протокол №4'},
-      {name: 'Вып. див. ЦБ'},
-      {name: 'Возврат акции'},
-      {name: 'Распред. 40%'},
-      {name: 'На собрание'},
-      {name: 'С собрание'},
-      {name: 'Подписка'},
-      {name: 'Закр. разм/эм'},
-      {name: 'Мена'},
-      {name: 'Номер. дер'},
-      {name: 'Обратно. РЕПО'},
-      {name: 'Откр. л/с'},
-      {name: 'Св. о наслед'},
-      {name: 'Протокол 7/1'},
-      {name: 'Капитализации'},
-      {name: 'Дог. на разме'},
-      {name: 'Дарение'},
-      {name: 'Купля-продажа'},
-      {name: 'Передача в ном. держ'},
-      {name: 'Наследство'},
-      {name: 'Залог'},
-      {name: 'Безвозмездно'},
-      {name: 'Довер. управ'},
-      {name: 'Возврат из довер. управления'},
-      {name: 'Снять залог'},
-    ])
+    // await queryInterface.bulkInsert('transaction_operations', [
+    //   {name: 'Перв. ввод'},
+    //   {name: 'Эмиссия'},
+    //   {name: 'Ден, аукцион'},
+    //   {name: 'Восстанов. ак'},
+    //   {name: 'Распред. акции'},
+    //   {name: 'Зак, ден, аукцион'},
+    //   {name: 'Анулирование'},
+    //   {name: 'Арест'},
+    //   {name: 'Снятие арест'},
+    //   {name: 'Блокирование'},
+    //   {name: 'Отмена блок'},
+    //   {name: 'Приватизация'},
+    //   {name: 'Транзит'},
+    //   {name: 'Дробление'},
+    //   {name: 'Протокол №4'},
+    //   {name: 'Вып. див. ЦБ'},
+    //   {name: 'Возврат акции'},
+    //   {name: 'Распред. 40%'},
+    //   {name: 'На собрание'},
+    //   {name: 'С собрание'},
+    //   {name: 'Подписка'},
+    //   {name: 'Закр. разм/эм'},
+    //   {name: 'Мена'},
+    //   {name: 'Номер. дер'},
+    //   {name: 'Обратно. РЕПО'},
+    //   {name: 'Откр. л/с'},
+    //   {name: 'Св. о наслед'},
+    //   {name: 'Протокол 7/1'},
+    //   {name: 'Капитализации'},
+    //   {name: 'Дог. на разме'},
+    //   {name: 'Дарение'},
+    //   {name: 'Купля-продажа'},
+    //   {name: 'Передача в ном. держ'},
+    //   {name: 'Наследство'},
+    //   {name: 'Залог'},
+    //   {name: 'Безвозмездно'},
+    //   {name: 'Довер. управ'},
+    //   {name: 'Возврат из довер. управления'},
+    //   {name: 'Снять залог'},
+    // ])
   },
 
   async down (queryInterface) {
