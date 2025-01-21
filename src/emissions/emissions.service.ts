@@ -63,9 +63,36 @@ export class EmissionsService {
     const emissionTypes = await this.emissionTypeRepository.findAll()
     return emissionTypes
   }
+  // async getEmissionsByHolderId(hid: number){
+  //   const emissions = await this.emissionRepository.findAll({
+  //     include: [
+  //       {
+  //         model: Security,
+  //         where: {
+  //           holder_id: hid
+  //         },
+  //         include: [
+  //           {
+  //             model: SecurityPledge,
+  //             as: 'security_pledged', // В залоге для этой бумаги
+  //           },
+  //           {
+  //             model: SecurityPledge,
+  //             as: 'security_pledgee', // Принято в залог для этой бумаги
+  //           },
+  //           {
+  //             model: SecurityBlock
+  //           }
+  //         ]
+  //       }
+  //     ]
+  //   })
+  //   return emissions
+  // }
+
   async getEmissionsByHolderId(hid: number){
     const emissions = await this.emissionRepository.findAll({
-      include: [
+      include: 
         {
           model: Security,
           where: {
@@ -85,9 +112,29 @@ export class EmissionsService {
             }
           ]
         }
-      ]
+      
     })
-    return emissions
+    return emissions.map(emission => ({
+      reg_number: emission.reg_number,
+      type: 'простые', // Или другой тип, если он у вас есть
+      total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+      nominal: emission.nominal || 0,
+      total_nominal_value:
+        (emission.nominal || 0) *
+        emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+      pledged_shares: emission.securities.reduce(
+        (sum, security) => sum + (security.security_pledged?.pledged_quantity || 0),
+        0,
+      ),
+      accepted_in_pledge: emission.securities.reduce(
+        (sum, security) => sum + (security.security_pledgee?.pledged_quantity || 0),
+        0,
+      ),
+      blocked_shares: emission.securities.reduce(
+        (sum, security) => sum + (security.security_block?.quantity || 0),
+        0,
+      ),
+    }));
   }
 
   async deductQuentityEmission(emission_id, quantity){
