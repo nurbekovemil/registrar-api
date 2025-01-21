@@ -27,6 +27,18 @@ export class PrintsService {
     const holder = await this.holderService.findOne(hid)
     const emitent = await this.emitentService.findOne(eid)
     const emission = await this.emissionService.getEmissionsByHolderId(hid)
+    let holder_pledged_security = 0;
+    let holder_pledgee_security = 0;
+    // if(emission.length > 0) {
+    //   emission.map(async esid => {
+    //     const security = await this.securityService.getHolderSecurity({holder_id: hid, emitent_id: eid, emission_id: esid.id})
+    //     const pledger = await this.securityService.getPlegerSecurity(security.id, hid)
+    //     const pledgee = await this.securityService.getPledgeeSecurity(security.id, hid)
+    //     holder_pledged_security = holder_pledged_security + pledger.pledged_quantity
+    //     holder_pledgee_security = holder_pledgee_security + pledgee.pledged_quantity
+    //   })
+
+    // }
     return {emitent, holder, emission}
   }
 

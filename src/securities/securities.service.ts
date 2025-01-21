@@ -229,7 +229,7 @@ export class SecuritiesService {
 
   async pledgeSecurity(data) {
     const {security_id, quantity, holder_from_id, holder_to_id} = data
-    const pledge = await this.securityPledgeRepository.findByPk(security_id)
+    let pledge = await this.securityPledgeRepository.findByPk(security_id)
     if(!pledge) {
       return await this.securityPledgeRepository.create({
         security_id,
@@ -255,6 +255,26 @@ export class SecuritiesService {
     const pledge = await this.securityPledgeRepository.findOne({
       where: {
         security_id
+      }
+    })
+    return pledge
+  }
+
+  async getPlegerSecurity(security_id: number, holder_id: number) {
+    const pledge = await this.securityPledgeRepository.findOne({
+      where: {
+        security_id,
+        pledger_id: holder_id
+      }
+    })
+    return pledge
+  }
+
+  async getPledgeeSecurity(security_id: number, holder_id: number) {
+    const pledge = await this.securityPledgeRepository.findOne({
+      where: {
+        security_id,
+        pledgee_id: holder_id
       }
     })
     return pledge
