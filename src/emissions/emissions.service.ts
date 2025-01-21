@@ -107,7 +107,7 @@ export class EmissionsService {
         'nominal',
         [sequelize.col('securities.quantity'), 'count'],
         [sequelize.col('securities->security_block.quantity'), 'blocked_count'],
-        [sequelize.col('securities->security_pledged.pledged_quantity'), 'pledge_count'],
+        [sequelize.col('securities->security_pledgee.pledged_quantity'), 'pledge_count'],
       ],
       include: [
         { 
@@ -116,17 +116,13 @@ export class EmissionsService {
           where: {
             holder_id: hid
           },
-          // include: [
-          //   SecurityBlock,
-          //   SecurityPledge
-          // ],
           include: [
               {
                 model: SecurityBlock
               },
               {
                 model: SecurityPledge,
-                as: 'security_pledged',
+                as: 'security_pledgee',
               }
           ],
         }
