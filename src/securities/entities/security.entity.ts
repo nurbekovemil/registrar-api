@@ -16,6 +16,7 @@ import { Emission } from 'src/emissions/entities/emission.entity';
 import { SecurityStatus } from './security-status.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { SecurityBlock } from './security-block.entity';
+import { SecurityPledge } from './security-pledge.entity';
 
 interface SecurityCreateAttrs {
   type_id: number;
@@ -89,5 +90,8 @@ export class Security extends Model<Security, SecurityCreateAttrs> {
 
   @HasOne(() => SecurityBlock)
   security_block: SecurityBlock
+
+  @HasOne(() => SecurityPledge)
+  security_pledge: SecurityPledge
 
 }

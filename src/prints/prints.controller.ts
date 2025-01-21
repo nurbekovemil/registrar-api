@@ -11,7 +11,7 @@ export class PrintsController {
     return this.printsService.getEmitentCard(id);
   } 
 
-  // Передаточное распоряжение
+  // Передаточное распоряжение || Выписка из реестра
   @Get('/emitent/:eid/reestr/:hid')
   getExtractReestrForHolderId(@Param('eid') eid: number, @Param('hid') hid: number) {
     return this.printsService.getExtractFromRegister(eid, hid)

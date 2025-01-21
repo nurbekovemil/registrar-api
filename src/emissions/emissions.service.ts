@@ -8,6 +8,7 @@ import { Security } from 'src/securities/entities/security.entity';
 import sequelize from 'sequelize';
 import { SecurityBlock } from 'src/securities/entities/security-block.entity';
 import { TransactionsService } from 'src/transactions/transactions.service';
+import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
 
 @Injectable()
 export class EmissionsService {
@@ -93,6 +94,7 @@ export class EmissionsService {
         'nominal',
         [sequelize.col('securities.quantity'), 'count'],
         [sequelize.col('securities->security_block.quantity'), 'blocked_count'],
+        [sequelize.col('securities->security_pledge.pledged_quantity'), 'pledge_count'],
       ],
       include: [
         { 
@@ -101,11 +103,18 @@ export class EmissionsService {
           where: {
             holder_id: hid
           },
+          // include: [
+          //   SecurityBlock,
+          //   SecurityPledge
+          // ],
           include: [
-            
-              SecurityBlock
-            
-          ]
+              {
+                model: SecurityBlock
+              },
+              {
+                model: SecurityPledge
+              }
+          ],
         }
       ]
     })
