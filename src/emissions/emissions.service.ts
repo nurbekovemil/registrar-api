@@ -70,7 +70,20 @@ export class EmissionsService {
           model: Security,
           where: {
             holder_id: hid
-          }
+          },
+          include: [
+            {
+              model: SecurityPledge,
+              as: 'security_pledged', // В залоге для этой бумаги
+            },
+            {
+              model: SecurityPledge,
+              as: 'security_pledgee', // Принято в залог для этой бумаги
+            },
+            {
+              model: SecurityBlock
+            }
+          ]
         }
       ]
     })
