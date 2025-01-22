@@ -229,7 +229,11 @@ export class SecuritiesService {
 
   async pledgeSecurity(data) {
     const {security_id, quantity, holder_from_id, holder_to_id} = data
-    let pledge = await this.securityPledgeRepository.findByPk(security_id)
+    let pledge = await this.securityPledgeRepository.findOne({
+      where: {
+        security_id
+      }
+    })
     if(!pledge) {
       return await this.securityPledgeRepository.create({
         security_id,
@@ -243,7 +247,12 @@ export class SecuritiesService {
   }
   async unpledgeSecurity(data) {
     const {security_id, quantity, holder_from_id, holder_to_id} = data
-    let pledge = await this.securityPledgeRepository.findByPk(security_id)
+    console.log(data)
+    let pledge = await this.securityPledgeRepository.findOne({
+      where: {
+        security_id
+      }
+    })
     if(!pledge) {
       throw new HttpException('Залогированная ценная бумага не найдена', HttpStatus.BAD_REQUEST)
     }

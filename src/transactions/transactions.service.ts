@@ -150,7 +150,7 @@ export class TransactionsService {
       where: {
         emitent_id: id
       },
-      attributes: ['id','contract_date'],
+      attributes: ['id','contract_date','quantity'],
       include: [
         {
           model: TransactionOperation
@@ -188,7 +188,7 @@ export class TransactionsService {
   
   async getTransactions(){
     const transactions = await this.transactionRepository.findAll({
-      attributes: ['id','contract_date'],
+      attributes: ['id','contract_date','quantity'],
       include: [
         {
           model: TransactionOperation
@@ -338,8 +338,10 @@ export class TransactionsService {
     }
     await this.securityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
     const holder_to_security = await this.securityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
+    console.log('test ----- ', createTransactionDto)
     if(!holder_to_security) {
-      throw new Error(`Ценная бумага не найдено`);
+      const holder_to_security = await this.createSecurity(createTransactionDto, transactionDate)
+      return await this.securityService.pledgeSecurity({security_id: holder_to_security.id, ...createTransactionDto})
     }
     return await this.securityService.pledgeSecurity({security_id: holder_to_security.id, ...createTransactionDto})
   }
