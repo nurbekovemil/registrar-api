@@ -68,9 +68,9 @@ export class HoldersService {
     const emissions = await this.emissionService.getEmissionsByHolderId(hid)
     return emissions
   }
-  async getHolderSecurities(hid: number){
-    const emissions = await this.emissionService.getHolderSecurities(hid)
-    return emissions
+  // Фильтр по дате надо протестировать с большим количеством данных
+  async getHolderSecurities(hid: number, query: any) {
+    return await this.emissionService.getHolderSecurities(hid, query)
   }
 
   async extractFromRegisters(eid: number) {

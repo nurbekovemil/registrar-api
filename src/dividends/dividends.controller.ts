@@ -23,7 +23,7 @@ export class DividendsController {
   }
 
   @Get('/:eid/all-list')
-  getAllDividends(@Param('eid') eid: number) {
-    return this.dividendsService.getAllDividendList(eid);
+  getAllDividends(@Param('eid') eid: number, @Query() query: any) {
+    return this.dividendsService.getAllDividendList(eid, query);
   }
 }

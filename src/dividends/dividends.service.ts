@@ -5,7 +5,7 @@ import { Dividend } from './entities/dividend.entity';
 import { DividendTransaction } from './entities/dividend-transaction.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { SecuritiesService } from 'src/securities/securities.service';
-import sequelize from 'sequelize';
+import sequelize, { Op } from 'sequelize';
 import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Holder } from 'src/holders/entities/holder.entity';
 import { HolderType } from 'src/holders/entities/holder-type.entity';
@@ -87,11 +87,18 @@ export class DividendsService {
     }
   }
 
-  async getAllDividendList(eid: number) {
+  async getAllDividendList(eid: number, query?: any) {
+    const { start_date, end_date } = query
+    const dividendCondition: any = {
+      emitent_id: eid
+    }
+    if (start_date && end_date) {
+      dividendCondition.date_close_reestr = {
+        [Op.between]: [new Date(start_date), new Date(end_date)]
+      }
+    }
     const dividends = await this.dividendRepository.findAll({
-      where: {
-        emitent_id: eid,
-      },
+      where: dividendCondition,
       include: [
         {
           model: HolderType

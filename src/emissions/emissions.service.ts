@@ -9,6 +9,7 @@ import sequelize from 'sequelize';
 import { SecurityBlock } from 'src/securities/entities/security-block.entity';
 import { TransactionsService } from 'src/transactions/transactions.service';
 import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class EmissionsService {
@@ -36,8 +37,15 @@ export class EmissionsService {
     return emission
   }
 
-  async findAll() {
-    const emissions = await this.emissionRepository.findAll()
+  async findAll(query?: any) {
+    const {start_date, end_date} = query
+    const emissionCondition: any = {}
+    if(start_date && end_date){
+      emissionCondition.released_date = {
+        [Op.between]: [start_date, end_date]
+      }
+    }
+    const emissions = await this.emissionRepository.findAll({where: emissionCondition})
     return emissions
   }
 
@@ -146,12 +154,22 @@ export class EmissionsService {
     throw new Error('Недостаточно средств')
   }
 
-  async getHolderSecurities(hid: number){
+  async getHolderSecurities(hid: number, query?) {
+    const { start_date, end_date } = query
+    const securityCondition: any = {
+      holder_id: hid
+    }
+    if (start_date && end_date) {
+      securityCondition.purchased_date = { 
+        [Op.between]: [new Date(start_date), new Date(end_date)]
+      }
+    }
     const securities = await this.emissionRepository.findAll({
       attributes: [
         'id',
         'reg_number',
         'nominal',
+        [sequelize.col('securities.purchased_date'), 'purchased_date'],
         [sequelize.col('securities.quantity'), 'count'],
         [sequelize.col('securities->security_block.quantity'), 'blocked_count'],
         [sequelize.col('securities->security_pledgee.pledged_quantity'), 'pledge_count'],
@@ -160,9 +178,7 @@ export class EmissionsService {
         { 
           model: Security,
           attributes: [],
-          where: {
-            holder_id: hid
-          },
+          where: securityCondition,
           include: [
               {
                 model: SecurityBlock

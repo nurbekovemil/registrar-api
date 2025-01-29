@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query } from '@nestjs/common';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 
@@ -12,8 +12,8 @@ export class TransactionsController {
   }
 
   @Get()
-  getTransaction() {
-    return this.transactionsService.getTransactions();
+  getTransaction(@Query() query: any) {
+    return this.transactionsService.getTransactions(query);
   }
   @Get('/operations')
   getTransactionOperations() {

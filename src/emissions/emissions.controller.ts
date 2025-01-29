@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Put, Query } from '@nestjs/common';
 import { EmissionsService } from './emissions.service';
 import { CreateEmissionDto } from './dto/create-emission.dto';
 import { UpdateEmissionDto } from './dto/update-emission.dto';
@@ -13,8 +13,8 @@ export class EmissionsController {
   }
 
   @Get()
-  findAll() {
-    return this.emissionsService.findAll();
+  findAll(@Query() query) {
+    return this.emissionsService.findAll(query);
   }
 
   @Get(':id')

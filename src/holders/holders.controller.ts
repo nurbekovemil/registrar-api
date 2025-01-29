@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, ParseIntPipe, Query } from '@nestjs/common';
 import { HoldersService } from './holders.service';
 import { CreateHolderDto } from './dto/create-holder.dto';
 import { UpdateHolderDto } from './dto/update-holder.dto';
@@ -75,8 +75,11 @@ export class HoldersController {
   }
 
   @Get('/:id/securities')
-  getHolderSecurities(@Param('id', ParseIntPipe) id: number) {
-    return this.holdersService.getHolderSecurities(id);
+  getHolderSecurities(
+    @Param('id', ParseIntPipe) id: number,
+    @Query() query: any
+  ) {
+    return this.holdersService.getHolderSecurities(id, query);
   }
 
 }

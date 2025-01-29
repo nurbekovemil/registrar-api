@@ -75,12 +75,20 @@ export class SecuritiesService {
     return security;
   }
 
-  async getEmitentHolders(eid: number){
+  async getEmitentHolders(eid: number, query?: any){
+    const { start_date, end_date} = query
+    const securityCondition: any = {
+      emitent_id: eid
+    }
+    if (start_date && end_date) {
+      securityCondition.purchased_date = {
+        [sequelize.Op.between]: [new Date(start_date), new Date(end_date)]
+      }
+    }
     const holders = await this.securityRepository.findAll({
-      where: {
-        emitent_id: eid
-      },
+      where: securityCondition,
       attributes: [
+        'purchased_date',
         [sequelize.col('Security.holder_id'), 'id'],
         'quantity',
         [sequelize.literal('Holder.name'), 'name'], // Add this line

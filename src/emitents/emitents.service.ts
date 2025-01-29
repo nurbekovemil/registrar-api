@@ -40,8 +40,8 @@ export class EmitentsService {
     return emissions
   }
 
-  async getEmitentHolders(id: number){
-    const holders = await this.securityService.getEmitentHolders(id)
+  async getEmitentHolders(id: number, query: any){
+    const holders = await this.securityService.getEmitentHolders(id, query)
     return holders
   }
   async getEmitentAllHolders(){

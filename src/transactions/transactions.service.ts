@@ -186,9 +186,17 @@ export class TransactionsService {
     return transactions
   }
   
-  async getTransactions(){
+  async getTransactions(query?: any){
+    const { start_date, end_date } = query
+    const trnsactionCondition: any = {}
+    if(start_date && end_date){
+      trnsactionCondition.createdAt = {
+        [Op.between]: [new Date(start_date), new Date(end_date)]
+      }
+    }
     const transactions = await this.transactionRepository.findAll({
-      attributes: ['id','contract_date','quantity'],
+      attributes: ['id','contract_date','quantity','createdAt'],
+      where: trnsactionCondition,
       include: [
         {
           model: TransactionOperation

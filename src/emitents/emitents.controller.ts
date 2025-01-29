@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query } from '@nestjs/common';
 import { EmitentsService } from './emitents.service';
 import { CreateEmitentDto } from './dto/create-emitent.dto';
 import { UpdateEmitentDto } from './dto/update-emitent.dto';
@@ -31,8 +31,8 @@ export class EmitentsController {
     return this.emitentsService.getEmitentEmissions(id);
   }
   @Get(':id/holders')
-  getEmitentHolders(@Param('id') id: number) {
-    return this.emitentsService.getEmitentHolders(id);
+  getEmitentHolders(@Param('id') id: number, @Query() query: any) {
+    return this.emitentsService.getEmitentHolders(id, query);
   }
 
   @Put(':id')
