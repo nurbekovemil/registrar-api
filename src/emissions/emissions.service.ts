@@ -45,7 +45,17 @@ export class EmissionsService {
         [Op.between]: [start_date, end_date]
       }
     }
-    const emissions = await this.emissionRepository.findAll({where: emissionCondition})
+    const emissions = await this.emissionRepository.findAll({
+      attributes: {
+        exclude: ['type_id']
+      },
+      where: emissionCondition,
+      include: [
+        {
+          model: EmissionType
+        }
+      ]
+    })
     return emissions
   }
 
@@ -63,14 +73,20 @@ export class EmissionsService {
     return emissions
   }
   
-  async createEmissionType(name: {name: string}){
-    const emissionType = await this.emissionTypeRepository.create(name)
-    return emissionType
-  }
+  // async createEmissionType(name: {name: string}){
+  //   const emissionType = await this.emissionTypeRepository.create(name)
+  //   return emissionType
+  // }
   async getEmissionTypes(){
     const emissionTypes = await this.emissionTypeRepository.findAll()
     return emissionTypes
   }
+
+  async createEmissionType(name: string){
+    const emissionType = await this.emissionTypeRepository.create({name})
+    return emissionType
+  }
+  
   // async getEmissionsByHolderId(hid: number){
   //   const emissions = await this.emissionRepository.findAll({
   //     include: [

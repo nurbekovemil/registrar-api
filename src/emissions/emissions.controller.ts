@@ -17,8 +17,22 @@ export class EmissionsController {
     return this.emissionsService.findAll(query);
   }
 
+  
+  @Get('types')
+  getEmissionTypes() {
+    return this.emissionsService.getEmissionTypes();
+  }
+
+  @Post('types')
+  createEmissionType(@Body() body) {
+    return this.emissionsService.createEmissionType(body.name);
+  }
+
+
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.emissionsService.findOne(id);
   }
+
+
 }
