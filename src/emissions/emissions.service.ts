@@ -47,12 +47,16 @@ export class EmissionsService {
     }
     const emissions = await this.emissionRepository.findAll({
       attributes: {
-        exclude: ['type_id']
+        exclude: ['type_id'],
+        include: [
+          [sequelize.col('emission.name'), 'type']
+        ]
       },
       where: emissionCondition,
       include: [
         {
-          model: EmissionType
+          model: EmissionType,
+          attributes:[]
         }
       ]
     })
@@ -68,7 +72,19 @@ export class EmissionsService {
     const emissions = await this.emissionRepository.findAll({
       where: {
         emitent_id
-      }
+      },
+      attributes: {
+        exclude: ['type_id'],
+        include: [
+          [sequelize.col('emission.name'), 'type']
+        ]
+      },
+      include: [
+        {
+          model: EmissionType,
+          attributes: []
+        }
+      ]
     })
     return emissions
   }
@@ -86,7 +102,7 @@ export class EmissionsService {
     const emissionType = await this.emissionTypeRepository.create({name})
     return emissionType
   }
-  
+
   // async getEmissionsByHolderId(hid: number){
   //   const emissions = await this.emissionRepository.findAll({
   //     include: [
@@ -185,6 +201,7 @@ export class EmissionsService {
         'id',
         'reg_number',
         'nominal',
+        [sequelize.col('emission.name'), 'type'],
         [sequelize.col('securities.purchased_date'), 'purchased_date'],
         [sequelize.col('securities.quantity'), 'count'],
         [sequelize.col('securities->security_block.quantity'), 'blocked_count'],
@@ -204,6 +221,10 @@ export class EmissionsService {
                 as: 'security_pledgee',
               }
           ],
+        },
+        {
+          model: EmissionType,
+          attributes: []
         }
       ]
     })

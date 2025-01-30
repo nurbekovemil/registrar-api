@@ -12,21 +12,22 @@ export class EmissionsController {
     return this.emissionsService.create(createEmissionDto);
   }
 
+  @Post('/types')
+  createEmissionType(@Body() body) {
+    return this.emissionsService.createEmissionType(body.name);
+  }
+
   @Get()
   findAll(@Query() query) {
     return this.emissionsService.findAll(query);
   }
 
   
-  @Get('types')
+  @Get('/types')
   getEmissionTypes() {
     return this.emissionsService.getEmissionTypes();
   }
 
-  @Post('types')
-  createEmissionType(@Body() body) {
-    return this.emissionsService.createEmissionType(body.name);
-  }
 
 
   @Get(':id')
