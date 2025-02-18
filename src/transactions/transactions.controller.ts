@@ -26,8 +26,8 @@ export class TransactionsController {
   }
 
   @Get('/emitent/:id')
-  getTransactionByEmitent(@Param('id') id: number) {
-    return this.transactionsService.getTransactionByEmitent(id);
+  getTransactionByEmitent(@Param('id') id: number, @Query() query: any) {
+    return this.transactionsService.getTransactionByEmitent(id, query);
   }
 
 }
