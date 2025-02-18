@@ -1,4 +1,4 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { CreateEmissionDto } from './dto/create-emission.dto';
 import { UpdateEmissionDto } from './dto/update-emission.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -102,6 +102,35 @@ export class EmissionsService {
   async createEmissionType(name: string){
     const emissionType = await this.emissionTypeRepository.create({name})
     return emissionType
+  }
+
+  async updateEmissionType(id: number, name: string){
+    let type = await this.emissionTypeRepository.findByPk(id)
+    type.name = name
+    return await type.save()
+  }
+
+  async deleteEmissionType(id: number){
+    try {
+      const isEmissions = await this.emissionRepository.findAll({
+        where: {
+          type_id: id
+        }
+      })
+      if(isEmissions.length > 0){
+        throw new Error('Нельзя удалить тип эмиссии, в котором есть эмиссии')
+      }
+      return await this.emissionTypeRepository.destroy({
+        where: {
+          id
+        }
+      })
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   // async getEmissionsByHolderId(hid: number){

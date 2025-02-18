@@ -22,14 +22,19 @@ export class EmissionsController {
     return this.emissionsService.findAll(query);
   }
 
-  
   @Get('/types')
   getEmissionTypes() {
     return this.emissionsService.getEmissionTypes();
   }
 
-
-
+  @Put('/types/:id')
+  updateEmissionType(@Param('id') id: number, @Body() body: {name: string}) {
+    return this.emissionsService.updateEmissionType(id, body.name);
+  }
+  @Delete('/types/:id')
+  deleteEmissionType(@Param('id') id: number) {
+    return this.emissionsService.deleteEmissionType(id);
+  }
   @Get(':id')
   findOne(@Param('id') id: number) {
     return this.emissionsService.findOne(id);

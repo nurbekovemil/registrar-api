@@ -292,7 +292,7 @@ export class HoldersService {
     return types
   }
 
-  async createHolderType({name}: {name: string}){
+  async createHolderType(name: string){
     const type = await this.holderTypeRepository.create({name})
     return type
   }
@@ -305,6 +305,22 @@ export class HoldersService {
     type.name = data.name
     await type.save()
     return type
+  }
+
+  async deleteHolderType(id: number){
+    const isHolders = await this.holderRepository.findAll({
+      where: {
+        holder_type: id
+      }
+    })
+    if(isHolders.length > 0){
+      throw new HttpException('Нельзя удалить категорию акционера, в котором есть участники', HttpStatus.BAD_REQUEST)
+    }
+    return await this.holderTypeRepository.destroy({
+      where: {
+        id
+      }
+    })
   }
 
   async createDistrict(createDistrictDto: CreateDistrictDto) {
@@ -332,6 +348,14 @@ export class HoldersService {
     return district
   }
   async deleteDistrict(id: number) {
+    const isHolders = await this.holderRepository.findAll({
+      where: {
+        district_id: id
+      }
+    })
+    if(isHolders.length > 0){
+      throw new HttpException('Нельзя удалить регион, в котором есть участники', HttpStatus.BAD_REQUEST)
+    }
     const district = await this.holderDistrictRepository.destroy({
       where: { id }
     })

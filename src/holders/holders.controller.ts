@@ -14,12 +14,17 @@ export class HoldersController {
 
   @Post('/holder-types')
   createHolderTypes(@Body() data: { name: string }) {
-    return this.holdersService.createHolderType(data);
+    return this.holdersService.createHolderType(data.name);
   }
 
   @Get('/holder-types')
   getHolderTypes() {
     return this.holdersService.getHolderTypes();
+  }
+
+  @Delete('/holder-types/:id')
+  deleteHolderTypes(@Param('id', ParseIntPipe) id: number) {
+    return this.holdersService.deleteHolderType(id);
   }
 
   @Put('/holder-types/:id')
@@ -38,7 +43,7 @@ export class HoldersController {
   }
 
   @Put('/district/:id')
-  updateDistrict(@Param('id', ParseIntPipe) id: number, @Body() updateDistrictDto: UpdateHolderDto) {
+  updateDistrict(@Param('id', ParseIntPipe) id: number, @Body() updateDistrictDto:{ name: string }) {
     return this.holdersService.updateDistrict(id, updateDistrictDto);
   }
 
