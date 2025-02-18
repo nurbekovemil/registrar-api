@@ -195,7 +195,7 @@ export class TransactionsService {
     const { start_date, end_date } = query
     const trnsactionCondition: any = {}
     if(start_date && end_date){
-      trnsactionCondition.createdAt = Sequelize.literal(`"createdAt" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`)    
+      trnsactionCondition.contract_date = Sequelize.literal(`"contract_date" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`)    
     }
     const transactions = await this.transactionRepository.findAll({
       attributes: ['id','contract_date','quantity','createdAt'],
