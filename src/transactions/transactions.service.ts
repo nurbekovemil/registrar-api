@@ -145,11 +145,18 @@ export class TransactionsService {
     return transaction
   }
 
-  async getTransactionByEmitent(id: number){
+  async getTransactionByEmitent(id: number, query?: any){
+    const { start_date, end_date } = query
+    const trnsactionCondition: any = {
+      emitent_id: id
+    }
+    if(start_date && end_date){
+      trnsactionCondition.createdAt = {
+        [Op.between]: [new Date(start_date), new Date(end_date)]
+      }
+    }
     const transactions = await this.transactionRepository.findAll({
-      where: {
-        emitent_id: id
-      },
+      where: trnsactionCondition,
       attributes: ['id','contract_date','quantity'],
       include: [
         {
