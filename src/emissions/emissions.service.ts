@@ -42,7 +42,9 @@ export class EmissionsService {
     const {start_date, end_date} = query
     const emissionCondition: any = {}
     if(start_date && end_date){
-      emissionCondition.released_date = Sequelize.literal(`"released_date" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`) 
+      emissionCondition.released_date = {
+        [Op.between]: [`${start_date}`, `${end_date} 23:59:59.999`]
+      } 
     }
     const emissions = await this.emissionRepository.findAll({
       attributes: {
@@ -191,7 +193,9 @@ export class EmissionsService {
       holder_id: hid
     }
     if (start_date && end_date) {
-      securityCondition.purchased_date = Sequelize.literal(`"purchased_date" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`)
+      securityCondition.purchased_date = {
+        [Op.between]: [`${start_date}`, `${end_date} 23:59:59.999`]
+      }
     }
     const securities = await this.emissionRepository.findAll({
       attributes: [

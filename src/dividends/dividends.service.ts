@@ -94,7 +94,9 @@ export class DividendsService {
       emitent_id: eid
     }
     if (start_date && end_date) {
-      dividendCondition.date_close_reestr = Sequelize.literal(`"date_close_reestr" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`)
+      dividendCondition.date_close_reestr = {
+        [Op.between]: [`${start_date}`, `${end_date} 23:59:59.999`]
+      }
     }
     const dividends = await this.dividendRepository.findAll({
       where: dividendCondition,
