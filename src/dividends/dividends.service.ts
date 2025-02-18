@@ -9,6 +9,7 @@ import sequelize, { Op } from 'sequelize';
 import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Holder } from 'src/holders/entities/holder.entity';
 import { HolderType } from 'src/holders/entities/holder-type.entity';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class DividendsService {
@@ -93,9 +94,7 @@ export class DividendsService {
       emitent_id: eid
     }
     if (start_date && end_date) {
-      dividendCondition.date_close_reestr = {
-        [Op.between]: [new Date(start_date), new Date(end_date)]
-      }
+      dividendCondition.date_close_reestr = Sequelize.literal(`"date_close_reestr" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`)
     }
     const dividends = await this.dividendRepository.findAll({
       where: dividendCondition,

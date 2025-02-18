@@ -10,6 +10,7 @@ import { SecurityBlock } from 'src/securities/entities/security-block.entity';
 import { TransactionsService } from 'src/transactions/transactions.service';
 import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
 import { Op } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class EmissionsService {
@@ -41,9 +42,7 @@ export class EmissionsService {
     const {start_date, end_date} = query
     const emissionCondition: any = {}
     if(start_date && end_date){
-      emissionCondition.released_date = {
-        [Op.between]: [start_date, end_date]
-      }
+      emissionCondition.released_date = Sequelize.literal(`"released_date" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`) 
     }
     const emissions = await this.emissionRepository.findAll({
       attributes: {
@@ -192,9 +191,7 @@ export class EmissionsService {
       holder_id: hid
     }
     if (start_date && end_date) {
-      securityCondition.purchased_date = { 
-        [Op.between]: [new Date(start_date), new Date(end_date)]
-      }
+      securityCondition.purchased_date = Sequelize.literal(`"purchased_date" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`)
     }
     const securities = await this.emissionRepository.findAll({
       attributes: [
