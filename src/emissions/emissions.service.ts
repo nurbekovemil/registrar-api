@@ -216,7 +216,7 @@ export class EmissionsService {
     throw new Error('Недостаточно средств')
   }
 
-  async getHolderSecurities(hid: number, query?) {
+  async getHolderSecurities(hid: number, query: any = {}) {
     const { start_date, end_date } = query
     const securityCondition: any = {
       holder_id: hid
