@@ -10,6 +10,8 @@ import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Holder } from 'src/holders/entities/holder.entity';
 import { HolderType } from 'src/holders/entities/holder-type.entity';
 import { Sequelize } from 'sequelize-typescript';
+import { Emission } from 'src/emissions/entities/emission.entity';
+import { EmissionType } from 'src/emissions/entities/emission-type.entity';
 
 @Injectable()
 export class DividendsService {
@@ -20,6 +22,7 @@ export class DividendsService {
   ){}
   async createDividend(createDividendDto: CreateDividendDto) {
     try {
+      console.log('Received data:', createDividendDto);
       let shareholders;
       if(!createDividendDto.district_id) {
         shareholders = await this.securityService.getEmitentHoldersByHolderType(createDividendDto.emitent_id, createDividendDto.type);
@@ -43,6 +46,7 @@ export class DividendsService {
         title: createDividendDto.title,
         type: createDividendDto.type,
         emitent_id: createDividendDto.emitent_id,
+        emission_id: createDividendDto.emission_id,
         share_price: createDividendDto.share_price,
         percent: createDividendDto.percent,
         amount_share,
@@ -81,6 +85,7 @@ export class DividendsService {
         dividendTrnsaction
       };
     } catch (error) {
+      console.log(error)
       throw new HttpException(
         error.message,
         HttpStatus.BAD_REQUEST,
@@ -107,6 +112,16 @@ export class DividendsService {
         {
           model: Emitent,
           attributes: ['id', 'full_name']
+        },
+        {
+          model: Emission,
+          attributes: ['id', 'reg_number'],
+          include: [
+            {
+              model: EmissionType,
+              attributes: ['id', 'name']
+            }
+          ]
         }
       ]
     })
