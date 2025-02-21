@@ -74,6 +74,11 @@ export class HoldersController {
     return this.holdersService.findOne(id);
   }
 
+  @Delete('/:id')
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.holdersService.delete(id);
+  }
+
   @Get('/:id/emissions')
   getHolderEmissions(@Param('id', ParseIntPipe) id: number) {
     return this.holdersService.getHolderEmissions(id);
@@ -85,6 +90,11 @@ export class HoldersController {
     @Query() query: any
   ) {
     return this.holdersService.getHolderSecurities(id, query);
+  }
+
+  @Get('/:id/emitents')
+  getEmitentsByHolderId(@Param('id', ParseIntPipe) id: number) {
+    return this.holdersService.getEmitentsByHolderId(id);
   }
 
 }

@@ -1,7 +1,7 @@
 import { DividendsService } from './../dividends/dividends.service';
 import { JournalsService } from './../journals/journals.service';
 import { SecuritiesService } from 'src/securities/securities.service';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateEmitentDto } from './dto/create-emitent.dto';
 import { UpdateEmitentDto } from './dto/update-emitent.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -49,26 +49,37 @@ export class EmitentsService {
     return holders
   }
   async update(id: number, updateEmitentDto: UpdateEmitentDto) {
-    const old_emitent_value = await this.emitentRepository.findByPk(id)
-    const emitent = await this.emitentRepository.update(updateEmitentDto, {
-      where: {
-        id
+    try {
+      const old_emitent_value = await this.emitentRepository.findByPk(id)
+      await this.emitentRepository.update(updateEmitentDto, {
+        where: {
+          id
+        }
+      })
+      const journal = {
+        title: `Запись изменена в эмитенте: ${updateEmitentDto.full_name}`,
+        old_value: old_emitent_value,
+        new_value: updateEmitentDto,
+        change_type: 'update',
+        changed_by: 1
       }
-    })
-    const journal = {
-      title: `Запись изменена в эмитенте: ${updateEmitentDto.full_name}`,
-      old_value: old_emitent_value,
-      new_value: updateEmitentDto,
-      change_type: 'update',
-      changed_by: 1
+      await this.journalsService.create(journal)
+      return 'Данные эмитента обновлены';
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        HttpStatus.BAD_REQUEST,
+      )
     }
-    await this.journalsService.create(journal)
-    return 'Updated';
   }
 
   async delete(id: number) {
     const transaction = await this.emitentRepository.sequelize.transaction();
     try {
+      const isHolders = await this.securityService.getEmitentHolders(id)
+      if(isHolders.length > 0){
+        throw new Error('Нельзя удалить эмитента, в котором есть участники')
+      }
       await this.securityService.deleteEmitentSecurities(id, transaction)
       await this.dividendsService.deleteEmitentDividends(id, transaction)
       const result =await this.emitentRepository.destroy({
@@ -78,13 +89,16 @@ export class EmitentsService {
         transaction
       })
       if (!result) {
-        throw new Error(`Emitent with ID ${id} not found.`);
+        throw new Error('Эмитент не найден');
       }
       await transaction.commit();
-      return 'Deleted';
+      return 'Эмитент удален';
     } catch (error) {
-      await transaction.rollback();
-      throw new Error(`Failed to delete emitent: ${error.message}`);
+      transaction.rollback();
+      throw new HttpException(
+        error.message,
+        HttpStatus.BAD_REQUEST,
+      )
     }
   }
 }

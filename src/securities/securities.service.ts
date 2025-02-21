@@ -10,6 +10,7 @@ import sequelize from 'sequelize';
 import { SecurityBlock } from './entities/security-block.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { SecurityPledge } from './entities/security-pledge.entity';
+import { Op } from 'sequelize';
 @Injectable()
 export class SecuritiesService {
   constructor(
@@ -75,7 +76,7 @@ export class SecuritiesService {
     return security;
   }
 
-  async getEmitentHolders(eid: number, query?: any){
+  async getEmitentHolders(eid: number, query: any = {}){
     const { start_date, end_date} = query
     const securityCondition: any = {
       emitent_id: eid
@@ -227,13 +228,21 @@ export class SecuritiesService {
   // }
 
   async deleteEmitentSecurities(emitent_id: number, transaction: any) {
-    await this.securityRepository.destroy({
-      where: {
-        emitent_id
-      },
-      transaction
-    })
+    const securities = await this.securityRepository.findAll({
+      where: { emitent_id }
+    });
+    const securitiesToDelete = securities
+      .filter(security => security.quantity === 0)
+      .map(security => security.id); // Получаем массив ID для удаления
+  
+    if (securitiesToDelete.length > 0) {
+      await this.securityRepository.destroy({
+        where: { id: { [Op.in]: securitiesToDelete } }, // Используем оператор $in
+        transaction
+      });
+    }
   }
+  
 
   async pledgeSecurity(data) {
     const {security_id, quantity, holder_from_id, holder_to_id} = data
@@ -295,6 +304,21 @@ export class SecuritiesService {
       }
     })
     return pledge
+  }
+
+  async getEmitentsByHolderId(id: number) {
+    const emitents = await this.securityRepository.findAll({
+      where: {
+        holder_id: id
+      },
+      attributes:[],
+      include: [
+        {
+          model: Emitent
+        }
+      ]
+    })
+    return emitents.map(security => security.emitent);
   }
 }
 

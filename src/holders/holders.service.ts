@@ -49,6 +49,26 @@ export class HoldersService {
     return 'Updated';
   }
 
+  async delete(id: number) {
+    try {
+      const isSecurities = await this.emissionService.getHolderSecurities(id)
+      if(isSecurities.length > 0){
+        throw new Error('Нельзя удалить участника, в котором есть ценные бумаги')
+      }
+      await this.holderRepository.destroy({
+        where: {
+          id
+        }
+      })
+      return 'Участник удален';
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+  }
+
   async findAll() {
     const holders = await this.holderRepository.findAll()
     return holders;
@@ -367,5 +387,9 @@ export class HoldersService {
       throw new HttpException('Ценная бумага не найден', HttpStatus.BAD_REQUEST)
     }
     return await this.securityService.getPledgedSecurity(holder_from_security.id)
+  }
+
+  async getEmitentsByHolderId(id: number) {
+    return await this.securityService.getEmitentsByHolderId(id)
   }
 }
