@@ -162,7 +162,7 @@ export class EmissionsService {
 
   async getEmissionsByHolderId(hid: number){
     const emissions = await this.emissionRepository.findAll({
-      include: 
+      include: [
         {
           model: Security,
           where: {
@@ -181,12 +181,16 @@ export class EmissionsService {
               model: SecurityBlock
             }
           ]
+        },
+        {
+          model: EmissionType
         }
-      
+      ]
     })
     return emissions.map(emission => ({
       reg_number: emission.reg_number,
-      type: 'простые', // Или другой тип, если он у вас есть
+      // type: 'простые', // Или другой тип, если он у вас есть
+      type: emission.emission.name,
       total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
       nominal: emission.nominal || 0,
       total_nominal_value:
