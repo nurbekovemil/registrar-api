@@ -22,17 +22,17 @@ export class DividendsService {
   ){}
   async createDividend(createDividendDto: CreateDividendDto) {
     try {
-      console.log('Received data:', createDividendDto);
       let shareholders;
       if(!createDividendDto.district_id) {
-        shareholders = await this.securityService.getEmitentHoldersByHolderType(createDividendDto.emitent_id, createDividendDto.type);
+        shareholders = await this.securityService.getEmitentHoldersByHolderType(createDividendDto.emitent_id, createDividendDto.type, createDividendDto.emission_type);
       } else {
-        shareholders = await this.securityService.getEmitentHoldersByHolderDictrict(createDividendDto.emitent_id, createDividendDto.type, createDividendDto.district_id);
+        shareholders = await this.securityService.getEmitentHoldersByHolderDictrict(createDividendDto.emitent_id, createDividendDto.type, createDividendDto.district_id, createDividendDto.emission_type);
       }
       if (!shareholders.length) {
         throw new HttpException('Акционеры не найдены', HttpStatus.NOT_FOUND);
       }
-      const amount_share = shareholders.reduce((acc, item) => acc + item.quantity, 0);
+      console.log('shareholders', JSON.parse(JSON.stringify(shareholders)))
+      const amount_share = shareholders.reduce((acc, item) => acc + Number(item.quantity), 0);
       const amount_share_credited = amount_share * createDividendDto.share_price;
       let amount_share_debited, amount_pay = 0;
       if(createDividendDto.type === 1) {
@@ -46,7 +46,7 @@ export class DividendsService {
         title: createDividendDto.title,
         type: createDividendDto.type,
         emitent_id: createDividendDto.emitent_id,
-        emission_id: createDividendDto.emission_type,
+        emission_type: createDividendDto.emission_type,
         share_price: createDividendDto.share_price,
         percent: createDividendDto.percent,
         amount_share,

@@ -11,6 +11,7 @@ import { SecurityBlock } from './entities/security-block.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { SecurityPledge } from './entities/security-pledge.entity';
 import { Op } from 'sequelize';
+import { EmissionType } from 'src/emissions/entities/emission-type.entity';
 @Injectable()
 export class SecuritiesService {
   constructor(
@@ -105,7 +106,7 @@ export class SecuritiesService {
     })
     return holders
   }
-  async getEmitentHoldersByHolderType(eid: number, type: number){
+  async getEmitentHoldersByHolderType(eid: number, type: number, emisType: number){
     const holders = await this.securityRepository.findAll({
       where: {
         emitent_id: eid,
@@ -135,6 +136,13 @@ export class SecuritiesService {
             holder_type: type
           }
           // attributes: ['id', 'name']
+        },
+        {
+          model: Emission,
+          attributes: [],
+          where: {
+            type_id: emisType
+          }
         }
       ],
       group: ['Security.id','holder.id']
@@ -142,7 +150,7 @@ export class SecuritiesService {
     return holders
   }
 
-  async getEmitentHoldersByHolderDictrict(eid: number, type: number, dsid: number){
+  async getEmitentHoldersByHolderDictrict(eid: number, type: number, dsid: number, emisType: number){
     const holders = await this.securityRepository.findAll({
       where: {
         emitent_id: eid,
@@ -170,6 +178,13 @@ export class SecuritiesService {
           where: {
             holder_type: type,
             district_id: dsid
+          }
+        },
+        {
+          model: Emission,
+          attributes: [],
+          where: {
+            type_id: emisType
           }
         }
       ],

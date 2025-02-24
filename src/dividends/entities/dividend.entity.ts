@@ -18,7 +18,7 @@ import { EmissionType } from 'src/emissions/entities/emission-type.entity';
   interface DividendCreateAttrs {
     title: string;
     emitent_id: number;
-    emission_id: number;
+    emission_type: number;
     type: number;
     date_close_reestr: string;
     month_year: string;
