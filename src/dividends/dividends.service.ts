@@ -115,7 +115,6 @@ export class DividendsService {
         },
         {
           model: EmissionType,
-          attributes: ['id', 'reg_number'],
           // include: [
           //   {
           //     model: EmissionType,
