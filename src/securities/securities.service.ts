@@ -326,12 +326,13 @@ export class SecuritiesService {
       where: {
         holder_id: id
       },
-      attributes:[],
+      attributes: ['emitent_id'], // Ограничиваем выборку
       include: [
         {
           model: Emitent
         }
-      ]
+      ],
+      group: ['Security.emitent_id', 'emitent.id'] // Добавляем все используемые поля
     })
     return emitents.map(security => security.emitent);
   }

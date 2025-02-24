@@ -187,10 +187,11 @@ export class EmissionsService {
         }
       ]
     })
+    console.log(JSON.parse(JSON.stringify(emissions)))
     return emissions.map(emission => ({
       reg_number: emission.reg_number,
       // type: 'простые', // Или другой тип, если он у вас есть
-      type: emission.emission.name,
+      type: emission?.emission?.name,
       total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
       nominal: emission.nominal || 0,
       total_nominal_value:
