@@ -46,7 +46,7 @@ export class DividendsService {
         title: createDividendDto.title,
         type: createDividendDto.type,
         emitent_id: createDividendDto.emitent_id,
-        emission_id: createDividendDto.emission_id,
+        emission_id: createDividendDto.emission_type,
         share_price: createDividendDto.share_price,
         percent: createDividendDto.percent,
         amount_share,
@@ -114,14 +114,14 @@ export class DividendsService {
           attributes: ['id', 'full_name']
         },
         {
-          model: Emission,
+          model: EmissionType,
           attributes: ['id', 'reg_number'],
-          include: [
-            {
-              model: EmissionType,
-              attributes: ['id', 'name']
-            }
-          ]
+          // include: [
+          //   {
+          //     model: EmissionType,
+          //     attributes: ['id', 'name']
+          //   }
+          // ]
         }
       ]
     })

@@ -13,6 +13,7 @@ import { HolderType } from 'src/holders/entities/holder-type.entity';
 import { Holder } from 'src/holders/entities/holder.entity'
 import { DividendTransaction } from './dividend-transaction.entity';
 import { Emission } from 'src/emissions/entities/emission.entity';
+import { EmissionType } from 'src/emissions/entities/emission-type.entity';
   
   interface DividendCreateAttrs {
     title: string;
@@ -48,9 +49,9 @@ import { Emission } from 'src/emissions/entities/emission.entity';
     @Column({ type: DataType.INTEGER })
     emitent_id: number;
 
-    @ForeignKey(() => Emission)
+    @ForeignKey(() => EmissionType)
     @Column({ type: DataType.INTEGER })
-    emission_id: number;
+    emission_type: number;
 
     @ForeignKey(() => HolderType)
     @Column({ type: DataType.INTEGER })
@@ -89,8 +90,8 @@ import { Emission } from 'src/emissions/entities/emission.entity';
     @BelongsTo(() => Emitent)
     emitent: Emitent;
 
-    @BelongsTo(() => Emission)
-    emission: Emission;
+    @BelongsTo(() => EmissionType)
+    emission_type_id: EmissionType;
 
     @HasMany(() => DividendTransaction)
     dividend_transactions: DividendTransaction[]
