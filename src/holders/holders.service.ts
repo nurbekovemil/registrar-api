@@ -13,6 +13,7 @@ import { HolderDistrict } from './entities/holder-district.entity';
 import { CreateDistrictDto } from './dto/create-holder-district.dto';
 import { UpdateDistrictDto } from './dto/update-holder-district.dto';
 import { SecuritiesService } from 'src/securities/securities.service';
+import { EmissionType } from 'src/emissions/entities/emission-type.entity';
 
 
 @Injectable()
@@ -226,46 +227,127 @@ export class HoldersService {
     }
   }
 
+  // async getExtractReestrOwnsByEmission(eid: number, query: any) {
+  //   try {
+  //     if (!eid) {
+  //       throw new Error('Emitent id is required');
+  //     }
+  //     const totalSecurities = await Security.sum('quantity', {
+  //       where: { emitent_id: eid },
+  //     });
+  //     const holders = this.holderRepository.findAll({
+  //       attributes: [
+  //         'id',  // Выбор конкретных полей, например, id и name
+  //         'name',
+  //         [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
+  //         [sequelize.col('securities.emission.reg_number'), 'reg_number'],
+  //         [
+  //           sequelize.literal(`(SUM(securities.quantity) * 100.0 / ${totalSecurities})::numeric(10, 2)`),
+  //           'percentage'
+  //         ],
+  //         [
+  //           sequelize.literal(`SUM(securities.quantity * "securities->emission"."nominal")`),
+  //           'ordinary_nominal'
+  //         ],
+  //         [
+  //           sequelize.literal('0'),
+  //           'privileged'
+  //         ],
+  //         [
+  //           sequelize.literal('0.00'),
+  //           'privileged_nominal'
+  //         ],
+  //         [
+  //           sequelize.literal(`CONCAT(passport_type, ' ', passport_number, ' ', passport_agency)`),
+  //           'passport'
+  //         ],
+  //         'actual_address',
+  //         // 'district'
+
+  //       ],
+  //       include: [
+  //         {
+  //           model: Security,
+  //           attributes: [],
+  //           where: {
+  //             emitent_id: eid
+  //           },
+  //           include: [
+  //             {
+  //               model: Emission,
+  //               attributes: [],
+  //               where: {
+  //                 id: query.emission
+  //               }
+  //             }
+  //           ],
+  //         },
+  //         {
+  //           model: HolderDistrict,
+  //           attributes: ['name'],
+  //         }
+  //       ],
+  //       group: ['Holder.id','securities->emission.reg_number','district.id'],
+  //     })
+
+  //     return holders;
+  //   } catch (error) {
+  //     throw new Error(`Failed to extract from registers: ${error.message}`);
+  //   }
+  // }
+
   async getExtractReestrOwnsByEmission(eid: number, query: any) {
     try {
       if (!eid) {
         throw new Error('Emitent id is required');
       }
-      const totalSecurities = await Security.sum('quantity', {
+  
+      // Найдем все бумаги эмитента и сгруппируем их по типу эмиссии
+      const securities = await Security.findAll({
         where: { emitent_id: eid },
+        attributes: ['quantity'],
+        include: [
+          {
+            model: Emission,
+            required: true,
+            attributes: ['id'],
+            include: [
+              { model: EmissionType, attributes: ['id'] }
+            ]
+          }
+        ]
       });
+  
+      // Подсчет общего количества для каждого типа эмиссии
+      const totalOrdinarySecurities = securities
+        .filter(s => s.emission.emission.id === 1)
+        .reduce((sum, s) => sum + s.quantity, 0);
+  
+      const totalPrivilegedSecurities = securities
+        .filter(s => s.emission.emission.id === 2)
+        .reduce((sum, s) => sum + s.quantity, 0);
+  
       const holders = this.holderRepository.findAll({
         attributes: [
-          'id',  // Выбор конкретных полей, например, id и name
+          'id',
           'name',
-          [sequelize.fn('SUM', sequelize.col('securities.quantity')), 'ordinary'],
+          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN "securities->emission->emission"."id" = 1 THEN securities.quantity ELSE 0 END`)), 'ordinary'],
+          [sequelize.fn('SUM', sequelize.literal(`CASE WHEN "securities->emission->emission"."id" = 2 THEN securities.quantity ELSE 0 END`)), 'privileged'],
           [sequelize.col('securities.emission.reg_number'), 'reg_number'],
-          // [
-          //   sequelize.literal(`(SUM(securities.quantity) * 100.0 / ${totalSecurities})`),
-          //   'percentage'
-          // ],
-          // [
-          //   sequelize.literal(`(CAST(SUM(securities.quantity) * 100.0 / ${totalSecurities} AS numeric(10, 2)))`),
-          //   'percentage_test'
-          // ],
-          // [
-          //   sequelize.literal(`TO_CHAR((SUM(securities.quantity) * 100.0 / ${totalSecurities}), 'FM999999999.00')`),
-          //   'percentage_test_2'
-          // ],
           [
-            sequelize.literal(`(SUM(securities.quantity) * 100.0 / ${totalSecurities})::numeric(10, 2)`),
-            'percentage'
+            sequelize.literal(`(SUM(CASE WHEN "securities->emission->emission"."id" = 1 THEN securities.quantity ELSE 0 END) * 100.0 / ${totalOrdinarySecurities})::numeric(10, 2)`),
+            'ordinary_percentage'
           ],
           [
-            sequelize.literal(`SUM(securities.quantity * "securities->emission"."nominal")`),
+            sequelize.literal(`(SUM(CASE WHEN "securities->emission->emission"."id" = 2 THEN securities.quantity ELSE 0 END) * 100.0 / ${totalPrivilegedSecurities})::numeric(10, 2)`),
+            'privileged_percentage'
+          ],
+          [
+            sequelize.literal(`SUM(CASE WHEN "securities->emission->emission"."id" = 1 THEN securities.quantity * "securities->emission"."nominal" ELSE 0 END)`),
             'ordinary_nominal'
           ],
           [
-            sequelize.literal('0'),
-            'privileged'
-          ],
-          [
-            sequelize.literal('0.00'),
+            sequelize.literal(`SUM(CASE WHEN "securities->emission->emission"."id" = 2 THEN securities.quantity * "securities->emission"."nominal" ELSE 0 END)`),
             'privileged_nominal'
           ],
           [
@@ -273,23 +355,18 @@ export class HoldersService {
             'passport'
           ],
           'actual_address',
-          // 'district'
-
         ],
         include: [
           {
             model: Security,
             attributes: [],
-            where: {
-              emitent_id: eid
-            },
+            where: { emitent_id: eid },
             include: [
               {
                 model: Emission,
                 attributes: [],
-                where: {
-                  id: query.emission
-                }
+                where: { id: query.emission },
+                include: [{ model: EmissionType, attributes: ['id'] }]
               }
             ],
           },
@@ -298,14 +375,17 @@ export class HoldersService {
             attributes: ['name'],
           }
         ],
-        group: ['Holder.id','securities->emission.reg_number','district.id'],
-      })
-
+        group: ['Holder.id','securities->emission.reg_number','securities->emission->emission.id','district.id'],
+      });
+  
       return holders;
     } catch (error) {
       throw new Error(`Failed to extract from registers: ${error.message}`);
     }
   }
+  
+  
+  
 
   async getHolderTypes(){
     const types = await this.holderTypeRepository.findAll()
