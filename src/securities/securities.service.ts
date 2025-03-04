@@ -340,7 +340,7 @@ export class SecuritiesService {
 
   async getEmitentSecurities(eid: number, estype: number | string, esid?: number) {
     const emissionTypeCondition: any = {}
-    if (estype !== 'all') {
+    if (estype !== 'all' && estype != null) {
       emissionTypeCondition.type_id = estype
     }
     if(esid) {

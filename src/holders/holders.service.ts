@@ -149,10 +149,10 @@ export class HoldersService {
     });
   }
   async getFormattedExtractReestrOwnsByEmission(eid: number, query: any) {
-    const { emission_type, emission_id } = query;
+    const { emission_id } = query;
   
     // Получаем все акции эмитента с учетом типа эмиссии
-    const securities = await this.securityService.getEmitentSecurities(eid, emission_type, emission_id);
+    const securities = await this.securityService.getEmitentSecurities(eid, null, emission_id);
     // Получаем общее количество акций эмитента
     // const totalSecurities = await Security.sum('quantity', { where: { emitent_id: eid } });
     const totalSecurities = securities.reduce((total, security) => total + Number(security.quantity), 0);
