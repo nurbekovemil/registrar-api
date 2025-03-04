@@ -44,10 +44,10 @@ export class PrintsService {
 
   async getExtractReestrHolders(eid: number, query: any) {
     if(query.report_type == 1) {
-      return await this.holderService.extractFromRegisters(eid)
+      return await this.holderService.extractFromRegisters(eid, query)
     }
     if(query.report_type == 2) {
-      return await this.holderService.getExtractReestrOwns(eid)
+      return await this.holderService.getExtractReestrOwns(eid, query)
     }
     if(query.report_type == 3) {
       return await this.holderService.getExtractReestrOwnsByEmission(eid, query)

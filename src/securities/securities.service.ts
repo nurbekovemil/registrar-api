@@ -12,6 +12,7 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { SecurityPledge } from './entities/security-pledge.entity';
 import { Op } from 'sequelize';
 import { EmissionType } from 'src/emissions/entities/emission-type.entity';
+import { HolderDistrict } from 'src/holders/entities/holder-district.entity';
 @Injectable()
 export class SecuritiesService {
   constructor(
@@ -335,6 +336,39 @@ export class SecuritiesService {
       group: ['Security.emitent_id', 'emitent.id'] // Добавляем все используемые поля
     })
     return emitents.map(security => security.emitent);
+  }
+
+  async getEmitentSecurities(eid: number, estype: number | string, esid?: number) {
+    const emissionTypeCondition: any = {}
+    if (estype !== 'all') {
+      emissionTypeCondition.type_id = estype
+    }
+    if(esid) {
+      emissionTypeCondition.id = esid
+    }
+    return await this.securityRepository.findAll({
+      where: {
+        emitent_id: eid
+      },
+      include: [
+        {
+          model: Holder,
+          include: [
+            {
+              model: HolderDistrict,
+             
+            }
+          ]
+        },
+        {
+          model: Emission,
+          where: emissionTypeCondition
+        },
+        {
+          model: Emitent,
+        },
+      ],
+    });
   }
 }
 
