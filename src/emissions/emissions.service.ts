@@ -11,6 +11,7 @@ import { TransactionsService } from 'src/transactions/transactions.service';
 import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
 import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
+import { JournalsService } from 'src/journals/journals.service';
 
 @Injectable()
 export class EmissionsService {
@@ -18,6 +19,7 @@ export class EmissionsService {
     @InjectModel(Emission) private emissionRepository: typeof Emission,
     @InjectModel(EmissionType) private emissionTypeRepository: typeof EmissionType,
     @Inject(forwardRef(() => TransactionsService)) private transactionsService: TransactionsService,
+    private journalsService: JournalsService,
   ){}
 
   async create(createEmissionDto: CreateEmissionDto) {
@@ -187,7 +189,6 @@ export class EmissionsService {
         }
       ]
     })
-    console.log(JSON.parse(JSON.stringify(emissions)))
     return emissions.map(emission => ({
       reg_number: emission.reg_number,
       // type: 'простые', // Или другой тип, если он у вас есть
@@ -264,5 +265,34 @@ export class EmissionsService {
       ]
     })
     return securities
+  }
+
+  async cancellationEmissionCount(emission_id, count){
+    try {
+      const emission = await this.emissionRepository.findByPk(emission_id)
+      if(emission.count > 0 && emission.count >= count){
+        const updateEmissionCount = { count: emission.count - count }
+        await this.emissionRepository.update(updateEmissionCount, {where: { id: emission_id }})
+        emission.count = emission.count - count
+        const journal = {
+          title: `Запись изменена в эмиссии (Аннулирование): ${emission.reg_number}`,
+          old_value: {
+            count: emission.count
+          },
+          new_value: {
+            count: updateEmissionCount.count
+          },
+          change_type: 'update',
+          changed_by: 1
+        }
+        return await this.journalsService.create(journal)
+      }
+      throw new Error('Недостаточно средств')
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
   }
 }

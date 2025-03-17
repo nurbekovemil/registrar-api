@@ -5,6 +5,7 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import { Emission } from './entities/emission.entity';
 import { EmissionType } from './entities/emission-type.entity';
 import { TransactionsModule } from 'src/transactions/transactions.module';
+import { JournalsModule } from 'src/journals/journals.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { TransactionsModule } from 'src/transactions/transactions.module';
       Emission,
       EmissionType
     ]),
+    JournalsModule
   ],
   controllers: [EmissionsController],
   providers: [EmissionsService],

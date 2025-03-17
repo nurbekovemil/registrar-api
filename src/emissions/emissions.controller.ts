@@ -31,6 +31,10 @@ export class EmissionsController {
   updateEmissionType(@Param('id') id: number, @Body() body: {name: string}) {
     return this.emissionsService.updateEmissionType(id, body.name);
   }
+  @Put('/:id/cancel')
+  cancelEmissionCount(@Param('id') id: number, @Body() body) {
+    return this.emissionsService.cancellationEmissionCount(id, body.count);
+  }
   @Delete('/types/:id')
   deleteEmissionType(@Param('id') id: number) {
     return this.emissionsService.deleteEmissionType(id);
