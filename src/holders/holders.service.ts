@@ -107,6 +107,7 @@ export class HoldersService {
 
       return {
         id: security.id,
+        holder_id: holder.id,
         full_name: holder?.name, // Ф.и.о.
         quantity: security.quantity, // Количество акций
         percentage: percentageOfEmission, // Процент от эмиссии
@@ -136,6 +137,7 @@ export class HoldersService {
   
       return {
         id: security.id,
+        holder_id: holder.id,
         full_name: holder?.name, // Ф.и.о.
         country: holder?.district?.name, // Страна
         percentage: percentageOfEmission, // Процент от эмиссии
@@ -168,6 +170,7 @@ export class HoldersService {
   
       return {
         id: security.id,
+        holder_id: holder.id,
         full_name: holder?.name, // Ф.и.о.
         emission: emission.reg_number,
         percentage: percentageOfEmission, // Процент от эмиссии
