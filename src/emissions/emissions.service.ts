@@ -267,7 +267,7 @@ export class EmissionsService {
     return securities
   }
 
-  async cancellationEmissionCount(emission_id, count){
+  async cancellationEmissionCount(emission_id, count, document_id){
     try {
       const emission = await this.emissionRepository.findByPk(emission_id)
       if(emission.count > 0 && emission.count >= count){
@@ -277,10 +277,11 @@ export class EmissionsService {
         const journal = {
           title: `Запись изменена в эмиссии (Аннулирование): ${emission.reg_number}`,
           old_value: {
-            count: emission.count
+            count: emission.count,
           },
           new_value: {
-            count: updateEmissionCount.count
+            count: updateEmissionCount.count,
+            document_id
           },
           change_type: 'update',
           changed_by: 1

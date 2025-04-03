@@ -33,7 +33,7 @@ export class EmissionsController {
   }
   @Put('/:id/cancel')
   cancelEmissionCount(@Param('id') id: number, @Body() body) {
-    return this.emissionsService.cancellationEmissionCount(id, body.count);
+    return this.emissionsService.cancellationEmissionCount(id, body.count, body.document_id);
   }
   @Delete('/types/:id')
   deleteEmissionType(@Param('id') id: number) {
