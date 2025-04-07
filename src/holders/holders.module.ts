@@ -9,12 +9,14 @@ import { Security } from 'src/securities/entities/security.entity';
 import { HolderType } from './entities/holder-type.entity';
 import { HolderDistrict } from './entities/holder-district.entity';
 import { JournalsModule } from 'src/journals/journals.module';
+import { HolderStatus } from './entities/holder-status.entity';
 
 @Module({
   imports: [
     SequelizeModule.forFeature([
       HolderDistrict,
       HolderType,
+      HolderStatus,
       Holder,
       Security
     ]),

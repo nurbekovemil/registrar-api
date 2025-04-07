@@ -9,4 +9,5 @@ export class CreateHolderDto {
     readonly inn: string;
     readonly district_id: number;
     readonly holder_type: number;
+    readonly holder_status: number;
 }

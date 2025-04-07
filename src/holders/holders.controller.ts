@@ -12,6 +12,7 @@ export class HoldersController {
     return this.holdersService.findAll();
   }
 
+  // holder types methods
   @Post('/holder-types')
   createHolderTypes(@Body() data: { name: string }) {
     return this.holdersService.createHolderType(data.name);
@@ -31,6 +32,28 @@ export class HoldersController {
   updateHolderTypes(@Param('id', ParseIntPipe) id: number, @Body() data: { name: string }) {
     return this.holdersService.updateHolderType(id, data);
   }
+
+  // holder status methods
+  @Post('/holder-status')
+  createHolderStatus(@Body() data: { name: string }) {
+    return this.holdersService.createHolderStatus(data.name);
+  }
+
+  @Get('/holder-status')
+  getHolderStatus() {
+    return this.holdersService.getHolderStatus();
+  }
+
+  @Delete('/holder-status/:id')
+  deleteHolderStatus(@Param('id', ParseIntPipe) id: number) {
+    return this.holdersService.deleteHolderStatus(id);
+  }
+
+  @Put('/holder-status/:id')
+  updateHolderStatus(@Param('id', ParseIntPipe) id: number, @Body() data: { name: string }) {
+    return this.holdersService.updateHolderStatus(id, data);
+  }
+
 
   @Post('/district')
   createDistrict(@Body() createDistrictDto: CreateHolderDto) {

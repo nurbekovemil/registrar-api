@@ -41,6 +41,7 @@ import { Document } from "./documents/entities/document.entity";
 import { JournalsModule } from './journals/journals.module';
 import { Journal } from "./journals/entities/journal.entity";
 import { SecurityPledge } from "./securities/entities/security-pledge.entity";
+import { HolderStatus } from "./holders/entities/holder-status.entity";
 
 @Module({
   controllers: [],
@@ -72,6 +73,7 @@ import { SecurityPledge } from "./securities/entities/security-pledge.entity";
         AccountType,
         Document,
         HolderType,
+        HolderStatus,
         HolderDistrict,
         Holder, 
         Security, 

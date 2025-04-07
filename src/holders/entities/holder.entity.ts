@@ -14,6 +14,7 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { HolderType } from './holder-type.entity';
 import { HolderDistrict } from './holder-district.entity';
 import { Document } from 'src/documents/entities/document.entity';
+import { HolderStatus } from './holder-status.entity';
   
   interface HolderCreateAttrs {
     name: string;
@@ -26,6 +27,7 @@ import { Document } from 'src/documents/entities/document.entity';
     inn: string;
     district_id: number;
     holder_type: number;
+    holder_status: number;
   }
   
   @Table({ tableName: 'holders', createdAt: false, updatedAt: false })
@@ -39,6 +41,10 @@ import { Document } from 'src/documents/entities/document.entity';
     })
     id: number;
     
+    @ForeignKey(() => HolderStatus)
+    @Column({ type: DataType.INTEGER })
+    holder_status: number;
+
     @ForeignKey(() => HolderType)
     @Column({ type: DataType.INTEGER })
     holder_type: number;

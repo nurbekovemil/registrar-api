@@ -14,6 +14,7 @@ import { CreateDistrictDto } from './dto/create-holder-district.dto';
 import { UpdateDistrictDto } from './dto/update-holder-district.dto';
 import { SecuritiesService } from 'src/securities/securities.service';
 import { EmissionType } from 'src/emissions/entities/emission-type.entity';
+import { HolderStatus } from './entities/holder-status.entity';
 
 
 @Injectable()
@@ -22,6 +23,7 @@ export class HoldersService {
     @InjectModel(Holder) private holderRepository: typeof Holder,
     @InjectModel(HolderType) private holderTypeRepository: typeof HolderType,
     @InjectModel(HolderDistrict) private holderDistrictRepository: typeof HolderDistrict,
+    @InjectModel(HolderStatus) private holderStatusRepository: typeof HolderStatus,
     private emissionService: EmissionsService,
     private journalsService: JournalsService,
     private securityService: SecuritiesService
@@ -409,6 +411,7 @@ export class HoldersService {
     
   
 
+  // HOLDER TYPES CRUD
   async getHolderTypes(){
     const types = await this.holderTypeRepository.findAll()
     return types
@@ -444,6 +447,44 @@ export class HoldersService {
       }
     })
   }
+
+  // HOLDER STATUS CRUD
+  async getHolderStatus() {
+    const statuses = await this.holderStatusRepository.findAll();
+    return statuses;
+  }
+  
+  async createHolderStatus(name: string) {
+    const status = await this.holderStatusRepository.create({ name });
+    return status;
+  }
+  
+  async updateHolderStatus(id: number, data: { name: string }) {
+    let status = await this.holderStatusRepository.findByPk(id);
+    if (!status) {
+      throw new HttpException('Статус участника не найден', HttpStatus.BAD_REQUEST);
+    }
+    status.name = data.name;
+    await status.save();
+    return status;
+  }
+  
+  async deleteHolderStatus(id: number) {
+    const isHolders = await this.holderRepository.findAll({
+      where: {
+        holder_status: id,
+      },
+    });
+    if (isHolders.length > 0) {
+      throw new HttpException('Нельзя удалить статус участника, в котором есть участники', HttpStatus.BAD_REQUEST);
+    }
+    return await this.holderStatusRepository.destroy({
+      where: {
+        id,
+      },
+    });
+  }
+  
 
   async createDistrict(createDistrictDto: CreateDistrictDto) {
     const is_district = await this.holderDistrictRepository.findOne({
@@ -494,4 +535,6 @@ export class HoldersService {
   async getEmitentsByHolderId(id: number) {
     return await this.securityService.getEmitentsByHolderId(id)
   }
+
+
 }
