@@ -34,7 +34,13 @@ export class HoldersService {
 
   async update(id: number, updateHolderDto: UpdateHolderDto) {
     const old_holder_value = await this.holderRepository.findByPk(id)
-    const holder = await this.holderRepository.update(updateHolderDto, {
+    if(!old_holder_value){
+      throw new HttpException(
+        'Участник не найден',
+        HttpStatus.BAD_REQUEST,
+      )
+    }
+    await this.holderRepository.update(updateHolderDto, {
       where: {
         id
       }
@@ -43,7 +49,7 @@ export class HoldersService {
       title: `Запись изменена в участнике: ${updateHolderDto.name}`,
       old_value: old_holder_value,
       new_value: updateHolderDto,
-      change_type: 'update',
+      change_type: 'holder',
       changed_by: 1
     }
     await this.journalsService.create(journal)

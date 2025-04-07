@@ -273,7 +273,6 @@ export class EmissionsService {
       if(emission.count > 0 && emission.count >= count){
         const updateEmissionCount = { count: emission.count - count }
         await this.emissionRepository.update(updateEmissionCount, {where: { id: emission_id }})
-        emission.count = emission.count - count
         const journal = {
           title: `Запись изменена в эмиссии (Аннулирование): ${emission.reg_number}`,
           old_value: {
@@ -283,9 +282,10 @@ export class EmissionsService {
             count: updateEmissionCount.count,
             document_id
           },
-          change_type: 'update',
+          change_type: 'emission',
           changed_by: 1
         }
+        emission.count = emission.count - count
         return await this.journalsService.create(journal)
       }
       throw new Error('Недостаточно средств')
