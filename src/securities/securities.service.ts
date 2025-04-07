@@ -30,14 +30,14 @@ export class SecuritiesService {
 
   async deductQuentitySecurity(holder_security, quantity) {
     const security = await this.securityRepository.findByPk(holder_security.id)
-    security.quantity = security.quantity - quantity
+    security.quantity = Number(security.quantity) - Number(quantity)
     return security.save()
   }
 
   async topUpQuentitySecurity(holder_security, quantity) {
     try {
       const security = await this.securityRepository.findByPk(holder_security.id)
-      security.quantity = security.quantity + quantity
+      security.quantity = Number(security.quantity) + Number(quantity)
       return security.save()
     } catch (error) {
       
