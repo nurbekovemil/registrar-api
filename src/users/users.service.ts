@@ -1,7 +1,8 @@
-import { Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { User } from "./entities/users.entity";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { InjectModel } from "@nestjs/sequelize";
+import * as bcrypt from "bcryptjs";
 
 @Injectable()
 export class UsersService {
@@ -10,8 +11,20 @@ export class UsersService {
   ) {}
 
   async createUser(dto: CreateUserDto) {
-    const user = await this.userRepository.create(dto);
-    return user;
+    try {
+      const candidate = await this.userRepository.findOne({ where: { login: dto.login } });
+      if (candidate) {
+        throw new Error('Пользователь с таким логином уже существует');
+      }
+      const hashPassword = await bcrypt.hash(dto.password, 5)
+      const user = await this.userRepository.create({...dto, password: hashPassword});
+      return user; 
+    } catch (error) {
+      throw new HttpException(
+        error.message,
+        HttpStatus.BAD_REQUEST,
+      )
+    }
   }
 
   async getAllUsers() {

@@ -45,6 +45,6 @@ import { User } from 'src/users/entities/users.entity';
     @Column({ type: DataType.STRING })
     phone_number: string;
 
-    @HasMany(() => User)
-    users: User[];
+    // @HasMany(() => User)
+    // users: User[];
   }

@@ -30,7 +30,12 @@ export class AuthService {
     const user = await this.validateUser(loginDto);
     const {token} = await this.generateToken(user)
     return {
-      user,
+      user: {
+        id: user.id,
+        login: user.login,
+        first_name: user.first_name,
+        last_name: user.last_name
+      },
       token
     };
   }

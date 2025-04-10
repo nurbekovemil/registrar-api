@@ -13,7 +13,7 @@ import { Company } from 'src/companies/entities/company.entity';
     password: string;
     first_name: string;
     last_name: string;
-    company_id: number;
+    // company_id: number;
   }
   
   @Table({ tableName: 'users', createdAt: false, updatedAt: false })
@@ -39,10 +39,10 @@ import { Company } from 'src/companies/entities/company.entity';
     @Column({ type: DataType.STRING })
     last_name: string;
 
-    @ForeignKey(() => Company)
-    @Column({ type: DataType.INTEGER })
-    company_id: number;
+    // @ForeignKey(() => Company)
+    // @Column({ type: DataType.INTEGER })
+    // company_id: number;
 
-    @BelongsTo(() => Company)
-    company: Company;
+    // @BelongsTo(() => Company)
+    // company: Company;
   }
