@@ -52,7 +52,7 @@ export class HoldersService {
       old_value: old_holder_value,
       new_value: updateHolderDto,
       change_type: 'holder',
-      changed_by: 1
+      emitent_id: null
     }
     await this.journalsService.create(journal)
     return 'Updated';

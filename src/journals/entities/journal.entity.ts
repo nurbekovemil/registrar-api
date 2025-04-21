@@ -1,9 +1,11 @@
 import {
       Column,
       DataType,
+      ForeignKey,
       Model,
       Table,
     } from 'sequelize-typescript';
+import { Emitent } from 'src/emitents/entities/emitent.entity';
 
     
     interface JournalCreateAttrs {
@@ -11,7 +13,7 @@ import {
       old_value: object;
       new_value: object;
       change_type: string;
-      changed_by: number;
+      emitent_id: number;
     }
     
     @Table({ tableName: 'journals', updatedAt: false })
@@ -37,6 +39,9 @@ import {
       @Column({ type: DataType.STRING })
       change_type: string;
 
+      @ForeignKey(() => Emitent)
       @Column({ type: DataType.INTEGER })
-      changed_by: number;
+      emitent_id: number;
+
+
     }

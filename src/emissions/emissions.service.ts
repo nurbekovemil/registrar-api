@@ -12,6 +12,7 @@ import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
 import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { JournalsService } from 'src/journals/journals.service';
+import e from 'express';
 
 @Injectable()
 export class EmissionsService {
@@ -283,7 +284,7 @@ export class EmissionsService {
             document_id
           },
           change_type: 'emission',
-          changed_by: 1
+          emitent_id: emission.emitent_id
         }
         emission.count = emission.count - count
         return await this.journalsService.create(journal)

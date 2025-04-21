@@ -61,7 +61,7 @@ export class EmitentsService {
         old_value: old_emitent_value,
         new_value: updateEmitentDto,
         change_type: 'update',
-        changed_by: 1
+        emitent_id: id
       }
       await this.journalsService.create(journal)
       return 'Данные эмитента обновлены';

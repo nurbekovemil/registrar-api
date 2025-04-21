@@ -5,9 +5,9 @@ import { JournalsService } from './journals.service';
 export class JournalsController {
   constructor(private readonly journalsService: JournalsService) {}
 
-  @Get()
-  findAll() {
-    return this.journalsService.findAll();
+  @Get('/emitent/:id')
+  findAll(@Param('id') id: number) {
+    return this.journalsService.findAll(id);
   }
 
   @Get(':id')
