@@ -3,4 +3,5 @@ import { CreateHolderDto } from './create-holder.dto';
 
 export class UpdateHolderDto extends PartialType(CreateHolderDto) {
     readonly document_id?: number
+    readonly org_emitent_id?: number
 }

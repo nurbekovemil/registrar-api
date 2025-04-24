@@ -8,6 +8,7 @@ import {
   } from 'sequelize-typescript';
 import { Emission } from 'src/emissions/entities/emission.entity';
 import { Holder } from 'src/holders/entities/holder.entity';
+import { Journal } from 'src/journals/entities/journal.entity';
 import { Security } from 'src/securities/entities/security.entity';
   
   interface EmitentCreateAttrs {
@@ -93,4 +94,7 @@ import { Security } from 'src/securities/entities/security.entity';
 
     @HasMany(() => Security)
     securities: Security[]
+
+    @HasMany(() => Journal)
+    holders: Journal[]
   }

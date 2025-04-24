@@ -55,7 +55,8 @@ export class HoldersService {
       change_type: 'holder',
       emitent_id: emitents.map(e => e.id),
       document_id: updateHolderDto.document_id,
-      holder_id: id
+      holder_id: id,
+      org_emitent_id: updateHolderDto.org_emitent_id
     }
     await this.journalsService.create(journal)
     return 'Updated';

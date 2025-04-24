@@ -338,7 +338,8 @@ export class EmissionsService {
           change_type: 'emission',
           emitent_id: [emission.emitent_id],
           emission_id: emission_id,
-          document_id
+          document_id,
+          org_emitent_id: emission.emitent_id
         }
         emission.count = emission.count - count
         return await this.journalsService.create(journal)

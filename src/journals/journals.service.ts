@@ -4,6 +4,7 @@ import { CreateJournalDto } from './dto/create-journal.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
 import { SecuritiesService } from 'src/securities/securities.service';
+import { Emitent } from 'src/emitents/entities/emitent.entity';
 
 @Injectable()
 export class JournalsService {
@@ -21,7 +22,12 @@ export class JournalsService {
         emitent_id: {
           [Op.contains]: [emitent_id]
         }
-      }
+      },
+      include: [
+        {
+          model: Emitent
+        }
+      ]
     });
   }
 

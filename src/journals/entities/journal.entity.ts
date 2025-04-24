@@ -1,4 +1,5 @@
 import {
+  BelongsTo,
       Column,
       DataType,
       ForeignKey,
@@ -20,6 +21,7 @@ import { Holder } from 'src/holders/entities/holder.entity';
       emission_id?: number;
       document_id: number;
       holder_id?: number;
+      org_emitent_id: number
     }
     
     @Table({ tableName: 'journals', updatedAt: false })
@@ -45,9 +47,12 @@ import { Holder } from 'src/holders/entities/holder.entity';
       @Column({ type: DataType.STRING })
       change_type: string;
 
-      @ForeignKey(() => Emitent)
       @Column({ type: DataType.ARRAY(DataType.INTEGER) })
       emitent_id: number[];
+
+      @ForeignKey(() => Emitent)
+      @Column({ type: DataType.INTEGER })
+      org_emitent_id: number;
 
       @ForeignKey(() => Emission)
       @Column({ type: DataType.INTEGER })
@@ -60,4 +65,7 @@ import { Holder } from 'src/holders/entities/holder.entity';
       @ForeignKey(() => Holder)
       @Column({ type: DataType.INTEGER })
       holder_id: number;
+
+      @BelongsTo(() => Emitent)
+      org_emitent: Emitent;
     }

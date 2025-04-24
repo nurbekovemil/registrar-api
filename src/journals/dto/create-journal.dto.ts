@@ -7,4 +7,5 @@ export class CreateJournalDto {
     readonly emission_id?: number;
     readonly document_id: number;
     readonly holder_id?: number;
+    readonly org_emitent_id: number;
 }
