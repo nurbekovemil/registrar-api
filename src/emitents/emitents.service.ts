@@ -60,8 +60,9 @@ export class EmitentsService {
         title: `Запись изменена в эмитенте: ${updateEmitentDto.full_name}`,
         old_value: old_emitent_value,
         new_value: updateEmitentDto,
-        change_type: 'update',
-        emitent_id: id
+        change_type: 'emitent',
+        emitent_id: [id],
+        document_id: updateEmitentDto.document_id
       }
       await this.journalsService.create(journal)
       return 'Данные эмитента обновлены';

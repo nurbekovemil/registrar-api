@@ -214,6 +214,59 @@ export class EmissionsService {
     }));
   }
 
+  async getEmissionsByEmitentIdHolderId(eid: number, hid: number){
+    const emissions = await this.emissionRepository.findAll({
+      include: [
+        {
+          model: Security,
+          where: {
+            holder_id: hid,
+            emitent_id: eid
+          },
+          include: [
+            {
+              model: SecurityPledge,
+              as: 'security_pledged', // В залоге для этой бумаги
+            },
+            {
+              model: SecurityPledge,
+              as: 'security_pledgee', // Принято в залог для этой бумаги
+            },
+            {
+              model: SecurityBlock
+            }
+          ]
+        },
+        {
+          model: EmissionType
+        }
+      ]
+    })
+    return emissions.map(emission => ({
+      reg_number: emission.reg_number,
+      // type: 'простые', // Или другой тип, если он у вас есть
+      type: emission?.emission?.name,
+      total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+      nominal: emission.nominal || 0,
+      total_nominal_value:
+        (emission.nominal || 0) *
+        emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+      pledged_shares: emission.securities.reduce(
+        (sum, security) => sum + (security.security_pledged?.pledged_quantity || 0),
+        0,
+      ),
+      accepted_in_pledge: emission.securities.reduce(
+        (sum, security) => sum + (security.security_pledgee?.pledged_quantity || 0),
+        0,
+      ),
+      blocked_shares: emission.securities.reduce(
+        (sum, security) => sum + (security.security_block?.quantity || 0),
+        0,
+      ),
+      share_percent: (emission.securities.reduce((sum, security) => sum + security.quantity, 0) / emission.start_count) * 100
+    }));
+  }
+
   async deductQuentityEmission(emission_id, quantity){
     const emission = await this.emissionRepository.findByPk(emission_id)
     if(emission.count > 0 && emission.count >= quantity){
@@ -280,11 +333,12 @@ export class EmissionsService {
             count: emission.count,
           },
           new_value: {
-            count: updateEmissionCount.count,
-            document_id
+            count: updateEmissionCount.count
           },
           change_type: 'emission',
-          emitent_id: emission.emitent_id
+          emitent_id: [emission.emitent_id],
+          emission_id: emission_id,
+          document_id
         }
         emission.count = emission.count - count
         return await this.journalsService.create(journal)

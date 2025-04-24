@@ -3,11 +3,13 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateJournalDto } from './dto/create-journal.dto';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { SecuritiesService } from 'src/securities/securities.service';
 
 @Injectable()
 export class JournalsService {
   constructor(
     @InjectModel(Journal) private journalRepository: typeof Journal,
+    private securityService: SecuritiesService
   ){}
   async create(createJournalDto: CreateJournalDto) {
     await this.journalRepository.create(createJournalDto);
@@ -16,10 +18,9 @@ export class JournalsService {
   async findAll(emitent_id: number) {
     return await this.journalRepository.findAll({
       where: {
-        [Op.or]: [
-          { emitent_id: emitent_id },
-          { emitent_id: null }
-        ]
+        emitent_id: {
+          [Op.contains]: [emitent_id]
+        }
       }
     });
   }

@@ -47,12 +47,15 @@ export class HoldersService {
         id
       }
     })
+    const emitents = await this.securityService.getEmitentsByHolderId(id)
     const journal = {
       title: `Запись изменена в участнике: ${updateHolderDto.name}`,
       old_value: old_holder_value,
       new_value: updateHolderDto,
       change_type: 'holder',
-      emitent_id: null
+      emitent_id: emitents.map(e => e.id),
+      document_id: updateHolderDto.document_id,
+      holder_id: id
     }
     await this.journalsService.create(journal)
     return 'Updated';

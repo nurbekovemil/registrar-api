@@ -26,7 +26,7 @@ export class PrintsService {
   async getExtractFromRegister(eid: number, hid: number) {
     const holder = await this.holderService.findOne(hid)
     const emitent = await this.emitentService.findOne(eid)
-    const emission = await this.emissionService.getEmissionsByHolderId(hid)
+    const emission = await this.emissionService.getEmissionsByEmitentIdHolderId(eid, hid)
     let holder_pledged_security = 0;
     let holder_pledgee_security = 0;
     // if(emission.length > 0) {

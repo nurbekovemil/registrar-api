@@ -5,7 +5,10 @@ import {
       Model,
       Table,
     } from 'sequelize-typescript';
+import { Document } from 'src/documents/entities/document.entity';
+import { Emission } from 'src/emissions/entities/emission.entity';
 import { Emitent } from 'src/emitents/entities/emitent.entity';
+import { Holder } from 'src/holders/entities/holder.entity';
 
     
     interface JournalCreateAttrs {
@@ -13,7 +16,10 @@ import { Emitent } from 'src/emitents/entities/emitent.entity';
       old_value: object;
       new_value: object;
       change_type: string;
-      emitent_id: number;
+      emitent_id: number[];
+      emission_id?: number;
+      document_id: number;
+      holder_id?: number;
     }
     
     @Table({ tableName: 'journals', updatedAt: false })
@@ -40,8 +46,18 @@ import { Emitent } from 'src/emitents/entities/emitent.entity';
       change_type: string;
 
       @ForeignKey(() => Emitent)
+      @Column({ type: DataType.ARRAY(DataType.INTEGER) })
+      emitent_id: number[];
+
+      @ForeignKey(() => Emission)
       @Column({ type: DataType.INTEGER })
-      emitent_id: number;
+      emission_id: number;
 
+      @ForeignKey(() => Document)
+      @Column({ type: DataType.INTEGER })
+      document_id: number;
 
+      @ForeignKey(() => Holder)
+      @Column({ type: DataType.INTEGER })
+      holder_id: number;
     }
