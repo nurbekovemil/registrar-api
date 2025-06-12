@@ -16,7 +16,7 @@ import {
     pledgee_id: number;
   }
 
-  @Table({ tableName: 'security_pledges' })
+  @Table({ tableName: 'security_pledges', timestamps: false })
   export class SecurityPledge extends Model<SecurityPledge, CreatePledgeAttrs> {
     @Column({
       type: DataType.INTEGER,
@@ -41,13 +41,13 @@ import {
     @Column({ type: DataType.INTEGER })
     pledgee_id: number; // Залогополучатель (кто получает залог)
   
-    @BelongsTo(() => Security)
-    security: Security;
-  
-    @BelongsTo(() => Holder, 'pledger_id')
+    @BelongsTo(() => Holder, { as: 'pledger', foreignKey: 'pledger_id' })
     pledger: Holder;
   
-    @BelongsTo(() => Holder, 'pledgee_id')
+    @BelongsTo(() => Holder, { as: 'pledgee', foreignKey: 'pledgee_id' })
     pledgee: Holder;
+
+    @BelongsTo(() => Security)
+    security: Security
   }
   

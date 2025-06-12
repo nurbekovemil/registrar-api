@@ -15,6 +15,7 @@ import { HolderType } from './holder-type.entity';
 import { HolderDistrict } from './holder-district.entity';
 import { Document } from 'src/documents/entities/document.entity';
 import { HolderStatus } from './holder-status.entity';
+import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
   
   interface HolderCreateAttrs {
     name: string;
@@ -95,4 +96,10 @@ import { HolderStatus } from './holder-status.entity';
 
     @BelongsTo(() => HolderDistrict)
     district: HolderDistrict;
+
+    @HasMany(() => SecurityPledge, { as: 'pledges_given', foreignKey: 'pledger_id' })
+    pledges_given: SecurityPledge[];
+
+    @HasMany(() => SecurityPledge, { as: 'pledges_received', foreignKey: 'pledgee_id' })
+    pledges_received: SecurityPledge[];
   }

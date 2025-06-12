@@ -94,10 +94,10 @@ export class Security extends Model<Security, SecurityCreateAttrs> {
   @HasOne(() => SecurityPledge)
   security_pledge: SecurityPledge
 
-  @HasOne(() => SecurityPledge, { as: 'security_pledged', foreignKey: 'pledger_id' })
+  @HasOne(() => SecurityPledge, { as: 'security_pledged', foreignKey: 'security_id' })
   security_pledged: SecurityPledge; // В залоге для этой бумаги
 
-  @HasOne(() => SecurityPledge, { as: 'security_pledgee', foreignKey: 'pledgee_id' })
+  @HasOne(() => SecurityPledge, { as: 'security_pledgee', foreignKey: 'security_id' })
   security_pledgee: SecurityPledge; // Принято в залог для этой бумаги
 
 }

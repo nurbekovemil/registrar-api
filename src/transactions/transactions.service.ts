@@ -344,7 +344,13 @@ export class TransactionsService {
   }
 
   private async createPledgeSecurity(createTransactionDto, transactionDate, t){
-    const {holder_from_id, holder_to_id, emitent_id, emission_id} = createTransactionDto
+    const {
+      holder_from_id, 
+      holder_to_id, 
+      emitent_id, 
+      emission_id
+    } = createTransactionDto
+
     const holder_from_security = await this.securityService.getHolderSecurity({holder_id: holder_from_id, emitent_id, emission_id})
     if(holder_from_security && holder_from_security.quantity < createTransactionDto.quantity){
       throw new Error(`Недостаточно ценных бумаг: доступно ${holder_from_security.quantity}`);
@@ -353,14 +359,19 @@ export class TransactionsService {
     if(holder_from_security_block && (holder_from_security.quantity - holder_from_security_block.quantity) < createTransactionDto.quantity){
       throw new Error(`Заблокированы: ${holder_from_security_block.quantity} ценных бумаг из ${holder_from_security.quantity}`);
     }
-    await this.securityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
     const holder_to_security = await this.securityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
-    console.log('test ----- ', createTransactionDto)
+    // console.log('test ----- ', createTransactionDto)
     if(!holder_to_security) {
-      const holder_to_security = await this.createSecurity(createTransactionDto, transactionDate)
-      return await this.securityService.pledgeSecurity({security_id: holder_to_security.id, ...createTransactionDto})
+      console.log('test non security----- ', createTransactionDto)
+      const new_holder_to_security = await this.createSecurity(createTransactionDto, transactionDate)
+      const pladge = await this.securityService.pledgeSecurity({security_id: new_holder_to_security.id, ...createTransactionDto})
+      await this.securityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
+      return new_holder_to_security
     }
-    return await this.securityService.pledgeSecurity({security_id: holder_to_security.id, ...createTransactionDto})
+    console.log('test has security ----- ', createTransactionDto)
+    const pladge = await this.securityService.pledgeSecurity({security_id: holder_to_security.id, ...createTransactionDto})
+    await this.securityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
+    return holder_to_security
   }
 
   private async unpledgeSecurity(createTransactionDto, transactionDate, t){

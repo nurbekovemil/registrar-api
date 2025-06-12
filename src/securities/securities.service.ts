@@ -19,6 +19,7 @@ export class SecuritiesService {
     @InjectModel(Security) private securityRepository: typeof Security,
     @InjectModel(SecurityBlock) private securityBlockRepository: typeof SecurityBlock,
     @InjectModel(SecurityPledge) private securityPledgeRepository: typeof SecurityPledge,
+    @InjectModel(Holder) private holderRepository: typeof Holder,
     // @InjectModel(Transaction) private transactionRepository: typeof Transaction,
   ) {}
 
@@ -261,22 +262,38 @@ export class SecuritiesService {
   
 
   async pledgeSecurity(data) {
-    const {security_id, quantity, holder_from_id, holder_to_id} = data
-    let pledge = await this.securityPledgeRepository.findOne({
-      where: {
-        security_id
-      }
-    })
-    if(!pledge) {
-      return await this.securityPledgeRepository.create({
-        security_id,
-        pledged_quantity: quantity,
-        pledger_id: holder_from_id,
-        pledgee_id: holder_to_id
-      })
+    console.log('plegde security ---- ', data)
+    try {
+        const { 
+          security_id, 
+          quantity, 
+          holder_from_id, 
+          holder_to_id
+        } = data
+
+        let pledge = await this.securityPledgeRepository.findOne({
+          where: {
+            security_id
+          }
+        })
+        if(!pledge) {
+          console.log('create pledge ----- ')
+          
+          const new_pledge = await this.securityPledgeRepository.create({
+            security_id: Number(security_id),
+            pledged_quantity: quantity,
+            pledger_id: Number(holder_from_id),
+            pledgee_id: Number(holder_to_id)
+          })
+          return new_pledge.save()
+        }
+        console.log('update pledge ----- ')
+        pledge.pledged_quantity = pledge.pledged_quantity + quantity
+        return pledge.save()
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
     }
-    pledge.pledged_quantity = pledge.pledged_quantity + quantity
-    return pledge.save()
   }
   async unpledgeSecurity(data) {
     const {security_id, quantity, holder_from_id, holder_to_id} = data
