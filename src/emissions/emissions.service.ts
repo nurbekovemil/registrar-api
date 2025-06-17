@@ -5,7 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Emission } from './entities/emission.entity';
 import { EmissionType } from './entities/emission-type.entity';
 import { Security } from 'src/securities/entities/security.entity';
-import sequelize, { JSON } from 'sequelize';
+import sequelize from 'sequelize';
 import { SecurityBlock } from 'src/securities/entities/security-block.entity';
 import { TransactionsService } from 'src/transactions/transactions.service';
 import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
@@ -219,19 +219,24 @@ export class EmissionsService {
         {
           model: Security,
           where: {
-            holder_id: hid,
             emitent_id: eid
           },
           include: [
             {
               model: SecurityPledge,
               as: 'security_pledged', // В залоге для этой бумаги
-              required: false
+              required: false,
+              where: {
+                pledger_id: hid
+              }
             },
             {
               model: SecurityPledge,
               as: 'security_pledgee', // Принято в залог для этой бумаги
-              required: false
+              required: false,
+              where: {
+                pledgee_id: hid
+              }
             },
             {
               model: SecurityBlock
@@ -243,7 +248,7 @@ export class EmissionsService {
         }
       ]
     })
-    console.log(emissions)
+    console.log(JSON.stringify(emissions))
     return emissions.map(emission => ({
       reg_number: emission.reg_number,
       // type: 'простые', // Или другой тип, если он у вас есть
