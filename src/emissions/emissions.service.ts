@@ -167,17 +167,25 @@ export class EmissionsService {
       include: [
         {
           model: Security,
-          where: {
-            holder_id: hid
-          },
+          // where: {
+          //   holder_id: hid
+          // },
           include: [
             {
               model: SecurityPledge,
               as: 'security_pledged', // В залоге для этой бумаги
+              required: false,
+              where: {
+                pledger_id: hid
+              }
             },
             {
               model: SecurityPledge,
               as: 'security_pledgee', // Принято в залог для этой бумаги
+              required: false,
+              where: {
+                pledgee_id: hid
+              }
             },
             {
               model: SecurityBlock
