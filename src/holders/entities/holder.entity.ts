@@ -94,6 +94,9 @@ import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
     @HasMany(() => Security)
     securities: Security[];
 
+    @BelongsTo(() => HolderType)
+    type: HolderType;
+
     @BelongsTo(() => HolderDistrict)
     district: HolderDistrict;
 

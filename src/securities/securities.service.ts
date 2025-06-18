@@ -363,6 +363,7 @@ export class SecuritiesService {
     if(esid) {
       emissionTypeCondition.id = esid
     }
+    console.log('test ---- ',emissionTypeCondition, estype, esid)
     return await this.securityRepository.findAll({
       where: {
         emitent_id: eid
@@ -386,6 +387,18 @@ export class SecuritiesService {
         },
       ],
     });
+  }
+
+  async hasHolderSecurities(holder_id: number) {
+    const security = await this.securityRepository.findOne({
+      where: {
+        holder_id
+      }
+    })
+    if(security) {
+      return true
+    }
+    return false
   }
 }
 

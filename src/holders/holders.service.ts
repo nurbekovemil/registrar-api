@@ -15,6 +15,7 @@ import { UpdateDistrictDto } from './dto/update-holder-district.dto';
 import { SecuritiesService } from 'src/securities/securities.service';
 import { EmissionType } from 'src/emissions/entities/emission-type.entity';
 import { HolderStatus } from './entities/holder-status.entity';
+import { is } from 'sequelize/types/lib/operators';
 
 
 @Injectable()
@@ -87,10 +88,30 @@ export class HoldersService {
     return holders;
   }
 
-  async findOne(id: number) {
-    const holder = await this.holderRepository.findByPk(id)
-    return holder;
-  }
+async findOne(id: number) {
+  const holder = await this.holderRepository.findOne({
+    where: { id },
+    include: [
+      {
+        model: HolderType,
+        attributes: [],
+      },
+      {
+        model: HolderDistrict,
+        attributes: [],
+      }
+    ],
+    attributes: {
+      include: [
+        [sequelize.col('type.name'), 'holder_type'],
+        [sequelize.col('district.name'), 'district_id'],
+      ],
+    },
+  });
+
+  return holder;
+}
+
 
   async getEmitentAllHolders() {
     const holders = await this.holderRepository.findAll()
@@ -106,7 +127,13 @@ export class HoldersService {
     return await this.emissionService.getHolderSecurities(hid, query)
   }
   async getFormattedExtractFromRegisters(eid: number, query){
-    const { emission_type } = query
+    let emission_type = null
+    const isHasEmissionType = await this.emissionService.hasEmissionType(emission_type)
+    if(!isHasEmissionType) {
+      emission_type = 'all'
+    } else {
+      emission_type = query.emission_type
+    }
     const securities = await this.securityService.getEmitentSecurities(eid, emission_type);
     const totalSecurities = securities.reduce((total, security) => total + Number(security.quantity), 0);
 
@@ -117,13 +144,17 @@ export class HoldersService {
       const percentageOfEmission = ((security.quantity * 100.0) / totalSecurities).toFixed(2);
       const nominal = (security.quantity * emission.nominal).toFixed(2);
 
+      const isPreferred = emission.type_id === 2; // указывается тип акций
+
       return {
         id: security.id,
         holder_id: holder.id,
         full_name: holder?.name, // Ф.и.о.
-        quantity: security.quantity, // Количество акций
+        common_quantity: isPreferred ? 0 : security.quantity, // Количество простых акций
+        common_nominal: isPreferred ? 0 : (security.quantity * emission.nominal).toFixed(2), // Номинал простых
+        preferred_quantity: isPreferred ? security.quantity : 0, // Количество привилегированных акций
+        preferred_nominal: isPreferred ? (security.quantity * emission.nominal).toFixed(2) : 0, // Номинал привилегированных
         percentage: percentageOfEmission, // Процент от эмиссии
-        nominal, // Номинал
         country: holder?.district?.name, // Страна
       };
     });
@@ -538,6 +569,10 @@ export class HoldersService {
 
   async getEmitentsByHolderId(id: number) {
     return await this.securityService.getEmitentsByHolderId(id)
+  }
+
+  async getEmitentEmissions(hid, eid){
+    return await this.emissionService.getEmitentEmissions(hid, eid)
   }
 
 

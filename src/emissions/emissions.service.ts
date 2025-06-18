@@ -5,13 +5,14 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Emission } from './entities/emission.entity';
 import { EmissionType } from './entities/emission-type.entity';
 import { Security } from 'src/securities/entities/security.entity';
-import sequelize from 'sequelize';
+import sequelize, { col, fn } from 'sequelize';
 import { SecurityBlock } from 'src/securities/entities/security-block.entity';
 import { TransactionsService } from 'src/transactions/transactions.service';
 import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
 import { Op } from 'sequelize';
 import { Sequelize } from 'sequelize-typescript';
 import { JournalsService } from 'src/journals/journals.service';
+import { Holder } from 'src/holders/entities/holder.entity';
 
 @Injectable()
 export class EmissionsService {
@@ -99,6 +100,10 @@ export class EmissionsService {
   async getEmissionTypes(){
     const emissionTypes = await this.emissionTypeRepository.findAll()
     return emissionTypes
+  }
+  async hasEmissionType(id){
+    const emissionType = await this.emissionTypeRepository.findByPk(id)
+    return emissionType
   }
 
   async createEmissionType(name: string){
@@ -227,7 +232,7 @@ export class EmissionsService {
         {
           model: Security,
           where: {
-            emitent_id: eid
+            emitent_id: eid,
           },
           include: [
             {
@@ -256,7 +261,6 @@ export class EmissionsService {
         }
       ]
     })
-    console.log(JSON.stringify(emissions))
     return emissions.map(emission => ({
       reg_number: emission.reg_number,
       // type: 'простые', // Или другой тип, если он у вас есть
@@ -266,14 +270,6 @@ export class EmissionsService {
       total_nominal_value:
         (emission.nominal || 0) *
         emission.securities.reduce((sum, security) => sum + security.quantity, 0),
-      // pledged_shares: emission.securities.reduce(
-      //   (sum, security) => sum + (security.security_pledged?.pledged_quantity || 0),
-      //   0,
-      // ),
-      // accepted_in_pledge: emission.securities.reduce(
-      //   (sum, security) => sum + (security.security_pledgee?.pledged_quantity || 0),
-      //   0,
-      // ),
       pledged_shares: emission.securities.reduce((sum, security) => {
         return sum + (security.security_pledged?.pledged_quantity || 0);
       }, 0),
@@ -375,4 +371,64 @@ export class EmissionsService {
       )
     }
   }
+
+async getEmitentEmissions(hid: number, eid: number) {
+    const emissions = await this.emissionRepository.findAll({
+      where: {
+        emitent_id: eid
+      },
+      include: [
+        {
+          model: Security,
+          include: [
+            {
+              model: SecurityPledge,
+              as: 'security_pledged', // В залоге для этой бумаги
+              required: false,
+              where: {
+                pledger_id: hid
+              }
+            },
+            {
+              model: SecurityPledge,
+              as: 'security_pledgee', // Принято в залог для этой бумаги
+              required: false,
+              where: {
+                pledgee_id: hid
+              }
+            },
+            {
+              model: SecurityBlock
+            }
+          ]
+        },
+        {
+          model: EmissionType
+        }
+      ]
+    })
+    return emissions.map(emission => ({
+      reg_number: emission.reg_number,
+      // type: 'простые', // Или другой тип, если он у вас есть
+      type: emission?.emission?.name,
+      total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+      nominal: emission.nominal || 0,
+      total_nominal_value:
+        (emission.nominal || 0) *
+        emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+      pledged_shares: emission.securities.reduce(
+        (sum, security) => sum + (security.security_pledged?.pledged_quantity || 0),
+        0,
+      ),
+      accepted_in_pledge: emission.securities.reduce(
+        (sum, security) => sum + (security.security_pledgee?.pledged_quantity || 0),
+        0,
+      ),
+      blocked_shares: emission.securities.reduce(
+        (sum, security) => sum + (security.security_block?.quantity || 0),
+        0,
+      ),
+    }));
+}
+
 }

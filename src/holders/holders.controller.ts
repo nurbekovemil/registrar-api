@@ -120,4 +120,9 @@ export class HoldersController {
     return this.holdersService.getEmitentsByHolderId(id);
   }
 
+  @Get('/:hid/emitent/:eid/emissions')
+  getEmitentEmissions(@Param('hid', ParseIntPipe) hid: number, @Param('eid', ParseIntPipe) eid: number) {
+    return this.holdersService.getEmitentEmissions(hid, eid);
+  }
+
 }
