@@ -42,6 +42,7 @@ import { JournalsModule } from './journals/journals.module';
 import { Journal } from "./journals/entities/journal.entity";
 import { SecurityPledge } from "./securities/entities/security-pledge.entity";
 import { HolderStatus } from "./holders/entities/holder-status.entity";
+import { SeederModule } from './seeder/seeder.module';
 
 @Module({
   controllers: [],
@@ -104,6 +105,7 @@ import { HolderStatus } from "./holders/entities/holder-status.entity";
     AnalysisModule,
     DocumentsModule,
     JournalsModule,
+    SeederModule,
   ],
 })
 export class AppModule {}
