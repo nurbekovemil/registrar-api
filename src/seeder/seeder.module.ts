@@ -5,6 +5,7 @@ import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Emission } from 'src/emissions/entities/emission.entity';
 import { Holder } from 'src/holders/entities/holder.entity';
 import { Security } from 'src/securities/entities/security.entity';
+import { SeederController } from './seeder.controller';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { Security } from 'src/securities/entities/security.entity';
       Security
     ]),
   ],
-  controllers: [],
+  controllers: [SeederController],
   providers: [SeederService]
 })
 export class SeederModule {}

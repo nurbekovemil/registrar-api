@@ -20,15 +20,15 @@ import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
   interface HolderCreateAttrs {
     name: string;
     actual_address: string;
-    legal_address: string;
-    phone_number: string;
-    passport_type: string;
-    passport_number: string;
-    passport_agency: string;
-    inn: string;
+    // legal_address: string;
+    // phone_number: string;
+    // passport_type: string;
+    // passport_number: string;
+    // passport_agency: string;
+    // inn: string;
     district_id: number;
     holder_type: number;
-    holder_status: number;
+    // holder_status: number;
   }
   
   @Table({ tableName: 'holders', createdAt: false, updatedAt: false })

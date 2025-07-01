@@ -26,7 +26,7 @@ interface SecurityCreateAttrs {
   emitent_id: number;
   emission_id: number;
   quantity: number;
-  purchased_date: string
+  // purchased_date: string
 }
 
 @Table({ tableName: 'securities', createdAt: false, updatedAt: false })

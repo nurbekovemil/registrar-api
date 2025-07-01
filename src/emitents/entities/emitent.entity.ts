@@ -13,21 +13,21 @@ import { Security } from 'src/securities/entities/security.entity';
   
   interface EmitentCreateAttrs {
     full_name: string;
-    short_name: string;
-    director_company: string;
-    director_registrar: string;
-    accountant: string;
-    gov_name: string;
-    gov_number: string;
-    legal_address: string;
-    postal_address: string;
-    phone_number: string;
-    email: string;
-    bank_name: string;
-    bank_account: string;
-    id_number: string;
-    capital: string;
-    contract_date: string
+    // short_name: string;
+    // director_company: string;
+    // director_registrar: string;
+    // accountant: string;
+    // gov_name: string;
+    // gov_number: string;
+    // legal_address: string;
+    // postal_address: string;
+    // phone_number: string;
+    // email: string;
+    // bank_name: string;
+    // bank_account: string;
+    // id_number: string;
+    // capital: string;
+    // contract_date: string
   }
   
   @Table({ tableName: 'emitents', createdAt: false, updatedAt: false })

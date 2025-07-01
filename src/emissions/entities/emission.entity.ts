@@ -5,10 +5,10 @@ import { Security } from "src/securities/entities/security.entity";
 
 interface EmissionCreateAttrs {
     reg_number: string;
-    release_date: string;
+    // release_date: string;
     type_id: number;
     emitent_id: number;
-    nominal: number;
+    // nominal: number;
     start_count: number;
     count: number;
   }
