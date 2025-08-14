@@ -408,6 +408,7 @@ async getEmitentEmissions(hid: number, eid: number) {
       ]
     })
     return emissions.map(emission => ({
+      id: emission.id,
       reg_number: emission.reg_number,
       // type: 'простые', // Или другой тип, если он у вас есть
       type: emission?.emission?.name,

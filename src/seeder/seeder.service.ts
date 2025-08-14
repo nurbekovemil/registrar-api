@@ -72,6 +72,7 @@ export class SeederService {
             holder_type: 1,
             district_id: 1
           });
+          // await this.transactionRepository.create(createTransactionDto)
           await this.securityRepository.create({ 
             emission_id: emission.id, 
             emitent_id: emitent.id,
