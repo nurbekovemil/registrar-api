@@ -412,21 +412,21 @@ async getEmitentEmissions(hid: number, eid: number) {
       reg_number: emission.reg_number,
       // type: 'простые', // Или другой тип, если он у вас есть
       type: emission?.emission?.name,
-      total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+      total_shares: emission.securities.reduce((sum, security) => sum + (security.holder_id === hid ? security.quantity || 0 : 0), 0),
       nominal: emission.nominal || 0,
       total_nominal_value:
         (emission.nominal || 0) *
-        emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+        emission.securities.reduce((sum, security) => sum + (security.holder_id === hid ? security.quantity || 0 : 0), 0),
       pledged_shares: emission.securities.reduce(
-        (sum, security) => sum + (security.security_pledged?.pledged_quantity || 0),
+        (sum, security) => sum + (security.security_pledged?.pledger_id === hid ? security.security_pledged?.pledged_quantity || 0 : 0),
         0,
       ),
       accepted_in_pledge: emission.securities.reduce(
-        (sum, security) => sum + (security.security_pledgee?.pledged_quantity || 0),
+        (sum, security) => sum + (security.security_pledgee?.pledgee_id === hid ? security.security_pledgee?.pledged_quantity || 0 : 0),
         0,
       ),
       blocked_shares: emission.securities.reduce(
-        (sum, security) => sum + (security.security_block?.quantity || 0),
+        (sum, security) => sum + (security.holder_id === hid ? security.security_block?.quantity || 0 : 0),
         0,
       ),
     }));
