@@ -429,7 +429,12 @@ async getEmitentEmissions(hid: number, eid: number) {
         (sum, security) => sum + (security.holder_id === hid ? security.security_block?.quantity || 0 : 0),
         0,
       ),
-    }));
+    })).filter(em => 
+      em.total_shares > 0 ||
+      em.pledged_shares > 0 ||
+      em.accepted_in_pledge > 0 ||
+      em.blocked_shares > 0
+    );
 }
 
 }
