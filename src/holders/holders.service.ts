@@ -36,7 +36,19 @@ export class HoldersService {
   }
 
   async update(id: number, updateHolderDto: UpdateHolderDto) {
-    const old_holder_value = await this.holderRepository.findByPk(id)
+    const old_holder_value = await this.holderRepository.findByPk(id, {
+      include: [
+        {
+          model: HolderType,
+        },
+        {
+          model: HolderDistrict,
+        },
+        {
+          model: HolderStatus,
+        },
+      ]
+    })
     if(!old_holder_value){
       throw new HttpException(
         'Участник не найден',
