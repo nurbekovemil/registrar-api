@@ -97,6 +97,9 @@ import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
     @BelongsTo(() => HolderType)
     type: HolderType;
 
+    @BelongsTo(() => HolderStatus)
+    status: HolderStatus;
+
     @BelongsTo(() => HolderDistrict)
     district: HolderDistrict;
 

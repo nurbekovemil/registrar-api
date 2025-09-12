@@ -99,7 +99,11 @@ async findOne(id: number) {
       {
         model: HolderDistrict,
         // attributes: [],
-      }
+      },
+      {
+        model: HolderStatus,
+        // attributes: [],
+      },
     ],
     // attributes: {
     //   // include: [
