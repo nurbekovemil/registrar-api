@@ -94,19 +94,19 @@ async findOne(id: number) {
     include: [
       {
         model: HolderType,
-        attributes: [],
+        // attributes: [],
       },
       {
         model: HolderDistrict,
-        attributes: [],
+        // attributes: [],
       }
     ],
-    attributes: {
-      include: [
-        [sequelize.col('type.name'), 'holder_type'],
-        [sequelize.col('district.name'), 'district_id'],
-      ],
-    },
+    // attributes: {
+    //   // include: [
+    //   //   [sequelize.col('type.name'), 'holder_type'],
+    //   //   [sequelize.col('district.name'), 'district_id'],
+    //   // ],
+    // },
   });
 
   return holder;
