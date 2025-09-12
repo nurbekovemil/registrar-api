@@ -7,6 +7,7 @@ import { Holder } from 'src/holders/entities/holder.entity';
 import { Security } from 'src/securities/entities/security.entity';
 import { SeederController } from './seeder.controller';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
+import { Document } from 'src/documents/entities/document.entity';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { Transaction } from 'src/transactions/entities/transaction.entity';
       Emission,
       Holder,
       Security,
-      Transaction
+      Transaction,
+      Document
     ]),
   ],
   controllers: [SeederController],

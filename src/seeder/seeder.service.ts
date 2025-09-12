@@ -8,6 +8,7 @@ import { Emitent } from 'src/emitents/entities/emitent.entity';
 import { Holder } from 'src/holders/entities/holder.entity';
 import { Security } from 'src/securities/entities/security.entity';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
+import { Document } from 'src/documents/entities/document.entity';
 
 @Injectable()
 export class SeederService {
@@ -17,6 +18,7 @@ export class SeederService {
     @InjectModel(Holder) private holderRepository: typeof Holder,
     @InjectModel(Transaction) private transactionRepository: typeof Transaction,
     @InjectModel(Security) private securityRepository: typeof Security,
+    @InjectModel(Document) private documentRepository: typeof Document
   ){}
 
   async processAllExcelFiles() {
@@ -101,9 +103,8 @@ export class SeederService {
         emission.nominal = nominalPrice;
         emission.release_date = new Date().toDateString();
         emission.save();
-        console.log('parsedData', parsedData.length);
+
         await Promise.all(parsedData.map(async (row) => {
-          console.log('row ----------- ', row.quantity);
           let holder = await this.holderRepository.create({ 
             name: row.full_name, 
             actual_address: row.address,
@@ -131,6 +132,14 @@ export class SeederService {
             amount: 0,
             contract_date: new Date().toDateString()
           });
+
+          let document = await this.documentRepository.create({
+            title: 'Перв ввод',
+            emitent_id: emitent.id
+          })
+          document.provider_name = row.full_name;
+          document.signer_name = 'Гульнара';
+          await document.save();
 
           transaction.emitent_id = emitent.id;
           transaction.security_id = security.id;
