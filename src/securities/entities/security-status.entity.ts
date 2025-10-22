@@ -5,8 +5,11 @@ import {
     Table,
   } from 'sequelize-typescript';
     
+  interface SecurityStatusAttributes {
+    name: string;
+  }
   @Table({ tableName: 'security_status', createdAt: false, updatedAt: false })
-  export class SecurityStatus extends Model<SecurityStatus> {
+  export class SecurityStatus extends Model<SecurityStatus, SecurityStatusAttributes> {
 
     @Column({
       type: DataType.INTEGER,

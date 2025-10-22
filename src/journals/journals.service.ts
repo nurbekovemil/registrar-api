@@ -31,7 +31,7 @@ export class JournalsService {
     });
   }
 
-  async findOne(id: number) {
+  async      findOne(id: number) {
     try {
       const journal = await this.journalRepository.findByPk(id);
       if(!journal) throw new Error('Журнал не найден')

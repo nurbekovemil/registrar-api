@@ -7,8 +7,11 @@ import {
   } from 'sequelize-typescript';
 import { Transaction } from './transaction.entity';
     
+interface TransactionOperationtAttributes {
+  name: string;
+}
   @Table({ tableName: 'transaction_operations', createdAt: false, updatedAt: false })
-  export class TransactionOperation extends Model<TransactionOperation> {
+  export class TransactionOperation extends Model<TransactionOperation, TransactionOperationtAttributes> {
 
     @Column({
       type: DataType.INTEGER,

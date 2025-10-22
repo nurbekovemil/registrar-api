@@ -8,6 +8,15 @@ import { Security } from 'src/securities/entities/security.entity';
 import { SeederController } from './seeder.controller';
 import { Transaction } from 'src/transactions/entities/transaction.entity';
 import { Document } from 'src/documents/entities/document.entity';
+import { SecurityType } from 'src/securities/entities/security-type.entity';
+import { SecurityAttitude } from 'src/securities/entities/security-attitude.entity';
+import { HolderDistrict } from 'src/holders/entities/holder-district.entity';
+import { EmissionType } from 'src/emissions/entities/emission-type.entity';
+import { TransactionOperation } from 'src/transactions/entities/transaction-operation.entity';
+import { HolderType } from 'src/holders/entities/holder-type.entity';
+import { HolderStatus } from 'src/holders/entities/holder-status.entity';
+import { SecurityStatus } from 'src/securities/entities/security-status.entity';
+import { User } from 'src/users/entities/users.entity';
 
 @Module({
   imports: [
@@ -17,7 +26,16 @@ import { Document } from 'src/documents/entities/document.entity';
       Holder,
       Security,
       Transaction,
-      Document
+      Document,
+      SecurityAttitude,
+      SecurityType,
+      HolderDistrict,
+      HolderType,
+      EmissionType,
+      TransactionOperation,
+      HolderStatus,
+      SecurityStatus,
+      User
     ]),
   ],
   controllers: [SeederController],

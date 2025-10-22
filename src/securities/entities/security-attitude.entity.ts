@@ -7,9 +7,12 @@ import {
   } from 'sequelize-typescript';
 import { Security } from './security.entity';
   
+interface SecurityAttitudeAttributes {
+  name: string;
+}
   
   @Table({ tableName: 'security_attitudes', createdAt: false, updatedAt: false })
-  export class SecurityAttitude extends Model<SecurityAttitude> {
+  export class SecurityAttitude extends Model<SecurityAttitude, SecurityAttitudeAttributes> {
 
     @Column({
       type: DataType.INTEGER,

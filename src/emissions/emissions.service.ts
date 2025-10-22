@@ -172,9 +172,9 @@ export class EmissionsService {
       include: [
         {
           model: Security,
-          // where: {
-          //   holder_id: hid
-          // },
+          where: {
+            holder_id: hid
+          },
           include: [
             {
               model: SecurityPledge,

@@ -1,4 +1,5 @@
 export class CreateHolderDto {
+    // readonly id: number; // временно 
     readonly name: string;
     readonly actual_address: string;
     readonly legal_address: string;
