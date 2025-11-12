@@ -69,4 +69,12 @@ export class PrintsService {
     const transaction = await this.transactionService.getTransactionById(tid)
     return transaction
   }
+
+  async getKvartalReport(query: any) {
+    try {
+      return await this.transactionService.getOperationStats(query)
+    } catch (error) {
+      throw error;
+    }
+  }
 }

@@ -35,4 +35,9 @@ export class PrintsController {
     return this.printsService.getTransferOrder(tid)
   }
 
+  @Get('/kvartal')
+  getKvartalReport(@Query() query: any) {
+    return this.printsService.getKvartalReport(query)
+  }
+
 }

@@ -13,7 +13,7 @@ import { Security } from 'src/securities/entities/security.entity';
 import { SecurityType } from 'src/securities/entities/security-type.entity';
 import { Sequelize } from 'sequelize-typescript';
 import { EmissionsService } from 'src/emissions/emissions.service';
-import { literal, Op } from 'sequelize';
+import { col, fn, literal, Op } from 'sequelize';
 import { SecurityBlock } from 'src/securities/entities/security-block.entity';
 
 @Injectable()
@@ -398,4 +398,147 @@ export class TransactionsService {
     
     return await this.securityService.unlockingSecurity({security_id: holder_to_security.id, quantity: createTransactionDto.quantity, unblock_date: transactionDate})
   }
+  // async getOperationStats() {
+  //   // получаем список всех возможных операций
+  //   const operations = await TransactionOperation.findAll({
+  //     attributes: ['id', 'name'],
+  //     raw: true,
+  //   });
+
+  //   // основной запрос с группировкой по эмитенту и эмиссии
+  //   const transactions = await this.transactionRepository.findAll({
+  //     attributes: [
+  //       [col('emitent.full_name'), 'emitent_name'],
+  //       [col('emission.reg_number'), 'emission_name'],
+  //       [col('emission.id'), 'emission_id'],
+  //       'operation_id',
+  //       [fn('COUNT', col('Transaction.id')), 'count'],
+  //       [fn('SUM', col('Transaction.quantity')), 'quantity'],
+  //       [fn('SUM', col('Transaction.amount')), 'volume'],
+  //     ],
+  //     include: [
+  //       { model: Emitent, attributes: [] },
+  //       { model: Emission, attributes: [] },
+  //     ],
+  //     group: ['emitent.id', 'emission.id', 'operation_id'],
+  //     raw: true,
+  //   });
+
+  //   // формируем итоговую структуру
+  //   const grouped = Object.values(
+  //     transactions.reduce((acc, row) => {
+  //       const key = row['emission_id'];
+
+  //       if (!acc[key]) {
+  //         acc[key] = {
+  //           emitent: row['emitent_name'],
+  //           emission: row['emission_name'],
+  //           emission_id: row['emission_id'],
+  //           operations: operations.map(op => ({
+  //             name: op.name,
+  //             count: 0,
+  //             quantity: 0,
+  //             volume: 0,
+  //           })),
+  //         };
+  //       }
+
+  //       const opIndex = operations.findIndex(
+  //         op => op.id === row['operation_id'],
+  //       );
+
+  //       if (opIndex >= 0) {
+  //         acc[key].operations[opIndex] = {
+  //           name: operations[opIndex].name,
+  //           count: Number(row['count']),
+  //           quantity: Number(row['quantity']),
+  //           volume: Number(row['volume']),
+  //         };
+  //       }
+
+  //       return acc;
+  //     }, {}),
+  //   );
+
+  //   return grouped;
+  // }
+  async getOperationStats(query?: { quarter?: number; year?: number }) {
+  const { quarter, year } = query || {};
+
+  // получаем список всех возможных операций
+  const operations = await TransactionOperation.findAll({
+    attributes: ['id', 'name'],
+    raw: true,
+  });
+
+  // формируем фильтр по дате
+  const where: any = {};
+if (quarter && year) {
+  const monthStart = (quarter - 1) * 3;      // 0 = январь
+  const monthEnd = monthStart + 2;           // конец квартала
+
+  const startDate = new Date(year, monthStart, 1);                  // первый день квартала
+  const endDate = new Date(year, monthEnd + 1, 0, 23, 59, 59, 999); // последний день квартала
+
+  where.contract_date = { [Op.between]: [startDate, endDate] };
+}
+  // console.log(where, '------- ')
+
+  // основной запрос с группировкой по эмитенту и эмиссии
+  const transactions = await this.transactionRepository.findAll({
+    where,
+    attributes: [
+      [col('emitent.full_name'), 'emitent_name'],
+      [col('emission.reg_number'), 'emission_name'],
+      [col('emission.id'), 'emission_id'],
+      'operation_id',
+      [fn('COUNT', col('Transaction.id')), 'count'],
+      [fn('SUM', col('Transaction.quantity')), 'quantity'],
+      [fn('SUM', col('Transaction.amount')), 'volume'],
+    ],
+    include: [
+      { model: Emitent, attributes: [] },
+      { model: Emission, attributes: [] },
+    ],
+    group: ['emitent.id', 'emission.id', 'operation_id'],
+    raw: true,
+  });
+
+  // формируем итоговую структуру
+  const grouped = Object.values(
+    transactions.reduce((acc, row) => {
+      const key = row['emission_id'];
+
+      if (!acc[key]) {
+        acc[key] = {
+          emitent: row['emitent_name'],
+          emission: row['emission_name'],
+          emission_id: row['emission_id'],
+          operations: operations.map(op => ({
+            name: op.name,
+            count: 0,
+            quantity: 0,
+            volume: 0,
+          })),
+        };
+      }
+
+      const opIndex = operations.findIndex(op => op.id === row['operation_id']);
+
+      if (opIndex >= 0) {
+        acc[key].operations[opIndex] = {
+          name: operations[opIndex].name,
+          count: Number(row['count']),
+          quantity: Number(row['quantity']),
+          volume: Number(row['volume']),
+        };
+      }
+
+      return acc;
+    }, {}),
+  );
+
+  return grouped;
+}
+
 }

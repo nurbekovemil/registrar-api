@@ -170,9 +170,13 @@ async findOne(id: number) {
         common_nominal: isPreferred ? 0 : (security.quantity * emission.nominal).toFixed(2), // Номинал простых
         preferred_quantity: isPreferred ? security.quantity : 0, // Количество привилегированных акций
         preferred_nominal: isPreferred ? (security.quantity * emission.nominal).toFixed(2) : 0, // Номинал привилегированных
-        percentage: percentageOfEmission, // Процент от эмиссии
+        percentage: Number(percentageOfEmission), // ✅ число
         country: holder?.district?.name, // Страна
       };
+    })
+    .filter(item => {
+      const percentFilter = query.percent ? Number(query.percent) : null;
+      return percentFilter === null || item.percentage > percentFilter;
     });
   }
   async getFormattedExtractReestrOwns(eid: number, query) {
@@ -199,7 +203,7 @@ async findOne(id: number) {
         holder_id: holder.id,
         full_name: holder?.name, // Ф.и.о.
         country: holder?.district?.name, // Страна
-        percentage: percentageOfEmission, // Процент от эмиссии
+        percentage: Number(percentageOfEmission), // Процент от эмиссии
         common_quantity: isPreferred ? 0 : security.quantity, // Количество простых акций
         common_nominal: isPreferred ? 0 : (security.quantity * emission.nominal).toFixed(2), // Номинал простых
         preferred_quantity: isPreferred ? security.quantity : 0, // Количество привилегированных акций
@@ -207,6 +211,10 @@ async findOne(id: number) {
         passport: `${holder?.passport_type} ${holder?.passport_number} ${holder?.passport_agency}`,
         address: holder?.actual_address
       };
+    })
+        .filter(item => {
+      const percentFilter = query.percent ? Number(query.percent) : null;
+      return percentFilter === null || item.percentage > percentFilter;
     });
   }
   async getFormattedExtractReestrOwnsByEmission(eid: number, query: any) {
@@ -232,7 +240,7 @@ async findOne(id: number) {
         holder_id: holder.id,
         full_name: holder?.name, // Ф.и.о.
         emission: emission.reg_number,
-        percentage: percentageOfEmission, // Процент от эмиссии
+        percentage: Number(percentageOfEmission), // Процент от эмиссии
         common_quantity: isPreferred ? 0 : security.quantity, // Количество простых акций
         common_nominal: isPreferred ? 0 : (security.quantity * emission.nominal).toFixed(2), // Номинал простых
         preferred_quantity: isPreferred ? security.quantity : 0, // Количество привилегированных акций
@@ -240,6 +248,10 @@ async findOne(id: number) {
         passport: `${holder?.passport_type} ${holder?.passport_number} ${holder?.passport_agency}`,
         address: holder?.actual_address
       };
+    })
+        .filter(item => {
+      const percentFilter = query.percent ? Number(query.percent) : null;
+      return percentFilter === null || item.percentage > percentFilter;
     });
   }
   
