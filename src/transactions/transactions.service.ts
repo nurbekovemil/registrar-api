@@ -139,7 +139,6 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
     TransactionOperationTypes.PAY_DIVIDENDS_SECURITIES,   // Выплата дивидендов ценными бумагами
     TransactionOperationTypes.FUND_CONTRIBUTION,          // Вклад в уставной капитал
   ]);
-
   const LockingLikeOperations = new Set([
     TransactionOperationTypes.LOCKING,
     TransactionOperationTypes.ARREST,
@@ -153,10 +152,8 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
   let security; // Типизируйте эту переменную соответствующим образом, например: let security: Security | undefined;
 
   try {
-    console.log('create transaction', createTransactionDto)
     const transaction = await this.transactionRepository.create(createTransactionDto, { transaction: t });
     const { operation_id } = createTransactionDto;
-
     // Используем группы для вызова нужного метода
     if (DonationLikeOperations.has(operation_id)) {
       security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t);
@@ -178,26 +175,25 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
         case TransactionOperationTypes.UNPLEDGE:
           security = await this.unpledgeSecurity(createTransactionDto, transaction.createdAt, t);
           break;
+        // case TransactionOperationTypes.EMISSION:
+
+        //   break;
         default:
           // Возможно, стоит добавить логирование или ошибку для необработанных типов операций
-          await t.rollback();
-          throw new Error(`Неизвестный тип операции: ${operation_id}`);
+          // throw new Error(`Неизвестный тип операции: ${operation_id}`);
       }
     }
 
     await t.commit();
-
     // Логика сохранения security_id может быть перенесена сюда или даже внутрь методов создания security,
     // если они возвращают объект с уже проставленным ID транзакции
     // Убедитесь, что '2' в вашем условии не является магическим числом
-    if (security && operation_id != 2) {
+    if (security && operation_id != 22) { // 22 - Эмиссия
       transaction.security_id = security.id;
       // Используем `save` вне транзакции, т.к. она уже закоммичена
       await transaction.save();
     }
-    
     return transaction;
-
   } catch (error) {
     await t.rollback(); // Всегда откатываем при ошибке
     // Убедитесь, что вы импортируете HttpException и HttpStatus из @nestjs/common
@@ -643,6 +639,6 @@ if (quarter && year) {
   );
 
   return grouped;
-}
+  }
 
 }

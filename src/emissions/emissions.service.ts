@@ -36,7 +36,6 @@ export class EmissionsService {
       quantity: createEmissionDto.start_count,
       amount: 0,
       contract_date: new Date().toISOString()
-      
     })
     return emission
   }
