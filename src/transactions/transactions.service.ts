@@ -26,85 +26,189 @@ export class TransactionsService {
     @Inject(forwardRef(() => EmissionsService)) private emissionService: EmissionsService,
     private sequelize: Sequelize,
   ) {}
-  async createTransaction(createTransactionDto: CreateTransactionDto) {
-    const t = await this.sequelize.transaction();
-    try {
-      const transaction = await this.transactionRepository.create(createTransactionDto, {transaction: t})
-      let security
-      switch (createTransactionDto.operation_id) {
-        // Логика для начисления дивидендов
-        case TransactionOperationTypes.DIVIDEND:        
-          security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt, t)
+  // async createTransaction(createTransactionDto: CreateTransactionDto) {
+  //   const t = await this.sequelize.transaction();
+  //   try {
+  //     const transaction = await this.transactionRepository.create(createTransactionDto, {transaction: t})
+  //     let security
+  //     switch (createTransactionDto.operation_id) {
+  //       // Логика для начисления дивидендов
+  //       case TransactionOperationTypes.DIVIDEND:        
+  //         security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt, t)
+  //         break;
+  //       // Логика для операции дарения
+  //       case TransactionOperationTypes.DONATION:
+  //         security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+  //         break;
+  //       // Логика для операции блокировки
+  //       case TransactionOperationTypes.LOCKING:
+  //         security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t)
+  //         break;
+  //       // Логика для операции разблокировки
+  //       case TransactionOperationTypes.UNLOCKING:
+  //         security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
+  //         break;
+  //       // Логика для операции купли-продажи
+  //         case TransactionOperationTypes.SALE:
+  //         security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+  //         break;
+  //       // Логика для операции передачи в номинальный держатель
+  //       case TransactionOperationTypes.NOMINEE_TRANSFER:
+  //         security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+  //         break;
+  //       // Логика для операции наследства
+  //       case TransactionOperationTypes.INHERITANCE:
+  //           security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+  //       break;
+  //       // Логика для операции арест
+  //       case TransactionOperationTypes.ARREST:
+  //         security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t)
+  //       break;
+  //       // Логика для операции снятия ареста
+  //       case TransactionOperationTypes.ARREST_REMOVAL:
+  //         security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
+  //       break;
+  //       // Логика для операции залог
+  //       case TransactionOperationTypes.PLEDGE:
+  //         security = await this.createPledgeSecurity(createTransactionDto, transaction.createdAt, t)
+  //       break;
+  //       // Логика для операции снять залог
+  //       case TransactionOperationTypes.UNPLEDGE:
+  //         security = await this.unpledgeSecurity(createTransactionDto, transaction.createdAt, t)
+  //       break;
+  //       // Логика для операции безвозмездно
+  //       case TransactionOperationTypes.GRATUITOUS:
+  //         security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+  //       break;
+  //       // Логика для операции доверительного управления
+  //       case TransactionOperationTypes.TRUST_MANAGEMENT:
+  //         security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+  //       break;
+  //       // Логика для операции возврата доверительного управления
+  //       case TransactionOperationTypes.TRUST_MANAGEMENT_RETURN:
+  //         security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+  //       break;
+  //       default:
+  //         break;
+  //     }
+  //     await t.commit();
+  //     if(security && createTransactionDto.operation_id != 2){
+  //       transaction.security_id = await security.id
+  //     }
+  //     await transaction.save()
+  //     return transaction
+  //   } catch (error) {
+  //     t.rollback();
+  //     throw new HttpException(
+  //       error.message,
+  //       HttpStatus.BAD_REQUEST,
+  //     )
+  //   }
+  // }
+
+  // Группируем типы операций, которые используют одну и ту же логику создания Security
+
+async createTransaction(createTransactionDto: CreateTransactionDto) {
+  const DonationLikeOperations = new Set([
+    TransactionOperationTypes.DONATION,                   // Дарение
+    TransactionOperationTypes.SALE,                       // Купля-продажа
+    TransactionOperationTypes.NOMINEE_TRANSFER,           // Передача в номинальное держание
+    TransactionOperationTypes.INHERITANCE,                // Наследство
+    TransactionOperationTypes.GRATUITOUS_TRANSFER,        // Безвозмездная передача
+    TransactionOperationTypes.TRUST_MANAGEMENT,           // Доверительное управление
+    TransactionOperationTypes.TRUST_MANAGEMENT_RETURN,    // Возврат из доверительного управления
+    TransactionOperationTypes.TRANSFER,                   // Передача
+
+    TransactionOperationTypes.AUCTION_PURCHASE,           // Покупка на аукционе
+    TransactionOperationTypes.MONEY_AUCTION,              // Денежный аукцион
+    TransactionOperationTypes.CLOSE_MONEY_AUCTION,        // Закрытый денежный аукцион
+    TransactionOperationTypes.TRANSIT,                    // Транзит
+    TransactionOperationTypes.ACCOUNT_MERGE,              // Объединение лицевых счетов
+    TransactionOperationTypes.REISSUE,                    // Переоформление
+    TransactionOperationTypes.POWER_OF_ATTORNEY_SALE,     // Продажа по поручению
+    TransactionOperationTypes.PROTOCOL_7_1,               // Протокол 7/1
+    TransactionOperationTypes.SHARE_DISTRIBUTION,         // Распределение акций
+    TransactionOperationTypes.MANAGER_TRANSFER,           // Передача менеджерской группе
+    TransactionOperationTypes.DISTRIBUTION_5_PERCENT,     // Распределение 5%
+    TransactionOperationTypes.FOR_MEETING,                // Передача на собрание
+    TransactionOperationTypes.FROM_MEETING,               // Возврат с собрания
+    TransactionOperationTypes.DISTRIBUTION_40_PERCENT,    // Распределение 40%
+    TransactionOperationTypes.WITHDRAW_SHARES,            // Изъятие акций
+    TransactionOperationTypes.EXCHANGE,                   // Мена (обмен)
+    TransactionOperationTypes.FOUNDERS_ISSUE,             // Учредительский выпуск
+    TransactionOperationTypes.PAY_DIVIDENDS_SECURITIES,   // Выплата дивидендов ценными бумагами
+    TransactionOperationTypes.FUND_CONTRIBUTION,          // Вклад в уставной капитал
+  ]);
+
+  const LockingLikeOperations = new Set([
+    TransactionOperationTypes.LOCKING,
+    TransactionOperationTypes.ARREST,
+  ]);
+
+  const UnlockingLikeOperations = new Set([
+    TransactionOperationTypes.UNBLOCKING,
+    TransactionOperationTypes.ARREST_REMOVAL,
+  ]);
+  const t = await this.sequelize.transaction();
+  let security; // Типизируйте эту переменную соответствующим образом, например: let security: Security | undefined;
+
+  try {
+    console.log('create transaction', createTransactionDto)
+    const transaction = await this.transactionRepository.create(createTransactionDto, { transaction: t });
+    const { operation_id } = createTransactionDto;
+
+    // Используем группы для вызова нужного метода
+    if (DonationLikeOperations.has(operation_id)) {
+      security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t);
+    } else if (LockingLikeOperations.has(operation_id)) {
+      security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t);
+    } else if (UnlockingLikeOperations.has(operation_id)) {
+      security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t);
+    } else {
+      switch (operation_id) {
+        case TransactionOperationTypes.PRIMARY_INPUT:
+          security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt, t);
           break;
-        // Логика для операции дарения
-        case TransactionOperationTypes.DONATION:
-          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
+        case TransactionOperationTypes.DIVIDEND:
+          security = await this.createDividendSecurity(createTransactionDto, transaction.createdAt, t);
           break;
-        // Логика для операции блокировки
-        case TransactionOperationTypes.LOCKING:
-          security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t)
-          break;
-        // Логика для операции разблокировки
-        case TransactionOperationTypes.UNLOCKING:
-          security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
-          break;
-        // Логика для операции купли-продажи
-          case TransactionOperationTypes.SALE:
-          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
-          break;
-        // Логика для операции передачи в номинальный держатель
-        case TransactionOperationTypes.NOMINEE_TRANSFER:
-          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
-          break;
-        // Логика для операции наследства
-        case TransactionOperationTypes.INHERITANCE:
-            security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-        // Логика для операции арест
-        case TransactionOperationTypes.ARREST:
-          security = await this.createLockingSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-        // Логика для операции снятия ареста
-        case TransactionOperationTypes.ARREST_REMOVAL:
-          security = await this.createUnlockingSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-        // Логика для операции залог
         case TransactionOperationTypes.PLEDGE:
-          security = await this.createPledgeSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-        // Логика для операции снять залог
-        case TransactionOperationTypes.UNPLEDGE:
-          security = await this.unpledgeSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-        // Логика для операции безвозмездно
-        case TransactionOperationTypes.GRATUITOUS:
-          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-        // Логика для операции доверительного управления
-        case TransactionOperationTypes.TRUST_MANAGEMENT:
-          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-        // Логика для операции возврата доверительного управления
-        case TransactionOperationTypes.TRUST_MANAGEMENT_RETURN:
-          security = await this.createDonationSecurity(createTransactionDto, transaction.createdAt, t)
-        break;
-        default:
+          security = await this.createPledgeSecurity(createTransactionDto, transaction.createdAt, t);
           break;
+        case TransactionOperationTypes.UNPLEDGE:
+          security = await this.unpledgeSecurity(createTransactionDto, transaction.createdAt, t);
+          break;
+        default:
+          // Возможно, стоит добавить логирование или ошибку для необработанных типов операций
+          await t.rollback();
+          throw new Error(`Неизвестный тип операции: ${operation_id}`);
       }
-      await t.commit();
-      if(security && createTransactionDto.operation_id != 2){
-        transaction.security_id = await security.id
-      }
-      await transaction.save()
-      return transaction
-    } catch (error) {
-      t.rollback();
-      throw new HttpException(
-        error.message,
-        HttpStatus.BAD_REQUEST,
-      )
     }
+
+    await t.commit();
+
+    // Логика сохранения security_id может быть перенесена сюда или даже внутрь методов создания security,
+    // если они возвращают объект с уже проставленным ID транзакции
+    // Убедитесь, что '2' в вашем условии не является магическим числом
+    if (security && operation_id != 2) {
+      transaction.security_id = security.id;
+      // Используем `save` вне транзакции, т.к. она уже закоммичена
+      await transaction.save();
+    }
+    
+    return transaction;
+
+  } catch (error) {
+    await t.rollback(); // Всегда откатываем при ошибке
+    // Убедитесь, что вы импортируете HttpException и HttpStatus из @nestjs/common
+    throw new HttpException(
+      error.message,
+      HttpStatus.BAD_REQUEST,
+    );
   }
+}
+
+  
 
   async getTransactionById(id: number){
     const transaction = await this.transactionRepository.findOne({
@@ -362,13 +466,13 @@ export class TransactionsService {
     const holder_to_security = await this.securityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
     // console.log('test ----- ', createTransactionDto)
     if(!holder_to_security) {
-      console.log('test non security----- ', createTransactionDto)
+      // console.log('test non security----- ', createTransactionDto)
       const new_holder_to_security = await this.createSecurity(createTransactionDto, transactionDate)
       const pladge = await this.securityService.pledgeSecurity({security_id: new_holder_to_security.id, ...createTransactionDto})
       await this.securityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
       return new_holder_to_security
     }
-    console.log('test has security ----- ', createTransactionDto)
+    // console.log('test has security ----- ', createTransactionDto)
     const pladge = await this.securityService.pledgeSecurity({security_id: holder_to_security.id, ...createTransactionDto})
     await this.securityService.deductQuentitySecurity(holder_from_security, createTransactionDto.quantity)
     return holder_to_security

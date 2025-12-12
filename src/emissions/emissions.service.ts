@@ -27,7 +27,7 @@ export class EmissionsService {
     const emission = await this.emissionRepository.create({...createEmissionDto, count: createEmissionDto.start_count})
     await this.transactionsService.createTransaction({
       is_exchange: false,
-      operation_id: 2,
+      operation_id: 22, // Эмиссия
       emitent_id: createEmissionDto.emitent_id,
       emission_id: emission.id,
       holder_from_id: null,
@@ -292,7 +292,7 @@ export class EmissionsService {
       emission.count = emission.count - quantity
       return emission.save()
     }
-    throw new Error('Недостаточно средств')
+    throw new Error('Недостаточно эмиссий: доступно ' + emission.count)
   }
 
   async getHolderSecurities(hid: number, query: any = {}) {

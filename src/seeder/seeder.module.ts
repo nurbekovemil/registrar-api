@@ -17,6 +17,7 @@ import { HolderType } from 'src/holders/entities/holder-type.entity';
 import { HolderStatus } from 'src/holders/entities/holder-status.entity';
 import { SecurityStatus } from 'src/securities/entities/security-status.entity';
 import { User } from 'src/users/entities/users.entity';
+import { SecurityBlock } from 'src/securities/entities/security-block.entity';
 
 @Module({
   imports: [
@@ -35,7 +36,8 @@ import { User } from 'src/users/entities/users.entity';
       TransactionOperation,
       HolderStatus,
       SecurityStatus,
-      User
+      User,
+      SecurityBlock,
     ]),
   ],
   controllers: [SeederController],
