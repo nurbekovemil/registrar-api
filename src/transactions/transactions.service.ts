@@ -573,15 +573,33 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
 
   // формируем фильтр по дате
   const where: any = {};
-if (quarter && year) {
-  const monthStart = (quarter - 1) * 3;      // 0 = январь
-  const monthEnd = monthStart + 2;           // конец квартала
+  // if (quarter && year) {
+  //   const monthStart = (quarter - 1) * 3;      // 0 = январь
+  //   const monthEnd = monthStart + 2;           // конец квартала
 
-  const startDate = new Date(year, monthStart, 1);                  // первый день квартала
-  const endDate = new Date(year, monthEnd + 1, 0, 23, 59, 59, 999); // последний день квартала
+  //   const startDate = new Date(year, monthStart, 1);                  // первый день квартала
+  //   const endDate = new Date(year, monthEnd + 1, 0, 23, 59, 59, 999); // последний день квартала
 
-  where.contract_date = { [Op.between]: [startDate, endDate] };
-}
+  //   where.contract_date = { [Op.between]: [startDate, endDate] };
+  // }
+  if (year) {
+    if (!quarter || quarter == 0) {
+      // 👉 весь год
+      const startDate = new Date(year, 0, 1);                       // 1 января
+      const endDate = new Date(year, 11, 31, 23, 59, 59, 999);      // 31 декабря
+
+      where.contract_date = { [Op.between]: [startDate, endDate] };
+    } else {
+      // 👉 выбран квартал (1–4)
+      const monthStart = (quarter - 1) * 3;
+      const monthEnd = monthStart + 2;
+
+      const startDate = new Date(year, monthStart, 1);
+      const endDate = new Date(year, monthEnd + 1, 0, 23, 59, 59, 999);
+
+      where.contract_date = { [Op.between]: [startDate, endDate] };
+    }
+  }
   // console.log(where, '------- ')
 
   // основной запрос с группировкой по эмитенту и эмиссии
