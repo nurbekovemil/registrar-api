@@ -409,51 +409,51 @@ async insertAllData(data) {
         }
       }
         // остаток по привилегированным акциям
-      if (preferedEmission) {
-        const issuedPreferred = await this.securityRepository.sum('quantity', {
-          where: { emission_id: preferedEmission.id }
-        });
+      // if (preferedEmission) {
+      //   const issuedPreferred = await this.securityRepository.sum('quantity', {
+      //     where: { emission_id: preferedEmission.id }
+      //   });
 
-        const preferredSecurityIds = await this.securityRepository.findAll({
-          attributes: ['id'],
-          where: { emission_id: preferedEmission.id }
-        }).then(rows => rows.map(r => r.id));
+      //   const preferredSecurityIds = await this.securityRepository.findAll({
+      //     attributes: ['id'],
+      //     where: { emission_id: preferedEmission.id }
+      //   }).then(rows => rows.map(r => r.id));
 
-        const blockedPreferred = preferredSecurityIds.length > 0
-          ? await this.securityBlockRepository.sum('quantity', {
-              where: { security_id: preferredSecurityIds }
-            })
-          : 0;
+      //   const blockedPreferred = preferredSecurityIds.length > 0
+      //     ? await this.securityBlockRepository.sum('quantity', {
+      //         where: { security_id: preferredSecurityIds }
+      //       })
+      //     : 0;
 
-        const usedPreferred = (issuedPreferred || 0) + (blockedPreferred || 0);
+      //   const usedPreferred = (issuedPreferred || 0) + (blockedPreferred || 0);
 
-        preferedEmission.count = preferedEmission.start_count - usedPreferred;
-        await preferedEmission.save();
-      }
+      //   preferedEmission.count = preferedEmission.start_count - usedPreferred;
+      //   await preferedEmission.save();
+      // }
 
-      // остаток по обычным акциям
-      if (ordinaryEmission) {
-        const issuedOrdinary = await this.securityRepository.sum('quantity', {
-          where: { emission_id: ordinaryEmission.id }
-        });
+      // // остаток по обычным акциям
+      // if (ordinaryEmission) {
+      //   const issuedOrdinary = await this.securityRepository.sum('quantity', {
+      //     where: { emission_id: ordinaryEmission.id }
+      //   });
 
-        const ordinarySecurityIds = await this.securityRepository.findAll({
-          attributes: ['id'],
-          where: { emission_id: ordinaryEmission.id }
-        }).then(rows => rows.map(r => r.id));
+      //   const ordinarySecurityIds = await this.securityRepository.findAll({
+      //     attributes: ['id'],
+      //     where: { emission_id: ordinaryEmission.id }
+      //   }).then(rows => rows.map(r => r.id));
 
-        const blockedOrdinary = ordinarySecurityIds.length > 0
-          ? await this.securityBlockRepository.sum('quantity', {
-              where: { security_id: ordinarySecurityIds }
-            })
-          : 0;
+      //   const blockedOrdinary = ordinarySecurityIds.length > 0
+      //     ? await this.securityBlockRepository.sum('quantity', {
+      //         where: { security_id: ordinarySecurityIds }
+      //       })
+      //     : 0;
 
-        const usedOrdinary = (issuedOrdinary || 0) + (blockedOrdinary || 0);
+      //   const usedOrdinary = (issuedOrdinary || 0) + (blockedOrdinary || 0);
 
-        ordinaryEmission.count = ordinaryEmission.start_count - usedOrdinary;
-        await ordinaryEmission.save();
+      //   ordinaryEmission.count = ordinaryEmission.start_count - usedOrdinary;
+      //   await ordinaryEmission.save();
 
-      }
+      // }
 
     }
 

@@ -232,6 +232,7 @@ export class EmissionsService {
           model: Security,
           where: {
             emitent_id: eid,
+            holder_id: hid
           },
           include: [
             {

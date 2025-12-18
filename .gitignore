@@ -3,6 +3,8 @@
 /node_modules
 /excel_data
 /seeder_data
+.development.env
+.production.env
 # Logs
 logs
 *.log

@@ -562,50 +562,203 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
 
   //   return grouped;
   // }
+  // async getOperationStats(query?: { quarter?: number; year?: number }) {
+  //   const { quarter, year } = query || {};
+  //   // получаем список всех возможных операций
+  //   const operations = await TransactionOperation.findAll({
+  //     attributes: ['id', 'name'],
+  //     raw: true,
+  //   });
+
+  //   // формируем фильтр по дате
+  //   const where: any = {};
+  //   // if (quarter && year) {
+  //   //   const monthStart = (quarter - 1) * 3;      // 0 = январь
+  //   //   const monthEnd = monthStart + 2;           // конец квартала
+
+  //   //   const startDate = new Date(year, monthStart, 1);                  // первый день квартала
+  //   //   const endDate = new Date(year, monthEnd + 1, 0, 23, 59, 59, 999); // последний день квартала
+
+  //   //   where.contract_date = { [Op.between]: [startDate, endDate] };
+  //   // }
+  //   if (year) {
+  //     if (!quarter || quarter == 0) {
+  //       // 👉 весь год
+  //       const startDate = new Date(year, 0, 1);                       // 1 января
+  //       const endDate = new Date(year, 11, 31, 23, 59, 59, 999);      // 31 декабря
+
+  //       where.contract_date = { [Op.between]: [startDate, endDate] };
+  //     } else {
+  //       // 👉 выбран квартал (1–4)
+  //       const monthStart = (quarter - 1) * 3;
+  //       const monthEnd = monthStart + 2;
+  //       const startDate = new Date(year, monthStart, 1);
+  //       const endDate = new Date(year, monthEnd + 1, 0, 23, 59, 59, 999);
+  //       where.contract_date = { [Op.between]: [startDate, endDate] };
+  //     }
+  //   }
+  //   // console.log(where, '------- ')
+
+  //   // основной запрос с группировкой по эмитенту и эмиссии
+  //   const transactions = await this.transactionRepository.findAll({
+  //     where,
+  //     attributes: [
+  //       [col('Transaction.is_exchange'), 'is_exchange'],
+  //       [col('emitent.full_name'), 'emitent_name'],
+  //       [col('emission.reg_number'), 'emission_name'],
+  //       [col('emission.id'), 'emission_id'],
+  //       'operation_id',
+  //       [fn('COUNT', col('Transaction.id')), 'count'],
+  //       [fn('SUM', col('Transaction.quantity')), 'quantity'],
+  //       [fn('SUM', col('Transaction.amount')), 'volume'],
+  //     ],
+  //     include: [
+  //       { model: Emitent, attributes: [] },
+  //       { model: Emission, attributes: [] },
+  //     ],
+  //     group: ['emitent.id', 'emission.id', 'operation_id', 'Transaction.is_exchange'],
+  //     raw: true,
+  //   });
+
+  //   // формируем итоговую структуру
+  //   // const grouped = Object.values(
+  //   //   transactions.reduce((acc, row) => {
+  //   //     const key = row['emission_id'];
+
+  //   //     if (!acc[key]) {
+  //   //       acc[key] = {
+  //   //         emitent: row['emitent_name'],
+  //   //         emission: row['emission_name'],
+  //   //         emission_id: row['emission_id'],
+  //   //         operations: operations.map(op => ({
+  //   //           name: op.name,
+  //   //           count: 0,
+  //   //           quantity: 0,
+  //   //           volume: 0,
+  //   //         })),
+  //   //       };
+  //   //     }
+
+  //   //     const opIndex = operations.findIndex(op => op.id === row['operation_id']);
+
+  //   //     if (opIndex >= 0) {
+  //   //       acc[key].operations[opIndex] = {
+  //   //         name: operations[opIndex].name,
+  //   //         count: Number(row['count']),
+  //   //         quantity: Number(row['quantity']),
+  //   //         volume: Number(row['volume']),
+  //   //       };
+  //   //     }
+
+  //   //     return acc;
+  //   //   }, {}),
+  //   // );
+  //   const grouped = Object.values(
+  //   transactions.reduce((acc, row) => {
+  //     const key = row['emission_id'];
+
+  //     if (!acc[key]) {
+  //       acc[key] = {
+  //         emitent: row['emitent_name'],
+  //         emission: row['emission_name'],
+  //         emission_id: row['emission_id'],
+
+  //         // один объект для биржевых операций
+  //         exchange: {
+  //           count: 0,
+  //           quantity: 0,
+  //           volume: 0,
+  //         },
+
+  //         // как раньше — полный список не биржевых
+  //         operations: operations.map(op => ({
+  //           name: op.name,
+  //           count: 0,
+  //           quantity: 0,
+  //           volume: 0,
+  //         })),
+  //       };
+  //     }
+
+  //     const isExchange = row['is_exchange'];
+
+  //     if (isExchange) {
+  //       // 👉 суммируем все биржевые операции в один объект
+  //       acc[key].exchange.count += Number(row['count']);
+  //       acc[key].exchange.quantity += Number(row['quantity']);
+  //       acc[key].exchange.volume += Number(row['volume']);
+  //     } else {
+  //       // 👉 не биржевая — как раньше
+  //       const opIndex = operations.findIndex(op => op.id === row['operation_id']);
+  //       if (opIndex >= 0) {
+  //         acc[key].operations[opIndex] = {
+  //           name: operations[opIndex].name,
+  //           count: Number(row['count']),
+  //           quantity: Number(row['quantity']),
+  //           volume: Number(row['volume']),
+  //         };
+  //       }
+  //     }
+
+  //     return acc;
+  //   }, {})
+  // );
+
+  //   return grouped;
+  // }
+
   async getOperationStats(query?: { quarter?: number; year?: number }) {
   const { quarter, year } = query || {};
 
-  // получаем список всех возможных операций
+  /**
+   * 1️⃣ Список не-биржевых операций, которые показываем отдельно
+   */
+  const NON_EXCHANGE_VISIBLE_OPERATION_IDS = [
+    TransactionOperationTypes.SALE,
+    TransactionOperationTypes.DONATION,
+    TransactionOperationTypes.TRANSFER,
+    TransactionOperationTypes.INHERITANCE,
+    TransactionOperationTypes.EXCHANGE,
+    TransactionOperationTypes.TRUST_MANAGEMENT,
+    TransactionOperationTypes.PLEDGE,
+  ];
+
+  /**
+   * 2️⃣ Получаем все возможные операции
+   */
   const operations = await TransactionOperation.findAll({
     attributes: ['id', 'name'],
     raw: true,
   });
 
-  // формируем фильтр по дате
+  /**
+   * 3️⃣ Формируем фильтр по дате
+   */
   const where: any = {};
-  // if (quarter && year) {
-  //   const monthStart = (quarter - 1) * 3;      // 0 = январь
-  //   const monthEnd = monthStart + 2;           // конец квартала
 
-  //   const startDate = new Date(year, monthStart, 1);                  // первый день квартала
-  //   const endDate = new Date(year, monthEnd + 1, 0, 23, 59, 59, 999); // последний день квартала
-
-  //   where.contract_date = { [Op.between]: [startDate, endDate] };
-  // }
   if (year) {
-    if (!quarter || quarter == 0) {
-      // 👉 весь год
-      const startDate = new Date(year, 0, 1);                       // 1 января
-      const endDate = new Date(year, 11, 31, 23, 59, 59, 999);      // 31 декабря
-
+    if (!quarter || quarter === 0) {
+      // весь год
+      const startDate = new Date(year, 0, 1);
+      const endDate = new Date(year, 11, 31, 23, 59, 59, 999);
       where.contract_date = { [Op.between]: [startDate, endDate] };
     } else {
-      // 👉 выбран квартал (1–4)
+      // выбран квартал
       const monthStart = (quarter - 1) * 3;
       const monthEnd = monthStart + 2;
-
       const startDate = new Date(year, monthStart, 1);
       const endDate = new Date(year, monthEnd + 1, 0, 23, 59, 59, 999);
-
       where.contract_date = { [Op.between]: [startDate, endDate] };
     }
   }
-  // console.log(where, '------- ')
 
-  // основной запрос с группировкой по эмитенту и эмиссии
+  /**
+   * 4️⃣ Основной запрос
+   */
   const transactions = await this.transactionRepository.findAll({
     where,
     attributes: [
+      [col('Transaction.is_exchange'), 'is_exchange'],
       [col('emitent.full_name'), 'emitent_name'],
       [col('emission.reg_number'), 'emission_name'],
       [col('emission.id'), 'emission_id'],
@@ -618,13 +771,20 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
       { model: Emitent, attributes: [] },
       { model: Emission, attributes: [] },
     ],
-    group: ['emitent.id', 'emission.id', 'operation_id'],
+    group: [
+      'emitent.id',
+      'emission.id',
+      'operation_id',
+      'Transaction.is_exchange',
+    ],
     raw: true,
   });
 
-  // формируем итоговую структуру
+  /**
+   * 5️⃣ Группировка результата
+   */
   const grouped = Object.values(
-    transactions.reduce((acc, row) => {
+    transactions.reduce((acc, row: any) => {
       const key = row['emission_id'];
 
       if (!acc[key]) {
@@ -632,31 +792,70 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
           emitent: row['emitent_name'],
           emission: row['emission_name'],
           emission_id: row['emission_id'],
-          operations: operations.map(op => ({
-            name: op.name,
+
+          exchange: {
             count: 0,
             quantity: 0,
             volume: 0,
-          })),
+          },
+
+          operations: operations
+            .filter(op =>
+              NON_EXCHANGE_VISIBLE_OPERATION_IDS.includes(op.id)
+            )
+            .map(op => ({
+              id: op.id,
+              name: op.name,
+              count: 0,
+              quantity: 0,
+              volume: 0,
+            })),
+
+          others: {
+            count: 0,
+            quantity: 0,
+            volume: 0,
+          },
         };
       }
 
-      const opIndex = operations.findIndex(op => op.id === row['operation_id']);
+      const isExchange = row['is_exchange'];
+      const count = Number(row['count']);
+      const quantity = Number(row['quantity']);
+      const volume = Number(row['volume']);
 
-      if (opIndex >= 0) {
-        acc[key].operations[opIndex] = {
-          name: operations[opIndex].name,
-          count: Number(row['count']),
-          quantity: Number(row['quantity']),
-          volume: Number(row['volume']),
-        };
+      if (isExchange) {
+        // биржевые
+        acc[key].exchange.count += count;
+        acc[key].exchange.quantity += quantity;
+        acc[key].exchange.volume += volume;
+      } else {
+        // не биржевые
+        const operationId = row['operation_id'];
+
+        if (NON_EXCHANGE_VISIBLE_OPERATION_IDS.includes(operationId)) {
+          const opIndex = acc[key].operations.findIndex(
+            op => op.id === operationId
+          );
+
+          if (opIndex >= 0) {
+            acc[key].operations[opIndex].count += count;
+            acc[key].operations[opIndex].quantity += quantity;
+            acc[key].operations[opIndex].volume += volume;
+          }
+        } else {
+          acc[key].others.count += count;
+          acc[key].others.quantity += quantity;
+          acc[key].others.volume += volume;
+        }
       }
 
       return acc;
-    }, {}),
+    }, {} as Record<number, any>)
   );
 
   return grouped;
-  }
+}
+
 
 }
