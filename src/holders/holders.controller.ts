@@ -23,6 +23,16 @@ export class HoldersController {
     return this.holdersService.getHolderTypes();
   }
 
+  @Get('blocked-securities')
+  getBlockedSecurities() {
+    return this.holdersService.getBlockedSecurities();
+  }
+
+  @Get('pledged-securities')
+  getPledgedSecurities() {
+    return this.holdersService.getPledgedSecurities();
+  }
+
   @Delete('/holder-types/:id')
   deleteHolderTypes(@Param('id', ParseIntPipe) id: number) {
     return this.holdersService.deleteHolderType(id);
@@ -124,5 +134,4 @@ export class HoldersController {
   getEmitentEmissions(@Param('hid', ParseIntPipe) hid: number, @Param('eid', ParseIntPipe) eid: number) {
     return this.holdersService.getEmitentEmissions(hid, eid);
   }
-
 }

@@ -16,6 +16,8 @@ import { SecuritiesService } from 'src/securities/securities.service';
 import { EmissionType } from 'src/emissions/entities/emission-type.entity';
 import { HolderStatus } from './entities/holder-status.entity';
 import { is } from 'sequelize/types/lib/operators';
+import { SecurityBlock } from 'src/securities/entities/security-block.entity';
+import { SecurityPledge } from 'src/securities/entities/security-pledge.entity';
 
 
 @Injectable()
@@ -602,6 +604,83 @@ async findOne(id: number) {
   async getEmitentEmissions(hid, eid){
     return await this.emissionService.getEmitentEmissions(hid, eid)
   }
+
+  async getBlockedSecurities() {
+    const blockedSecurities = await this.holderRepository.findAll({
+      include: [
+        {
+          model: Security,
+          required: true,
+          include: [
+            {
+              model: SecurityBlock,
+              required: true, // ⚠️ ТОЛЬКО у кого есть блок
+            }
+          ]
+        },
+      ]
+    })
+  const result = []
+  for (const holder of blockedSecurities) {
+    for (const security of holder.securities) {
+      result.push({
+        holder_id: holder.id,
+        holder_name: holder.name,
+        security_id: security.id,
+        security_quantity: security.quantity,
+        blocked_quantity: security.security_block.quantity
+      });
+    }
+  }
+
+  return result;
+
+  }
+
+async getPledgedSecurities() {
+  const holders = await this.holderRepository.findAll({
+    include: [
+      {
+        model: Security,
+        required: true,
+        include: [
+          {
+            model: SecurityPledge,
+            as: 'security_pledged',
+            required: false,
+          },
+          {
+            model: SecurityPledge,
+            as: 'security_pledgee',
+            required: false,
+          },
+        ],
+      },
+    ],
+  });
+  const result = [];
+  for (const holder of holders) {
+    for (const security of holder.securities) {
+      if (security.security_pledged || security.security_pledgee) {
+        result.push({
+          holder_id: holder.id,
+          holder_name: holder.name,
+
+          security_id: security.id,
+          security_quantity: security.quantity,
+
+          pledged_out_quantity:
+            security.security_pledged?.pledged_quantity ?? null,
+
+          pledged_in_quantity:
+            security.security_pledgee?.pledged_quantity ?? null,
+        });
+      }
+    }
+  }
+
+  return result;
+}
 
 
 }
