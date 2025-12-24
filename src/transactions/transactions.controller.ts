@@ -16,8 +16,8 @@ export class TransactionsController {
     return this.transactionsService.getTransactions(query);
   }
   @Get('/operations')
-  getTransactionOperations() {
-    return this.transactionsService.getTransactionOperations();
+  getTransactionOperations(@Query() query: any) {
+    return this.transactionsService.getTransactionOperations(query);
   }
 
   @Get('/:id')

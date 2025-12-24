@@ -24,8 +24,9 @@ interface TransactionOperationtAttributes {
     @Column({ type: DataType.STRING })
     name: string;
 
-    @Column({ type: DataType.INTEGER })
+    @Column({ type: DataType.INTEGER, defaultValue: 2 })
     group: number;
+
 
     @HasMany(() => Transaction)
     transactions: Transaction[]

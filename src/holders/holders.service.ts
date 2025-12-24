@@ -605,11 +605,12 @@ async findOne(id: number) {
     return await this.emissionService.getEmitentEmissions(hid, eid)
   }
 
-  async getBlockedSecurities() {
+  async getBlockedSecurities(emitent_id: number) {
     const blockedSecurities = await this.holderRepository.findAll({
       include: [
         {
           model: Security,
+          where: { emitent_id },
           required: true,
           include: [
             {
@@ -637,11 +638,12 @@ async findOne(id: number) {
 
   }
 
-async getPledgedSecurities() {
+async getPledgedSecurities(emitent_id: number) {
   const holders = await this.holderRepository.findAll({
     include: [
       {
         model: Security,
+        where: { emitent_id },
         required: true,
         include: [
           {

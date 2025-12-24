@@ -1,4 +1,4 @@
-import { forwardRef, HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { forwardRef, HttpException, HttpStatus, Inject, Injectable, Query } from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { Transaction } from './entities/transaction.entity';
 import { InjectModel } from '@nestjs/sequelize';
@@ -380,8 +380,17 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
     return operations
   }
 
-  async getTransactionOperations(){
-    const operations = await this.transactionOperationRepository.findAll()
+  async getTransactionOperations(query){
+    const { group } = query
+    let conditions = {}
+    if(group){
+      conditions = {
+        group
+      }
+    }
+    const operations = await this.transactionOperationRepository.findAll({
+      where: conditions
+    })
     return operations
   }
 

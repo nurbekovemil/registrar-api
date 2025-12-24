@@ -23,14 +23,14 @@ export class HoldersController {
     return this.holdersService.getHolderTypes();
   }
 
-  @Get('blocked-securities')
-  getBlockedSecurities() {
-    return this.holdersService.getBlockedSecurities();
+  @Get('emitent/:eid/blocked-securities')
+  getBlockedSecurities(@Param('eid', ParseIntPipe) eid: number) {
+    return this.holdersService.getBlockedSecurities(eid);
   }
 
-  @Get('pledged-securities')
-  getPledgedSecurities() {
-    return this.holdersService.getPledgedSecurities();
+  @Get('emitent/:eid/pledged-securities')
+  getPledgedSecurities(@Param('eid', ParseIntPipe) eid: number) {
+    return this.holdersService.getPledgedSecurities(eid);
   }
 
   @Delete('/holder-types/:id')
