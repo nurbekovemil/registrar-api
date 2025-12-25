@@ -626,7 +626,7 @@ async findOne(id: number) {
     for (const security of holder.securities) {
       result.push({
         holder_id: holder.id,
-        holder_name: holder.name,
+        name: holder.name,
         security_id: security.id,
         security_quantity: security.quantity,
         blocked_quantity: security.security_block.quantity
@@ -666,7 +666,7 @@ async getPledgedSecurities(emitent_id: number) {
       if (security.security_pledged || security.security_pledgee) {
         result.push({
           holder_id: holder.id,
-          holder_name: holder.name,
+          name: holder.name,
 
           security_id: security.id,
           security_quantity: security.quantity,
