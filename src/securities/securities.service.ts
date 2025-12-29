@@ -345,13 +345,28 @@ export class SecuritiesService {
   }
   async unpledgeSecurity(data) {
     const {security_id, quantity, holder_from_id, holder_to_id} = data
+    if (quantity <= 0) {
+      throw new HttpException(
+        'Количество для снятия залога должно быть больше 0',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     let pledge = await this.securityPledgeRepository.findOne({
       where: {
         security_id
       }
     })
-    if(!pledge) {
-      throw new HttpException('Залогированная ценная бумага не найдена', HttpStatus.BAD_REQUEST)
+    if (!pledge) {
+      throw new HttpException(
+        'Залогированная ценная бумага не найдена',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    if (quantity > pledge.pledged_quantity) {
+      throw new HttpException(
+        'Недостаточно заложенных акций для снятия залога',
+        HttpStatus.BAD_REQUEST,
+      );
     }
     pledge.pledged_quantity = pledge.pledged_quantity - quantity
     return pledge.save()
