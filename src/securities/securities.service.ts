@@ -204,30 +204,82 @@ export class SecuritiesService {
     return security
   }
 
-  async lockingSecurity({security_id, quantity, block_date}) {
-    const security = await this.securityBlockRepository.findOne({where: {security_id}})
-    if(!security) {
-      return await this.securityBlockRepository.create({
+  // async lockingSecurity({security_id, quantity, block_date}) {
+  //   const security = await this.securityBlockRepository.findOne({where: {security_id}})
+  //   if(!security) {
+  //     return await this.securityBlockRepository.create({
+  //       security_id,
+  //       quantity,
+  //       block_date,
+  //     })
+  //   }
+  //   security.quantity = security.quantity + quantity
+  //   security.block_date = block_date
+  //   return security.save()
+  // }
+
+  async lockingSecurity({ security_id, quantity, block_date }) {
+    if (quantity <= 0) {
+      throw new Error('Количество для блокировки должно быть больше 0');
+    }
+    const security = await this.securityRepository.findByPk(security_id);
+    const blocked_security = await this.securityBlockRepository.findOne({
+      where: { security_id },
+    });
+
+    if (!blocked_security) {
+      security.quantity -= quantity;
+      await security.save();
+      await this.securityBlockRepository.create({
         security_id,
         quantity,
         block_date,
-      })
+      });
+      return security;
     }
-    security.quantity = security.quantity + quantity
-    security.block_date = block_date
-    return security.save()
+    security.quantity -= quantity;
+    await security.save();
+    blocked_security.quantity += quantity;
+    // block_date логично менять только при первой блокировке
+    blocked_security.block_date = blocked_security.block_date ?? block_date;
+    await blocked_security.save();
+  return security
+}
+
+
+  async unlockingSecurity({ security_id, quantity, unblock_date }) {
+    const security = await this.securityRepository.findByPk(security_id);
+    const blocked = await this.securityBlockRepository.findOne({
+      where: { security_id },
+    });
+    if (!blocked) {
+      throw new Error('Ценная бумага в блоке не найдена');
+    }
+    if (quantity <= 0) {
+      throw new Error('Количество для разблокировки должно быть больше 0');
+    }
+    if (quantity > blocked.quantity) {
+      throw new Error('Недостаточно акций для разблокировки');
+    }
+    security.quantity += quantity;
+    await security.save();
+
+    blocked.quantity -= quantity;
+    blocked.unblock_date = unblock_date;
+    await blocked.save();
+    return security
   }
 
-  async unlockingSecurity({security_id, quantity, unblock_date}) {
-    const security = await this.securityBlockRepository.findOne({where: {security_id}})
-    if(!security) throw new Error('Ценная бумага не найдена')
-    if(security.quantity >= quantity) {
-      security.quantity = security.quantity - quantity
-      security.unblock_date = unblock_date
-      return security.save()
-    }
-    throw new Error('Недостаточно средств для разблокировки')
-  }
+  // async unlockingSecurity({security_id, quantity, unblock_date}) {
+  //   const blocked_security = await this.securityBlockRepository.findOne({where: {security_id}})
+  //   if(!blocked_security) throw new Error('Ценная бумага в блоке не найдена')
+  //   if(blocked_security.quantity <= quantity) {
+  //     blocked_security.quantity = blocked_security.quantity - quantity
+  //     blocked_security.unblock_date = unblock_date
+  //     return blocked_security.save()
+  //   }
+  //   throw new Error('Недостаточно средств для разблокировки')
+  // }
 
   // async getOperationsBySecurity(emitent_id: number, holder_id: number) {
   //   const operations = await this.securityRepository.findAll({
@@ -262,7 +314,6 @@ export class SecuritiesService {
   
 
   async pledgeSecurity(data) {
-    console.log('plegde security ---- ', data)
     try {
         const { 
           security_id, 
@@ -277,8 +328,6 @@ export class SecuritiesService {
           }
         })
         if(!pledge) {
-          console.log('create pledge ----- ')
-          
           const new_pledge = await this.securityPledgeRepository.create({
             security_id: Number(security_id),
             pledged_quantity: quantity,
@@ -287,7 +336,6 @@ export class SecuritiesService {
           })
           return new_pledge.save()
         }
-        console.log('update pledge ----- ')
         pledge.pledged_quantity = pledge.pledged_quantity + quantity
         return pledge.save()
     } catch (error) {
@@ -297,7 +345,6 @@ export class SecuritiesService {
   }
   async unpledgeSecurity(data) {
     const {security_id, quantity, holder_from_id, holder_to_id} = data
-    console.log(data)
     let pledge = await this.securityPledgeRepository.findOne({
       where: {
         security_id

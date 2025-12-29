@@ -444,11 +444,9 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
   private async createLockingSecurity(createTransactionDto, transactionDate, t){
     const {holder_to_id, emitent_id, emission_id} = createTransactionDto
     const holder_to_security = await this.securityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
-    
     if(holder_to_security && holder_to_security.quantity < createTransactionDto.quantity){
       throw new Error(`Недостаточно ценных бумаг: доступно ${holder_to_security.quantity}`);
     }
-    
     return await this.securityService.lockingSecurity({security_id: holder_to_security.id, quantity: createTransactionDto.quantity, block_date: transactionDate})
   }
 
@@ -500,11 +498,9 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
   private async createUnlockingSecurity(createTransactionDto, transactionDate, t){
     const { holder_to_id, emitent_id, emission_id } = createTransactionDto
     const holder_to_security = await this.securityService.getHolderSecurity({holder_id: holder_to_id, emitent_id, emission_id})
-    
-    if(holder_to_security && holder_to_security.quantity < createTransactionDto.quantity){
-      throw new Error(`Недостаточно ценных бумаг: доступно ${holder_to_security.quantity}`);
+    if(!holder_to_security) {
+      throw new Error(`Ценная бумага не найдено`);
     }
-    
     return await this.securityService.unlockingSecurity({security_id: holder_to_security.id, quantity: createTransactionDto.quantity, unblock_date: transactionDate})
   }
   // async getOperationStats() {
