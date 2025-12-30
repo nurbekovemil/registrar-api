@@ -430,50 +430,225 @@ export class EmissionsService {
     throw new Error('Недостаточно эмиссий: доступно ' + emission.count)
   }
 
-  async getHolderSecurities(hid: number, query: any = {}) {
-    const { start_date, end_date } = query
-    const securityCondition: any = {
-      holder_id: hid
-    }
-    if (start_date && end_date) {
-      securityCondition.purchased_date = {
-        [Op.between]: [`${start_date}`, `${end_date} 23:59:59.999`]
-      }
-    }
-    const securities = await this.emissionRepository.findAll({
-      attributes: [
-        'id',
-        'reg_number',
-        'nominal',
-        [sequelize.col('emission.name'), 'type'],
-        [sequelize.col('securities.purchased_date'), 'purchased_date'],
-        [sequelize.col('securities.quantity'), 'count'],
-        [sequelize.col('securities->security_block.quantity'), 'blocked_count'],
-        [sequelize.col('securities->security_pledgee.pledged_quantity'), 'pledge_count'],
-      ],
-      include: [
-        { 
-          model: Security,
-          attributes: [],
-          where: securityCondition,
-          include: [
-              {
-                model: SecurityBlock
-              },
-              {
-                model: SecurityPledge,
-                as: 'security_pledgee',
-              }
-          ],
-        },
-        {
-          model: EmissionType,
-          attributes: []
-        }
-      ]
-    })
-    return securities
+  // async getHolderSecurities(hid: number, query: any = {}) {
+  //   const { start_date, end_date } = query
+  //   const securityCondition: any = {
+  //     holder_id: hid
+  //   }
+  //   if (start_date && end_date) {
+  //     securityCondition.purchased_date = {
+  //       [Op.between]: [`${start_date}`, `${end_date} 23:59:59.999`]
+  //     }
+  //   }
+  //   const securities = await this.emissionRepository.findAll({
+  //     attributes: [
+  //       'id',
+  //       'reg_number',
+  //       'nominal',
+  //       [sequelize.col('emission.name'), 'type'],
+  //       [sequelize.col('securities.purchased_date'), 'purchased_date'],
+  //       [sequelize.col('securities.quantity'), 'count'],
+  //       [sequelize.col('securities->security_block.quantity'), 'blocked_count'],
+  //       [sequelize.col('securities->security_pledgee.pledged_quantity'), 'pledge_count'],
+  //     ],
+  //     include: [
+  //       { 
+  //         model: Security,
+  //         attributes: [],
+  //         where: securityCondition,
+  //         include: [
+  //             {
+  //               model: SecurityBlock
+  //             },
+  //             {
+  //               model: SecurityPledge,
+  //               as: 'security_pledgee',
+  //             }
+  //         ],
+  //       },
+  //       {
+  //         model: EmissionType,
+  //         attributes: []
+  //       }
+  //     ]
+  //   })
+  //   return securities
+  // }
+
+// async getHolderSecurities(hid: number, query: any = {}) {
+//   const { start_date, end_date } = query;
+  
+//   // Условие по дате теперь будем применять аккуратно
+//   let dateClause = '';
+//   if (start_date && end_date) {
+//     // ВАЖНО: Проверьте формат даты для вашей БД. 
+//     // Используем параметры, чтобы избежать инъекций в literal, 
+//     // либо применяем фильтр даты в объекте where
+//     dateClause = `AND "securities"."purchased_date" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`;
+//   }
+
+//   const emissions = await this.emissionRepository.findAll({
+//     include: [
+//       {
+//         model: Security,
+//         as: 'securities',
+//         required: true,
+//         // Заменяем простой holder_id на логику "Владелец ИЛИ Залогодержатель"
+//         where: Sequelize.literal(`(
+//           "securities"."holder_id" = ${hid} OR 
+//           EXISTS (
+//             SELECT 1 FROM "security_pledges" AS "sp" 
+//             WHERE "sp"."security_id" = "securities"."id" 
+//             AND ("sp"."pledger_id" = ${hid} OR "sp"."pledgee_id" = ${hid})
+//           )
+//         ) ${dateClause}`),
+//         include: [
+//           {
+//             model: SecurityBlock,
+//             required: false
+//           },
+//           {
+//             model: SecurityPledge,
+//             as: 'security_pledged',
+//             where: { pledger_id: hid },
+//             required: false
+//           },
+//           {
+//             model: SecurityPledge,
+//             as: 'security_pledgee',
+//             where: { pledgee_id: hid },
+//             required: false
+//           }
+//         ]
+//       },
+//       {
+//         model: EmissionType,
+//         required: false
+//       }
+//     ]
+//   });
+
+//   const result = [];
+
+//   for (const emission of emissions) {
+//     for (const security of emission.securities) {
+//       const pledgedOut = security.security_pledged?.reduce(
+//         (sum, p) => sum + (p.pledged_quantity || 0), 0
+//       ) || 0;
+
+//       const pledgedIn = security.security_pledgee?.reduce(
+//         (sum, p) => sum + (p.pledged_quantity || 0), 0
+//       ) || 0;
+
+//       result.push({
+//         id: emission.id,
+//         reg_number: emission.reg_number,
+//         nominal: emission.nominal || 0,
+//         // Проверьте путь: emission_type или emission
+//         type: emission?.emission?.name, 
+//         purchased_date: security.purchased_date,
+//         // Если пользователь не владелец, его личное количество акций = 0
+//         count: security.holder_id === hid ? security.quantity : 0,
+//         blocked_count: security.holder_id === hid ? (security.security_block?.quantity || 0) : 0,
+//         pledge_count: pledgedOut,
+//         accepted_pledge_count: pledgedIn
+//       });
+//     }
+//   }
+
+//   return result;
+// }
+
+async getHolderSecurities(hid: number, query: any = {}) {
+  const { start_date, end_date } = query;
+  
+  let dateClause = '';
+  if (start_date && end_date) {
+    dateClause = `AND "securities"."purchased_date" BETWEEN '${start_date}' AND '${end_date} 23:59:59.999'`;
   }
+
+  const emissions = await this.emissionRepository.findAll({
+    include: [
+      {
+        model: Security,
+        as: 'securities',
+        required: true,
+        where: Sequelize.literal(`(
+          "securities"."holder_id" = ${hid} OR 
+          EXISTS (
+            SELECT 1 FROM "security_pledges" AS "sp" 
+            WHERE "sp"."security_id" = "securities"."id" 
+            AND ("sp"."pledger_id" = ${hid} OR "sp"."pledgee_id" = ${hid})
+          )
+        ) ${dateClause}`),
+        include: [
+          { model: SecurityBlock, required: false },
+          {
+            model: SecurityPledge,
+            as: 'security_pledged',
+            where: { pledger_id: hid },
+            required: false
+          },
+          {
+            model: SecurityPledge,
+            as: 'security_pledgee',
+            where: { pledgee_id: hid },
+            required: false
+          }
+        ]
+      },
+      {
+        model: EmissionType,
+        required: false
+      }
+    ]
+  });
+
+  // Используем Map для суммирования данных по ID эмиссии
+  const resultMap = new Map();
+
+  for (const emission of emissions) {
+    if (!resultMap.has(emission.id)) {
+      resultMap.set(emission.id, {
+        id: emission.id,
+        reg_number: emission.reg_number,
+        nominal: emission.nominal || 0,
+        type: emission?.emission?.name,
+        purchased_date: null,
+        count: 0,
+        blocked_count: 0,
+        pledge_count: 0,
+        accepted_pledge_count: 0
+      });
+    }
+
+    const entry = resultMap.get(emission.id);
+
+    for (const security of emission.securities) {
+      // Обновляем дату, если она есть (берем самую раннюю или последнюю по логике)
+      if (!entry.purchased_date || new Date(security.purchased_date) < new Date(entry.purchased_date)) {
+        entry.purchased_date = security.purchased_date;
+      }
+
+      const pledgedOut = security.security_pledged?.reduce((sum, p) => sum + (p.pledged_quantity || 0), 0) || 0;
+      const pledgedIn = security.security_pledgee?.reduce((sum, p) => sum + (p.pledged_quantity || 0), 0) || 0;
+
+      // Суммируем значения
+      if (security.holder_id === hid) {
+        entry.count += (security.quantity || 0);
+        entry.blocked_count += (security.security_block?.quantity || 0);
+      }
+      
+      entry.pledge_count += pledgedOut;
+      entry.accepted_pledge_count += pledgedIn;
+    }
+  }
+
+  // Преобразуем Map обратно в массив и фильтруем "пустые" записи, если нужно
+  return Array.from(resultMap.values()).filter(item => 
+    item.count > 0 || item.pledge_count > 0 || item.accepted_pledge_count > 0
+  );
+}
 
   async cancellationEmissionCount(emission_id, count, document_id){
     try {
