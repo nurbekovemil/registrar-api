@@ -422,7 +422,7 @@ export class SecuritiesService {
     if (estype !== 'all' && estype != null) {
       emissionTypeCondition.type_id = estype
     }
-    if(esid) {
+    if(esid && esid != 0) {
       emissionTypeCondition.id = esid
     }
     return await this.securityRepository.findAll({

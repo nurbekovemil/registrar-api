@@ -159,7 +159,7 @@ async findOne(id: number) {
       const emission = security.emission;
       const holder = security.holder;
 
-      const percentageOfEmission = ((security.quantity * 100.0) / totalSecurities).toFixed(5);
+      const percentageOfEmission = ((security.quantity * 100.0) / totalSecurities).toFixed(6);
       const nominal = (security.quantity * emission.nominal).toFixed(4);
 
       const isPreferred = emission.type_id === 2; // указывается тип акций
