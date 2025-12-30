@@ -425,7 +425,6 @@ export class SecuritiesService {
     if(esid) {
       emissionTypeCondition.id = esid
     }
-    console.log('test ---- ',emissionTypeCondition, estype, esid)
     return await this.securityRepository.findAll({
       where: {
         emitent_id: eid

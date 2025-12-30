@@ -152,7 +152,7 @@ async findOne(id: number) {
     } else {
       emission_type = query.emission_type
     }
-    const securities = await this.securityService.getEmitentSecurities(eid, emission_type);
+    const securities = await this.securityService.getEmitentSecurities(eid, emission_type, null);
     const totalSecurities = securities.reduce((total, security) => total + Number(security.quantity), 0);
 
     return securities.map(security => {
@@ -182,10 +182,10 @@ async findOne(id: number) {
     });
   }
   async getFormattedExtractReestrOwns(eid: number, query) {
-    const { emission_type } = query;
+    const { emission } = query;
   
     // Получаем все акции эмитента с учетом типа эмиссии
-    const securities = await this.securityService.getEmitentSecurities(eid, emission_type);
+    const securities = await this.securityService.getEmitentSecurities(eid, null, emission);
   
     // Получаем общее количество акций эмитента
     const totalSecurities = securities.reduce((total, security) => total + Number(security.quantity), 0);
@@ -195,7 +195,7 @@ async findOne(id: number) {
       const emission = security.emission;
       const holder = security.holder;
   
-      const percentageOfEmission = ((security.quantity * 100.0) / totalSecurities).toFixed(5);
+      const percentageOfEmission = ((security.quantity * 100.0) / totalSecurities).toFixed(6);
   
       // Определяем, является ли акция простой или привилегированной
       const isPreferred = emission.type_id === 2; // указывается тип акций
@@ -220,10 +220,10 @@ async findOne(id: number) {
     });
   }
   async getFormattedExtractReestrOwnsByEmission(eid: number, query: any) {
-    const { emission_type } = query;
+    const { emission } = query;
   
     // Получаем все акции эмитента с учетом типа эмиссии
-    const securities = await this.securityService.getEmitentSecurities(eid, emission_type, null);
+    const securities = await this.securityService.getEmitentSecurities(eid, null, emission);
     // Получаем общее количество акций эмитента
     // const totalSecurities = await Security.sum('quantity', { where: { emitent_id: eid } });
     const totalSecurities = securities.reduce((total, security) => total + Number(security.quantity), 0);
@@ -232,7 +232,7 @@ async findOne(id: number) {
       const emission = security.emission;
       const holder = security.holder;
   
-      const percentageOfEmission = ((security.quantity * 100.0) / totalSecurities).toFixed(5);
+      const percentageOfEmission = ((security.quantity * 100.0) / totalSecurities).toFixed(6);
   
       // Определяем, является ли акция простой или привилегированной
       const isPreferred = emission.type_id === 2; // указывается тип акций
@@ -251,7 +251,7 @@ async findOne(id: number) {
         address: holder?.actual_address
       };
     })
-        .filter(item => {
+    .filter(item => {
       const percentFilter = query.percent ? Number(query.percent) : null;
       return percentFilter === null || item.percentage > percentFilter;
     });
