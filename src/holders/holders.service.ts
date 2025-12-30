@@ -638,6 +638,52 @@ async findOne(id: number) {
 
   }
 
+// async getPledgedSecurities(emitent_id: number) {
+//   const holders = await this.holderRepository.findAll({
+//     include: [
+//       {
+//         model: Security,
+//         where: { emitent_id },
+//         required: true,
+//         include: [
+//           {
+//             model: SecurityPledge,
+//             as: 'security_pledged',
+//             required: false,
+//           },
+//           {
+//             model: SecurityPledge,
+//             as: 'security_pledgee',
+//             required: false,
+//           },
+//         ],
+//       },
+//     ],
+//   });
+//   const result = [];
+//   for (const holder of holders) {
+//     for (const security of holder.securities) {
+//       if (security.security_pledged || security.security_pledgee) {
+//         result.push({
+//           id: holder.id,
+//           name: holder.name,
+
+//           security_id: security.id,
+//           security_quantity: security.quantity,
+
+//           pledged_out_quantity:
+//             security.security_pledged?.pledged_quantity ?? null,
+
+//           pledged_in_quantity:
+//             security.security_pledgee?.pledged_quantity ?? null,
+//         });
+//       }
+//     }
+//   }
+
+//   return result;
+// }
+
 async getPledgedSecurities(emitent_id: number) {
   const holders = await this.holderRepository.findAll({
     include: [
@@ -660,22 +706,34 @@ async getPledgedSecurities(emitent_id: number) {
       },
     ],
   });
+
   const result = [];
+
   for (const holder of holders) {
     for (const security of holder.securities) {
-      if (security.security_pledged || security.security_pledgee) {
+      // Считаем суммы, так как это массивы
+      const pledgedOut = security.security_pledged?.reduce(
+        (sum, p) => sum + (p.pledged_quantity || 0), 
+        0
+      ) || 0;
+
+      const pledgedIn = security.security_pledgee?.reduce(
+        (sum, p) => sum + (p.pledged_quantity || 0), 
+        0
+      ) || 0;
+
+      // Добавляем в результат только если есть хотя бы один вид залога
+      if (pledgedOut > 0 || pledgedIn > 0) {
         result.push({
           id: holder.id,
-          name: holder.name,
+          name: holder.name, // Убедитесь, что поле называется name, а не, например, last_name
 
           security_id: security.id,
           security_quantity: security.quantity,
 
-          pledged_out_quantity:
-            security.security_pledged?.pledged_quantity ?? null,
-
-          pledged_in_quantity:
-            security.security_pledgee?.pledged_quantity ?? null,
+          // Если залогов нет, возвращаем null (как в вашем исходном коде) или 0
+          pledged_out_quantity: pledgedOut > 0 ? pledgedOut : null,
+          pledged_in_quantity: pledgedIn > 0 ? pledgedIn : null,
         });
       }
     }
@@ -683,6 +741,5 @@ async getPledgedSecurities(emitent_id: number) {
 
   return result;
 }
-
 
 }

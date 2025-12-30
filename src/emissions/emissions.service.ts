@@ -151,139 +151,274 @@ export class EmissionsService {
   //           {
   //             model: SecurityPledge,
   //             as: 'security_pledged', // В залоге для этой бумаги
+  //             required: false,
+  //             where: {
+  //               pledger_id: hid
+  //             }
   //           },
   //           {
   //             model: SecurityPledge,
   //             as: 'security_pledgee', // Принято в залог для этой бумаги
+  //             required: false,
+  //             where: {
+  //               pledgee_id: hid
+  //             }
   //           },
   //           {
   //             model: SecurityBlock
   //           }
   //         ]
+  //       },
+  //       {
+  //         model: EmissionType
   //       }
   //     ]
   //   })
-  //   return emissions
+  //   return emissions.map(emission => ({
+  //     reg_number: emission.reg_number,
+  //     // type: 'простые', // Или другой тип, если он у вас есть
+  //     type: emission?.emission?.name,
+  //     total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+  //     nominal: emission.nominal || 0,
+  //     total_nominal_value:
+  //       (emission.nominal || 0) *
+  //       emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+  //     pledged_shares: emission.securities.reduce(
+  //       (sum, security) => sum + (security.security_pledged?.pledged_quantity || 0),
+  //       0,
+  //     ),
+  //     accepted_in_pledge: emission.securities.reduce(
+  //       (sum, security) => sum + (security.security_pledgee?.pledged_quantity || 0),
+  //       0,
+  //     ),
+  //     blocked_shares: emission.securities.reduce(
+  //       (sum, security) => sum + (security.security_block?.quantity || 0),
+  //       0,
+  //     ),
+  //   }));
   // }
 
-  async getEmissionsByHolderId(hid: number){
-    const emissions = await this.emissionRepository.findAll({
-      include: [
-        {
-          model: Security,
-          where: {
-            holder_id: hid
+  async getEmissionsByHolderId(hid: number) {
+  const emissions = await this.emissionRepository.findAll({
+    include: [
+      {
+        model: Security,
+        where: Sequelize.literal(`(
+          "securities"."holder_id" = ${hid} OR 
+          EXISTS (
+            SELECT 1 FROM "security_pledges" AS "sp" 
+            WHERE "sp"."security_id" = "securities"."id" 
+            AND ("sp"."pledger_id" = ${hid} OR "sp"."pledgee_id" = ${hid})
+          )
+        )`),
+        include: [
+          {
+            model: SecurityPledge,
+            as: 'security_pledged',
+            required: false,
+            where: { pledger_id: hid }
           },
-          include: [
-            {
-              model: SecurityPledge,
-              as: 'security_pledged', // В залоге для этой бумаги
-              required: false,
-              where: {
-                pledger_id: hid
-              }
-            },
-            {
-              model: SecurityPledge,
-              as: 'security_pledgee', // Принято в залог для этой бумаги
-              required: false,
-              where: {
-                pledgee_id: hid
-              }
-            },
-            {
-              model: SecurityBlock
-            }
-          ]
-        },
-        {
-          model: EmissionType
-        }
-      ]
-    })
-    return emissions.map(emission => ({
-      reg_number: emission.reg_number,
-      // type: 'простые', // Или другой тип, если он у вас есть
-      type: emission?.emission?.name,
-      total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
-      nominal: emission.nominal || 0,
-      total_nominal_value:
-        (emission.nominal || 0) *
-        emission.securities.reduce((sum, security) => sum + security.quantity, 0),
-      pledged_shares: emission.securities.reduce(
-        (sum, security) => sum + (security.security_pledged?.pledged_quantity || 0),
-        0,
-      ),
-      accepted_in_pledge: emission.securities.reduce(
-        (sum, security) => sum + (security.security_pledgee?.pledged_quantity || 0),
-        0,
-      ),
-      blocked_shares: emission.securities.reduce(
-        (sum, security) => sum + (security.security_block?.quantity || 0),
-        0,
-      ),
-    }));
-  }
-
-  async getEmissionsByEmitentIdHolderId(eid: number, hid: number){
-    const emissions = await this.emissionRepository.findAll({
-      include: [
-        {
-          model: Security,
-          where: {
-            emitent_id: eid,
-            holder_id: hid
+          {
+            model: SecurityPledge,
+            as: 'security_pledgee',
+            required: false,
+            where: { pledgee_id: hid }
           },
-          include: [
-            {
-              model: SecurityPledge,
-              as: 'security_pledged', // В залоге для этой бумаги
-              required: false,
-              where: {
-                pledger_id: hid
-              }
-            },
-            {
-              model: SecurityPledge,
-              as: 'security_pledgee', // Принято в залог для этой бумаги
-              required: false,
-              where: {
-                pledgee_id: hid
-              }
-            },
-            {
-              model: SecurityBlock
-            }
-          ]
-        },
-        {
-          model: EmissionType
-        }
-      ]
-    })
-    return emissions.map(emission => ({
+          {
+            model: SecurityBlock,
+            required: false // Рекомендуется добавить
+          }
+        ]
+      },
+      {
+        model: EmissionType // Убедитесь, что это поле совпадает с emission?.emission_type
+      }
+    ]
+  });
+
+  return emissions.map(emission => {
+    // 1. Считаем общее кол-во акций текущего холдера в этой эмиссии
+    const totalShares = emission.securities.reduce((sum, s) => sum + (s.quantity || 0), 0);
+    
+    // 2. Считаем акции в залоге (сумма по всем записям массива security_pledged)
+    const pledgedShares = emission.securities.reduce((sum, s) => {
+      const pledgeSum = s.security_pledged?.reduce((pSum, p) => pSum + (p.pledged_quantity || 0), 0) || 0;
+      return sum + pledgeSum;
+    }, 0);
+
+    // 3. Считаем акции, принятые в залог
+    const acceptedInPledge = emission.securities.reduce((sum, s) => {
+      const pledgeeSum = s.security_pledgee?.reduce((pSum, p) => pSum + (p.pledged_quantity || 0), 0) || 0;
+      return sum + pledgeeSum;
+    }, 0);
+
+    // 4. Считаем заблокированные акции
+    const blockedShares = emission.securities.reduce((sum, s) => {
+      return sum + (s.security_block?.quantity || 0);
+    }, 0);
+
+    return {
       reg_number: emission.reg_number,
-      // type: 'простые', // Или другой тип, если он у вас есть
+      // Исправлено обращение к типу эмиссии (зависит от вашей модели EmissionType)
       type: emission?.emission?.name,
-      total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+      total_shares: totalShares,
       nominal: emission.nominal || 0,
-      total_nominal_value:
-        (emission.nominal || 0) *
-        emission.securities.reduce((sum, security) => sum + security.quantity, 0),
-      pledged_shares: emission.securities.reduce((sum, security) => {
-        return sum + (security.security_pledged?.pledged_quantity || 0);
-      }, 0),
+      total_nominal_value: (emission.nominal || 0) * totalShares,
+      pledged_shares: pledgedShares,
+      accepted_in_pledge: acceptedInPledge,
+      blocked_shares: blockedShares,
+    };
+  });
+}
 
-      accepted_in_pledge: emission.securities.reduce((sum, security) => {
-        return sum + (security.security_pledgee?.pledged_quantity || 0);
-      }, 0),
+  // async getEmissionsByEmitentIdHolderId(eid: number, hid: number){
+  //   const emissions = await this.emissionRepository.findAll({
+  //     include: [
+  //       {
+  //         model: Security,
+  //         where: {
+  //           emitent_id: eid,
+  //           holder_id: hid
+  //         },
+  //         include: [
+  //           {
+  //             model: SecurityPledge,
+  //             as: 'security_pledged', // В залоге для этой бумаги
+  //             required: false,
+  //             where: {
+  //               pledger_id: hid
+  //             }
+  //           },
+  //           {
+  //             model: SecurityPledge,
+  //             as: 'security_pledgee', // Принято в залог для этой бумаги
+  //             required: false,
+  //             where: {
+  //               pledgee_id: hid
+  //             }
+  //           },
+  //           {
+  //             model: SecurityBlock
+  //           }
+  //         ]
+  //       },
+  //       {
+  //         model: EmissionType
+  //       }
+  //     ]
+  //   })
+  //   return emissions.map(emission => ({
+  //     reg_number: emission.reg_number,
+  //     // type: 'простые', // Или другой тип, если он у вас есть
+  //     type: emission?.emission?.name,
+  //     total_shares: emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+  //     nominal: emission.nominal || 0,
+  //     total_nominal_value:
+  //       (emission.nominal || 0) *
+  //       emission.securities.reduce((sum, security) => sum + security.quantity, 0),
+  //     pledged_shares: emission.securities.reduce((sum, security) => {
+  //       return sum + (security.security_pledged?.pledged_quantity || 0);
+  //     }, 0),
 
-      blocked_shares: emission.securities.reduce(
-        (sum, security) => sum + (security.security_block?.quantity || 0),
+  //     accepted_in_pledge: emission.securities.reduce((sum, security) => {
+  //       return sum + (security.security_pledgee?.pledged_quantity || 0);
+  //     }, 0),
+
+  //     blocked_shares: emission.securities.reduce(
+  //       (sum, security) => sum + (security.security_block?.quantity || 0),
+  //       0,
+  //     ),
+  //     share_percent: (emission.securities.reduce((sum, security) => sum + security.quantity, 0) / emission.start_count) * 100
+  //   }));
+  // }
+
+  async getEmissionsByEmitentIdHolderId(eid: number, hid: number) {
+  const emissions = await this.emissionRepository.findAll({
+    where: {
+      emitent_id: eid,
+    },
+    include: [
+      {
+        model: Security,
+        required: false,
+        where: Sequelize.literal(`(
+          "securities"."holder_id" = ${hid} OR 
+          EXISTS (
+            SELECT 1 FROM "security_pledges" AS "sp" 
+            WHERE "sp"."security_id" = "securities"."id" 
+            AND ("sp"."pledger_id" = ${hid} OR "sp"."pledgee_id" = ${hid})
+          )
+        )`),
+        include: [
+          {
+            model: SecurityPledge,
+            as: 'security_pledged', // Акции, которые ХОЛДЕР отдал в залог
+            required: false,
+            where: { pledger_id: hid },
+          },
+          {
+            model: SecurityPledge,
+            as: 'security_pledgee', // Акции, которые ХОЛДЕР принял в залог
+            required: false,
+            where: { pledgee_id: hid },
+          },
+          {
+            model: SecurityBlock,
+            required: false,
+          },
+        ],
+      },
+      {
+        model: EmissionType,
+      },
+    ],
+  });
+
+  return emissions.map((emission) => {
+    // Предварительно считаем общее количество акций холдера в этой эмиссии
+    const totalShares = emission.securities.reduce(
+      (sum, security) => sum + (security.quantity || 0),
+      0,
+    );
+
+    // Суммируем залоги (помним, что security_pledged — это МАССИВ)
+    const pledgedShares = emission.securities.reduce((sum, security) => {
+      const securityPledgeSum = security.security_pledged?.reduce(
+        (pSum, pledge) => pSum + (pledge.pledged_quantity || 0),
         0,
-      ),
-      share_percent: (emission.securities.reduce((sum, security) => sum + security.quantity, 0) / emission.start_count) * 100
-    }));
+      ) || 0;
+      return sum + securityPledgeSum;
+    }, 0);
+
+    const acceptedInPledge = emission.securities.reduce((sum, security) => {
+      const securityPledgeeSum = security.security_pledgee?.reduce(
+        (pSum, pledge) => pSum + (pledge.pledged_quantity || 0),
+        0,
+      ) || 0;
+      return sum + securityPledgeeSum;
+    }, 0);
+
+    const blockedShares = emission.securities.reduce(
+      (sum, security) => sum + (security.security_block?.quantity || 0),
+      0,
+    );
+
+    return {
+      reg_number: emission.reg_number,
+      // Исправьте путь к названию типа в зависимости от вашей модели EmissionType
+      type: emission?.emission?.name,
+      total_shares: totalShares,
+      nominal: emission.nominal || 0,
+      total_nominal_value: (emission.nominal || 0) * totalShares,
+      pledged_shares: pledgedShares,
+      accepted_in_pledge: acceptedInPledge,
+      blocked_shares: blockedShares,
+      // Проверка на деление на ноль для процента
+      share_percent: emission.start_count 
+        ? (totalShares / emission.start_count) * 100 
+        : 0,
+    };
+  });
   }
 
   async deductQuentityEmission(emission_id, quantity){
@@ -372,69 +507,161 @@ export class EmissionsService {
     }
   }
 
+// async getEmitentEmissions(hid: number, eid: number) {
+//     const emissions = await this.emissionRepository.findAll({
+//       where: {
+//         emitent_id: eid
+//       },
+//       include: [
+//         {
+//           model: Security,
+//           include: [
+//             {
+//               model: SecurityPledge,
+//               as: 'security_pledged', // В залоге для этой бумаги
+//               required: false,
+//               where: {
+//                 pledger_id: hid
+//               }
+//             },
+//             {
+//               model: SecurityPledge,
+//               as: 'security_pledgee', // Принято в залог для этой бумаги
+//               required: false,
+//               where: {
+//                 pledgee_id: hid
+//               }
+//             },
+//             {
+//               model: SecurityBlock
+//             }
+//           ]
+//         },
+//         {
+//           model: EmissionType
+//         }
+//       ]
+//     })
+//     return emissions.map(emission => ({
+//       id: emission.id,
+//       reg_number: emission.reg_number,
+//       // type: 'простые', // Или другой тип, если он у вас есть
+//       type: emission?.emission?.name,
+//       total_shares: emission.securities.reduce((sum, security) => sum + (security.holder_id === hid ? security.quantity || 0 : 0), 0),
+//       nominal: emission.nominal || 0,
+//       total_nominal_value:
+//         (emission.nominal || 0) *
+//         emission.securities.reduce((sum, security) => sum + (security.holder_id === hid ? security.quantity || 0 : 0), 0),
+//       pledged_shares: emission.securities.reduce(
+//         (sum, security) => sum + (security.security_pledged?.pledger_id === hid ? security.security_pledged?.pledged_quantity || 0 : 0),
+//         0,
+//       ),
+//       accepted_in_pledge: emission.securities.reduce(
+//         (sum, security) => sum + (security.security_pledgee?.pledgee_id === hid ? security.security_pledgee?.pledged_quantity || 0 : 0),
+//         0,
+//       ),
+//       blocked_shares: emission.securities.reduce(
+//         (sum, security) => sum + (security.holder_id === hid ? security.security_block?.quantity || 0 : 0),
+//         0,
+//       ),
+//     })).filter(em => 
+//       em.total_shares > 0 ||
+//       em.pledged_shares > 0 ||
+//       em.accepted_in_pledge > 0 ||
+//       em.blocked_shares > 0
+//     );
+// }
+
 async getEmitentEmissions(hid: number, eid: number) {
-    const emissions = await this.emissionRepository.findAll({
-      where: {
-        emitent_id: eid
+  const emissions = await this.emissionRepository.findAll({
+    where: {
+      emitent_id: eid,
+    },
+    include: [
+      {
+        model: Security,
+        // where: Sequelize.literal(`(
+        //   "securities"."holder_id" = ${hid} OR 
+        //   EXISTS (
+        //     SELECT 1 FROM "security_pledges" AS "sp" 
+        //     WHERE "sp"."security_id" = "securities"."id" 
+        //     AND ("sp"."pledger_id" = ${hid} OR "sp"."pledgee_id" = ${hid})
+        //   )
+        // )`),
+        include: [
+          {
+            model: SecurityPledge,
+            as: 'security_pledged',
+            required: false,
+            where: { pledger_id: hid },
+          },
+          {
+            model: SecurityPledge,
+            as: 'security_pledgee',
+            required: false,
+            where: { pledgee_id: hid },
+          },
+          {
+            model: SecurityBlock,
+            required: false,
+          },
+        ],
       },
-      include: [
-        {
-          model: Security,
-          include: [
-            {
-              model: SecurityPledge,
-              as: 'security_pledged', // В залоге для этой бумаги
-              required: false,
-              where: {
-                pledger_id: hid
-              }
-            },
-            {
-              model: SecurityPledge,
-              as: 'security_pledgee', // Принято в залог для этой бумаги
-              required: false,
-              where: {
-                pledgee_id: hid
-              }
-            },
-            {
-              model: SecurityBlock
-            }
-          ]
-        },
-        {
-          model: EmissionType
-        }
-      ]
+      {
+        model: EmissionType,
+      },
+    ],
+  });
+
+  return emissions
+    .map((emission) => {
+      // 1. Считаем акции, где пользователь является владельцем
+      const holderShares = emission.securities
+        .filter((s) => s.holder_id === hid)
+        .reduce((sum, s) => sum + (s.quantity || 0), 0);
+
+      // 2. Считаем акции в залоге (пользователь — залогодатель)
+      // Проходим по всем бумагам и суммируем массивы security_pledged
+      const pledgedShares = emission.securities.reduce((sum, s) => {
+        const pledgeSum = s.security_pledged?.reduce(
+          (pSum, p) => pSum + (p.pledged_quantity || 0),
+          0
+        ) || 0;
+        return sum + pledgeSum;
+      }, 0);
+
+      // 3. Считаем акции, принятые в залог (пользователь — залогодержатель)
+      const acceptedInPledge = emission.securities.reduce((sum, s) => {
+        const pledgeeSum = s.security_pledgee?.reduce(
+          (pSum, p) => pSum + (p.pledged_quantity || 0),
+          0
+        ) || 0;
+        return sum + pledgeeSum;
+      }, 0);
+
+      // 4. Считаем заблокированные акции (только для тех, где пользователь — владелец)
+      const blockedShares = emission.securities
+        .filter((s) => s.holder_id === hid)
+        .reduce((sum, s) => sum + (s.security_block?.quantity || 0), 0);
+
+      return {
+        id: emission.id,
+        reg_number: emission.reg_number,
+        type: emission?.emission?.name,
+        total_shares: holderShares,
+        nominal: emission.nominal || 0,
+        total_nominal_value: (emission.nominal || 0) * holderShares,
+        pledged_shares: pledgedShares,
+        accepted_in_pledge: acceptedInPledge,
+        blocked_shares: blockedShares,
+      };
     })
-    return emissions.map(emission => ({
-      id: emission.id,
-      reg_number: emission.reg_number,
-      // type: 'простые', // Или другой тип, если он у вас есть
-      type: emission?.emission?.name,
-      total_shares: emission.securities.reduce((sum, security) => sum + (security.holder_id === hid ? security.quantity || 0 : 0), 0),
-      nominal: emission.nominal || 0,
-      total_nominal_value:
-        (emission.nominal || 0) *
-        emission.securities.reduce((sum, security) => sum + (security.holder_id === hid ? security.quantity || 0 : 0), 0),
-      pledged_shares: emission.securities.reduce(
-        (sum, security) => sum + (security.security_pledged?.pledger_id === hid ? security.security_pledged?.pledged_quantity || 0 : 0),
-        0,
-      ),
-      accepted_in_pledge: emission.securities.reduce(
-        (sum, security) => sum + (security.security_pledgee?.pledgee_id === hid ? security.security_pledgee?.pledged_quantity || 0 : 0),
-        0,
-      ),
-      blocked_shares: emission.securities.reduce(
-        (sum, security) => sum + (security.holder_id === hid ? security.security_block?.quantity || 0 : 0),
-        0,
-      ),
-    })).filter(em => 
-      em.total_shares > 0 ||
-      em.pledged_shares > 0 ||
-      em.accepted_in_pledge > 0 ||
-      em.blocked_shares > 0
+    .filter(
+      (em) =>
+        em.total_shares > 0 ||
+        em.pledged_shares > 0 ||
+        em.accepted_in_pledge > 0 ||
+        em.blocked_shares > 0
     );
 }
-
 }
