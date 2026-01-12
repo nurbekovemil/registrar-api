@@ -184,15 +184,13 @@ async createTransaction(createTransactionDto: CreateTransactionDto) {
       }
     }
 
-    await t.commit();
-    // Логика сохранения security_id может быть перенесена сюда или даже внутрь методов создания security,
-    // если они возвращают объект с уже проставленным ID транзакции
-    // Убедитесь, что '2' в вашем условии не является магическим числом
-    if (security && operation_id != 22) { // 22 - Эмиссия
+    // Сохраняем security_id ВНУТРИ транзакции для обеспечения атомарности
+    if (security && operation_id != TransactionOperationTypes.EMISSION) {
       transaction.security_id = security.id;
-      // Используем `save` вне транзакции, т.к. она уже закоммичена
-      await transaction.save();
+      await transaction.save({ transaction: t });
     }
+    
+    await t.commit();
     return transaction;
   } catch (error) {
     await t.rollback(); // Всегда откатываем при ошибке
